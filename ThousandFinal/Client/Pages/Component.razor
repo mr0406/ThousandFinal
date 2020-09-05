@@ -1,0 +1,30 @@
+﻿@page "/"
+
+<div class="row">
+    <div class="col-9">
+        <div style="border: dotted; min-height: 90vh; width: inherit;
+                justify-content: center; display: flex; align-items: center">
+            <div style="border: dotted; width: 40%; height: 200px;">
+
+            </div>
+
+            <div style="border: dotted; width: 70%; height: 200px; position: absolute;
+                bottom : 10px; margin-left: auto; margin-right: auto; display: block">
+                <div class="row">
+                    @for (int i = 0; i < 10; i++)
+                    {
+                        <div style="border: solid; width: 80px; height: 120px;"></div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-3">
+        <p>Chat here</p>
+    </div>
+</div>
+
+@code {
+
+}
+

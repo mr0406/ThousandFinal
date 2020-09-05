@@ -1,0 +1,54 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ThousandFinal.Shared.Models
+{
+    public class CardModel
+    {
+        public Rank Rank { get; set; }
+        public Suit Suit { get; set; }
+        public Status Status { get; set; }
+        public string OwnerName { get; set; }
+
+        public CardModel()
+        {
+
+        }
+
+        public CardModel(Rank rank, Suit suit, Status status)
+        {
+            Rank = rank;
+            Suit = suit;
+            Status = status;
+            OwnerName = "";
+        }
+    }
+
+    public enum Rank
+    {
+        Nine,
+        Ten,
+        Jack,
+        Queen,
+        King,
+        Ace
+    }
+
+    public enum Suit
+    {
+        Hearts,
+        Diamonds,
+        Clubs,
+        Spades
+    }
+
+    public enum Status
+    {
+        InDeck,
+        InHand,
+        ToTake,
+        Active,
+        Won
+    }
+}
