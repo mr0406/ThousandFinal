@@ -12,6 +12,11 @@ namespace ThousandFinal.Shared.Models
         public int PointsInCurrentRound { get; set; }
         public int PointsToAchieve { get; set; }
 
+        public UserModel()
+        {
+
+        }
+
         public UserModel(string name)
         {
             Name = name;

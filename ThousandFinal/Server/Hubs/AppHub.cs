@@ -15,19 +15,21 @@ namespace ThousandFinal.Server.Hubs
     {
         private ICardService _cardService;
 
-        private static Dictionary<string, string> activeUsers = new Dictionary<string, string>();
+        private static Dictionary<string, UserModel> activeUsers = new Dictionary<string, UserModel>();
         private static List<CardModel> cards = new List<CardModel>();
+
+        private static Suit mandatorySuit { get; set; }
 
         public AppHub(ICardService cardService)
         {
             _cardService = cardService;
         }
 
-        public async Task JoinServer(string userName)
+        public async Task JoinServer(UserModel user)
         {
             string id = Context.ConnectionId;
-            activeUsers.Add(id, userName);
-            await Clients.All.ReceiveJoinServer(userName);
+            activeUsers.Add(id, user);
+            await Clients.All.ReceiveJoinServer(user);
         }
 
         public async Task StartGame()
@@ -40,7 +42,7 @@ namespace ThousandFinal.Server.Hubs
             await Clients.All.ReceiveMessage(user, message);
         }
 
-        public async Task LeaveServer(string user)
+        public async Task LeaveServer(UserModel user)
         {
             string id = Context.ConnectionId;
             activeUsers.Remove(id);
@@ -54,20 +56,25 @@ namespace ThousandFinal.Server.Hubs
 
         public async Task DealCards()
         {
-            List<string> playerNames = activeUsers.Values.Take(3).ToList();
+            List<string> playerNames = activeUsers.Values.Take(3).Select(x => x.Name).ToList();
 
             cards = _cardService.DistributeCards(playerNames);
-            //cards = _cardService.ShuffleCards();
             foreach(var user in activeUsers)
             {
-                List<CardModel> cardsForUser = cards.Where(x => x.OwnerName == user.Value).ToList();
+                List<CardModel> cardsForUser = cards.Where(x => x.OwnerName == user.Value.Name).ToList();
                 await Clients.Client(user.Key).ReceiveDealCards(cardsForUser);
             }
+        }
 
-            //cards.Add(new CardModel(Rank.King, Suit.Clubs, Status.InDeck));
-            //cards.Add(new CardModel(Rank.King, Suit.Hearts, Status.InDeck));
+        public override async Task OnDisconnectedAsync(Exception exception)
+        {
+            string id = Context.ConnectionId;
+            activeUsers.TryGetValue(id, out UserModel user);
 
-            //await Clients.All.ReceiveDealCards(cards);
+            await LeaveServer(user);
+            await base.OnDisconnectedAsync(exception);
+            Console.WriteLine(exception);
+            //Stop a game
         }
     }
 }

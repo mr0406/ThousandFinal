@@ -1,4 +1,4 @@
-﻿@page "/test"
+﻿@page "/"
 
 @inject NavigationManager  NavigationManager
 @using System.Text.Json;
@@ -35,8 +35,26 @@
                         }
                         else
                         {
-                            <div style="border: dotted; width: 40%; height: 200px;">
+                            <div id="resultTable" style="border: dotted; width: 20%; height: 100px; display: block; position: absolute;
+                                    margin-left: auto; margin-right: auto; top: 10px">
+                                @foreach (var user in users)
+                                {
+                                    <div>@user.Name : @user.Points pkt</div>
+                                }
+                            </div>
 
+                            <div style="border: solid; width: 95%; height: 250px">
+                                <div style="border: dotted; width: 10%; height: 200px; margin-left: 10px; display: inline-block; position: relative">
+
+                                </div>
+
+                                <div style="border: dotted; width: 40%; height: 200px; display: inline-block; position: relative; margin-left: 200px; margin-bottom: 10px">
+
+                                </div>
+
+                                <div style="border: dotted; width: 10%; height: 200px; margin-left: 200px; display: inline-block; position: relative">
+
+                                </div>
                             </div>
 
                             <div style="border: dotted; width: 70%; height: 200px; position: absolute; right:25%; left: 50%; bottom : 10px; margin-left: -35%">
@@ -56,7 +74,7 @@
                     <ul id="usersList">
                         @foreach (var user in users)
                         {
-                            <li>@user</li>
+                            <li>@user.Name</li>
                         }
                     </ul>
 
@@ -91,8 +109,9 @@
 @code {
     public HubConnection hubConnection;
     public List<string> messages = new List<string>();
-    public List<string> users = new List<string>();
+    public List<UserModel> users = new List<UserModel>();
     public string userName;
+    public UserModel user;
     public bool joined = false;
     public string messageInput;
 
@@ -108,9 +127,9 @@
             .WithUrl(NavigationManager.ToAbsoluteUri("/apphub"))
             .Build();
 
-        hubConnection.On<string>(ServerToClient.JOIN_SERVER, (username) =>
+        hubConnection.On<UserModel>(ServerToClient.JOIN_SERVER, (user) =>
         {
-            users.Add(username);
+            users.Add(user);
             StateHasChanged();
         });
 
@@ -121,16 +140,14 @@
             StateHasChanged();
         });
 
-        hubConnection.On<List<string>>(ServerToClient.GET_USERS, (userNames) =>
+        hubConnection.On<List<UserModel>>(ServerToClient.GET_USERS, (usersFromServer) =>
         {
-            users = userNames;
+            users = usersFromServer;
             StateHasChanged();
         });
 
         hubConnection.On<List<CardModel>>(ServerToClient.DEAL_CARDS, (cards) =>
         {
-            Console.WriteLine("tuta11");
-
             myCards = new List<CardModel>();
 
             foreach (var card in cards)
@@ -139,6 +156,14 @@
 
             }
 
+            StateHasChanged();
+        });
+
+        hubConnection.On<UserModel>(ServerToClient.LEAVE_SERVER, (user) =>
+        {
+            hubConnection.SendAsync(ClientToServer.GET_USERS);
+            var encodedMsg = $"{user.Name} left server.";
+            messages.Add(encodedMsg);
             StateHasChanged();
         });
 
@@ -152,20 +177,19 @@
         await hubConnection.SendAsync(ClientToServer.GET_USERS);
     }
 
-
-
     void Join()
     {
         if (users.Count < 3)
         {
-            hubConnection.SendAsync(ClientToServer.JOIN_SERVER, userName);
+            UserModel newUser = new UserModel(userName);
+            hubConnection.SendAsync(ClientToServer.JOIN_SERVER, newUser);
             joined = true;
         }
     }
 
     async Task Send()
     {
-        await hubConnection.SendAsync(ClientToServer.SEND_MESSAGE, userName, messageInput);
+        await hubConnection.SendAsync(ClientToServer.SEND_MESSAGE, user.Name, messageInput);
     }
 
     void StartGame()
