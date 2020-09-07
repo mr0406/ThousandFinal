@@ -34,7 +34,15 @@ namespace ThousandFinal.Server.Hubs
 
         public async Task StartGame()
         {
-            await Clients.All.ReceiveGameStarted();
+            for(int i = 0; i < 3; i++)
+            {
+                var leftIndex = (i + 1) % 3;
+                var rightIndex = (i + 2) % 3;
+
+                var leftPlayer = activeUsers.ElementAt(leftIndex).Value;
+                var rightPlayer = activeUsers.ElementAt(rightIndex).Value;
+                await Clients.Client(activeUsers.ElementAt(i).Key).ReceiveGameStarted(leftPlayer, rightPlayer);
+            }
         }
 
         public async Task SendMessage(string user, string message)

@@ -9,7 +9,7 @@ namespace ThousandFinal.Shared.Communication
     public interface IHubClient
     {
         Task ReceiveJoinServer(UserModel user);
-        Task ReceiveGameStarted();
+        Task ReceiveGameStarted(UserModel leftUser, UserModel rightUser);
 
         Task ReceiveMessage(string user, string message);
         Task ReceiveLeaveServer(UserModel user);

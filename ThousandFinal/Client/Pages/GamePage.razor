@@ -45,7 +45,7 @@
 
                             <div style="border: solid; width: 95%; height: 250px">
                                 <div style="border: dotted; width: 10%; height: 200px; margin-left: 10px; display: inline-block; position: relative">
-
+                                    <p>@leftUser.Name</p>
                                 </div>
 
                                 <div style="border: dotted; width: 40%; height: 200px; display: inline-block; position: relative; margin-left: 200px; margin-bottom: 10px">
@@ -53,7 +53,7 @@
                                 </div>
 
                                 <div style="border: dotted; width: 10%; height: 200px; margin-left: 200px; display: inline-block; position: relative">
-
+                                    <p>@rightUser.Name</p>
                                 </div>
                             </div>
 
@@ -111,7 +111,11 @@
     public List<string> messages = new List<string>();
     public List<UserModel> users = new List<UserModel>();
     public string userName;
-    public UserModel user;
+
+    public UserModel thisUser;
+    public UserModel leftUser;
+    public UserModel rightUser;
+
     public bool joined = false;
     public string messageInput;
 
@@ -153,7 +157,6 @@
             foreach (var card in cards)
             {
                 myCards.Add(card);
-
             }
 
             StateHasChanged();
@@ -167,8 +170,11 @@
             StateHasChanged();
         });
 
-        hubConnection.On(ServerToClient.START_GAME, () =>
+        hubConnection.On<UserModel, UserModel>(ServerToClient.START_GAME, (_leftUser, _rigtUser) =>
         {
+            leftUser = _leftUser;
+            rightUser = _rigtUser;
+
             GameStarted = true;
             StateHasChanged();
         });
@@ -181,15 +187,15 @@
     {
         if (users.Count < 3)
         {
-            UserModel newUser = new UserModel(userName);
-            hubConnection.SendAsync(ClientToServer.JOIN_SERVER, newUser);
+            thisUser = new UserModel(userName);
+            hubConnection.SendAsync(ClientToServer.JOIN_SERVER, thisUser);
             joined = true;
         }
     }
 
     async Task Send()
     {
-        await hubConnection.SendAsync(ClientToServer.SEND_MESSAGE, user.Name, messageInput);
+        await hubConnection.SendAsync(ClientToServer.SEND_MESSAGE, thisUser.Name, messageInput);
     }
 
     void StartGame()
