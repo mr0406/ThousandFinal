@@ -84,5 +84,18 @@ namespace ThousandFinal.Server.Hubs
             Console.WriteLine(exception);
             //Stop a game
         }
+
+
+        public async Task<bool> IsNameAvailable(string newUserName)
+        {
+            bool available = true;
+
+            if(activeUsers.Values.SingleOrDefault(x => x.Name == newUserName) != null)
+            {
+                available = false;
+            }
+
+            return available;
+        }
     }
 }

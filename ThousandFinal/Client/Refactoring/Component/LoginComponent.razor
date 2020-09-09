@@ -1,0 +1,41 @@
+﻿<div class="form-group">
+    <label>
+        User:
+        <input @bind="userName" />
+    </label>
+</div>
+<button @onclick="TryJoin" disabled="@(!IsConnected)">Join</button>
+<div style="color: red">@errorType</div>
+
+@code {
+    [CascadingParameter] NewGamePage newGamePage { get; set; }
+
+    public bool IsConnected => newGamePage.hubConnection.State == HubConnectionState.Connected;
+
+    public string userName;
+    public string errorType;
+
+    public void TryJoin()
+    {
+        //bool canJoin = true;
+        //bool canJoin = newGamePage.hubConnection.InvokeAsync<bool>(ClientToServer.IS_NAME_AVAILABLE, userName).GetAwaiter().GetResult();
+
+        bool canJoin = newGamePage.hubConnection.InvokeAsync<bool>(ClientToServer.IS_NAME_AVAILABLE, userName).GetAwaiter().GetResult();
+
+
+        errorType = canJoin.ToString();
+        //if()
+        //{
+        //    errorType = $"There is already a user with name: {userName}";
+        //}
+
+        //if(newGamePage.users.Count < 3)
+        //{
+        //    newGamePage.Join(userName);
+        //}
+        //else
+        //{
+        //    errorType = "Game room is full";
+        //}
+    }
+}

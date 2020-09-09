@@ -21,6 +21,6 @@ namespace ThousandFinal.Shared.Communication
         //Task PlayCard();
         //Task GiveCard();
 
-        
+        Task<bool> IsNameAvailable(string name);
     }
 }

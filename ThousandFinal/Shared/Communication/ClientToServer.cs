@@ -16,5 +16,8 @@ namespace ThousandFinal.Shared.Communication
         public const string DEAL_CARDS = "DealCards";
 
         public const string TEST = "Test";
+
+
+        public const string IS_NAME_AVAILABLE = "IsNameAvailable";
     }
 }
