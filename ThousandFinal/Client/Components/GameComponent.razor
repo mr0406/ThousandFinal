@@ -1,0 +1,97 @@
+﻿<div style="border: dotted; min-height: 90vh; width: inherit;
+                    justify-content: center; display: flex; align-items: center">
+    @if (!GameStarted)
+    {
+        <button @onclick="StartGame">Start</button>
+    }
+    else
+    {
+        if (myCards.Count == 0)
+        {
+            <button @onclick="DealCards">DealCards</button>
+        }
+        else
+        {
+            <div id="resultTable" style="border: dotted; width: 20%; height: 100px; display: block; position: absolute;
+                                    margin-left: auto; margin-right: auto; top: 10px">
+                @foreach (var user in Users)
+                {
+                    <div>@user.Name : @user.Points pkt</div>
+                }
+            </div>
+
+            <div style="border: solid; width: 95%; height: 250px">
+                <div style="border: dotted; width: 10%; height: 200px; margin-left: 10px; display: inline-block; position: relative">
+                    <p>@leftUser.Name</p>
+                </div>
+
+                <div style="border: dotted; width: 40%; height: 200px; display: inline-block; position: relative; margin-left: 200px; margin-bottom: 10px">
+
+                </div>
+
+                <div style="border: dotted; width: 10%; height: 200px; margin-left: 200px; display: inline-block; position: relative">
+                    <p>@rightUser.Name</p>
+                </div>
+            </div>
+
+            <div style="border: dotted; width: 70%; height: 200px; position: absolute; right:25%; left: 50%; bottom : 10px; margin-left: -35%">
+                @foreach (var card in myCards)
+                {
+                    <div style="margin: 2px; border: dashed">@card.Rank, @card.Suit, @card.OwnerName</div>
+                }
+            </div>
+        }
+    }
+</div>
+
+@code {
+    [CascadingParameter] public HubConnection hubConnection { get; set; }
+
+    [Parameter] public UserModel User { get; set; }
+    [Parameter] public List<UserModel> Users { get; set; }
+
+    public UserModel leftUser;
+    public UserModel rightUser;
+
+    public bool joined = false;
+    public string messageInput;
+
+    private List<CardModel> myCards = new List<CardModel>();
+    public bool GameStarted = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection.On<UserModel, UserModel>(ServerToClient.START_GAME, (_leftUser, _rigtUser) =>
+        {
+            leftUser = _leftUser;
+            rightUser = _rigtUser;
+
+            GameStarted = true;
+            StateHasChanged();
+        });
+
+        hubConnection.On<List<CardModel>>(ServerToClient.DEAL_CARDS, (cards) =>
+        {
+            myCards = new List<CardModel>();
+
+            foreach (var card in cards)
+                myCards.Add(card);
+
+            StateHasChanged();
+        });
+    }
+
+    void StartGame()
+    {
+        if (Users.Count == 3)
+        {
+            hubConnection.SendAsync(ClientToServer.START_GAME);
+        }
+    }
+
+    void DealCards()
+    {
+        Console.WriteLine("Client: DealCards");
+        hubConnection.SendAsync(ClientToServer.DEAL_CARDS);
+    }
+}

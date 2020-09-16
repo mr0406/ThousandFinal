@@ -2,127 +2,37 @@
 
 @inject NavigationManager  NavigationManager
 
-<div style="border: dotted">
-    <div>Name: @userName</div>
-
-    @if (!joined)
-    {
-        <div class="form-group">
-            <label>
-                User:
-                <input @bind="userName" />
-            </label>
-        </div>
-        <button @onclick="Join" disabled="@(!IsConnected)">Join</button>
-    }
-    else
-    {
-
-        <div class="row">
-            <div class="col-9">
-                <div style="border: dotted; min-height: 90vh; width: inherit;
-                    justify-content: center; display: flex; align-items: center">
-                    @if (!GameStarted)
-                    {
-                        <button @onclick="StartGame">Start</button>
-                    }
-                    else
-                    {
-                        if (myCards.Count == 0)
-                        {
-                            <button @onclick="DealCards">DealCards</button>
-                        }
-                        else
-                        {
-                            <div id="resultTable" style="border: dotted; width: 20%; height: 100px; display: block; position: absolute;
-                                    margin-left: auto; margin-right: auto; top: 10px">
-                                @foreach (var user in users)
-                                {
-                                    <div>@user.Name : @user.Points pkt</div>
-                                }
-                            </div>
-
-                            <div style="border: solid; width: 95%; height: 250px">
-                                <div style="border: dotted; width: 10%; height: 200px; margin-left: 10px; display: inline-block; position: relative">
-                                    <p>@leftUser.Name</p>
-                                </div>
-
-                                <div style="border: dotted; width: 40%; height: 200px; display: inline-block; position: relative; margin-left: 200px; margin-bottom: 10px">
-
-                                </div>
-
-                                <div style="border: dotted; width: 10%; height: 200px; margin-left: 200px; display: inline-block; position: relative">
-                                    <p>@rightUser.Name</p>
-                                </div>
-                            </div>
-
-                            <div style="border: dotted; width: 70%; height: 200px; position: absolute; right:25%; left: 50%; bottom : 10px; margin-left: -35%">
-                                @foreach (var card in myCards)
-                                {
-                                    <div style="margin: 2px; border: dashed">@card.Rank, @card.Suit, @card.OwnerName</div>
-                                }
-                            </div>
-                        }
-                    }
+<CascadingValue Value="this.hubConnection">
+    <div style="border: dotted">
+        @if (!joined)
+        {
+            <LoginComponent></LoginComponent>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-9">
+                    <GameComponent @ref="GameComponent" User="User" Users="Users"></GameComponent>
+                </div>
+                <div class="col-3">
+                    <ChatComponent User="User" Users="Users"></ChatComponent>
                 </div>
             </div>
-            <div class="col-3">
-                <div style="border: dotted">
-                    <hr />
-                    <div>Users: </div>
-                    <ul id="usersList">
-                        @foreach (var user in users)
-                        {
-                            <li>@user.Name</li>
-                        }
-                    </ul>
+        }
+    </div>
+</CascadingValue>
 
-                    <hr />
-
-                    <div>Messages: </div>
-
-                    <div style="height: 300px; width: 300px; border: 1px dashed gray;" class="overflow-auto">
-                        @foreach (var message in messages)
-                        {
-                            <div>@message</div>
-                        }
-                    </div>
-
-                    <hr />
-
-                    <div class="form-group">
-                        <label>
-                            Message:
-                            <input @bind="messageInput" size="40" />
-                        </label>
-                    </div>
-                    <button @onclick="Send">Send</button>
-
-                </div>
-            </div>
-        </div>
-    }
-
-</div>
 
 @code {
-    public HubConnection hubConnection;
-    public List<string> messages = new List<string>();
-    public List<UserModel> users = new List<UserModel>();
-    public string userName;
+    GameComponent GameComponent;
 
-    public UserModel thisUser;
-    public UserModel leftUser;
-    public UserModel rightUser;
+    public HubConnection hubConnection;
+    public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
 
     public bool joined = false;
-    public string messageInput;
 
-    private List<CardModel> myCards = new List<CardModel>();
-    public bool GameStarted = false;
-
-    public bool IsConnected =>
-        hubConnection.State == HubConnectionState.Connected;
+    public List<UserModel> Users = new List<UserModel>();
+    public UserModel User;
 
     protected override async Task OnInitializedAsync()
     {
@@ -130,84 +40,35 @@
             .WithUrl(NavigationManager.ToAbsoluteUri("/apphub"))
             .Build();
 
-        hubConnection.On<UserModel>(ServerToClient.JOIN_SERVER, (user) =>
+        hubConnection.On<List<UserModel>>(ServerToClient.RECEIVE_USERS, (List<UserModel> users) =>
         {
-            users.Add(user);
+            this.Users = users;
             StateHasChanged();
         });
 
-        hubConnection.On<string, string>(ServerToClient.SEND_MESSAGE, (user, message) =>
+        hubConnection.On(ServerToClient.RECEIVE_JOIN, (UserModel user) =>
         {
-            var encodedMsg = $"{user}: {message}";
-            messages.Add(encodedMsg);
+            joined = true;
+            User = user;
+            StateHasChanged();
+            hubConnection.SendAsync(ClientToServer.GET_USERS);
+        });
+
+        hubConnection.On(ServerToClient.RECEIVE_OTHER_USER_JOIN, (UserModel user) =>
+        {
+            Users.Add(user);
             StateHasChanged();
         });
 
-        hubConnection.On<List<UserModel>>(ServerToClient.GET_USERS, (usersFromServer) =>
-        {
-            users = usersFromServer;
-            StateHasChanged();
-        });
-
-        hubConnection.On<List<CardModel>>(ServerToClient.DEAL_CARDS, (cards) =>
-        {
-            myCards = new List<CardModel>();
-
-            foreach (var card in cards)
-            {
-                myCards.Add(card);
-            }
-
-            StateHasChanged();
-        });
-
-        hubConnection.On<UserModel>(ServerToClient.LEAVE_SERVER, (user) =>
+        hubConnection.On<UserModel>(ServerToClient.RECEIVE_OTHER_USER_LEAVE, (user) =>
         {
             hubConnection.SendAsync(ClientToServer.GET_USERS);
-            var encodedMsg = $"{user.Name} left server.";
-            messages.Add(encodedMsg);
-            StateHasChanged();
+        //var encodedMsg = $"{user.Name} left server.";
+        //messages.Add(encodedMsg);
+        StateHasChanged();
         });
 
-        hubConnection.On<UserModel, UserModel>(ServerToClient.START_GAME, (_leftUser, _rigtUser) =>
-        {
-            leftUser = _leftUser;
-            rightUser = _rigtUser;
-
-            GameStarted = true;
-            StateHasChanged();
-        });
 
         await hubConnection.StartAsync();
-        await hubConnection.SendAsync(ClientToServer.GET_USERS);
-    }
-
-    void Join()
-    {
-        if (users.Count < 3)
-        {
-            thisUser = new UserModel(userName);
-            hubConnection.SendAsync(ClientToServer.JOIN_SERVER, thisUser);
-            joined = true;
-        }
-    }
-
-    async Task Send()
-    {
-        await hubConnection.SendAsync(ClientToServer.SEND_MESSAGE, thisUser.Name, messageInput);
-    }
-
-    void StartGame()
-    {
-        if (users.Count == 3)
-        {
-            hubConnection.SendAsync(ClientToServer.START_GAME);
-        }
-    }
-
-    void DealCards()
-    {
-        Console.WriteLine("Client: DealCards");
-        hubConnection.SendAsync(ClientToServer.DEAL_CARDS);
     }
 }
