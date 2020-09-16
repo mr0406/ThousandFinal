@@ -1,0 +1,61 @@
+﻿<div style="border: dotted">
+    <hr />
+    <div>Users: </div>
+    <ul id="usersList">
+        @foreach (var user in Users)
+        {
+            <li>@user.Name</li>
+        }
+    </ul>
+
+    <hr />
+
+    <div>Messages: </div>
+
+    <div style="height: 300px; width: 300px; border: 1px dashed gray;" class="overflow-auto">
+        @foreach (var message in messages)
+        {
+            <div>@message</div>
+        }
+    </div>
+
+    <hr />
+
+    <div class="form-group">
+        <label>
+            Message:
+            <input @bind="messageInput" size="40" />
+        </label>
+    </div>
+    <button @onclick="Send">Send</button>
+
+</div>
+
+@code {
+    [CascadingParameter] public HubConnection hubConnection { get; set; }
+
+    [Parameter] public UserModel User { get; set; }
+    [Parameter] public List<UserModel> Users { get; set; }
+
+    public List<string> messages = new List<string>();
+    public string messageInput;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection.On<string, string>(ServerToClient.RECEIVE_MESSAGE, (string userName, string message) =>
+        {
+            messages.Add($"{userName} - {message}");
+            StateHasChanged();
+        });
+    }
+
+    async Task Send()
+    {
+        if(!String.IsNullOrWhiteSpace(messageInput))
+        {
+            await hubConnection.SendAsync(ClientToServer.SEND_MESSAGE, User.Name, messageInput);
+            messageInput = "";
+        }
+    }
+
+}
