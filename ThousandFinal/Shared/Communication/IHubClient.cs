@@ -8,12 +8,18 @@ namespace ThousandFinal.Shared.Communication
 {
     public interface IHubClient
     {
-        Task ReceiveJoinServer(UserModel user);
-        Task ReceiveGameStarted(UserModel leftUser, UserModel rightUser);
+        Task ReceiveJoin(UserModel user);
+        Task ReceiveCanNotJoin(string exceptionInfo);
+        Task ReceiveOtherUserJoin(UserModel user);
 
-        Task ReceiveMessage(string user, string message);
-        Task ReceiveLeaveServer(UserModel user);
         Task ReceiveUsers(List<UserModel> users);
+        Task ReceiveMessage(string userName, string message);
+
+        Task ReceiveLeaveServer(UserModel user);
+
+
+       
+        Task ReceiveGameStarted(UserModel leftUser, UserModel rightUser);
 
         Task ReceiveDealCards(List<CardModel> cards);
     }

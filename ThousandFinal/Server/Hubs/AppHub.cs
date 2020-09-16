@@ -7,8 +7,6 @@ using ThousandFinal.Server.Services;
 using ThousandFinal.Shared.Communication;
 using ThousandFinal.Shared.Models;
 
-using System.Text.Json;
-
 namespace ThousandFinal.Server.Hubs
 {
     public class AppHub : Hub<IHubClient>, IHubServer
@@ -25,13 +23,6 @@ namespace ThousandFinal.Server.Hubs
             _cardService = cardService;
         }
 
-        public async Task JoinServer(UserModel user)
-        {
-            string id = Context.ConnectionId;
-            activeUsers.Add(id, user);
-            await Clients.All.ReceiveJoinServer(user);
-        }
-
         public async Task StartGame()
         {
             for(int i = 0; i < 3; i++)
@@ -45,9 +36,9 @@ namespace ThousandFinal.Server.Hubs
             }
         }
 
-        public async Task SendMessage(string user, string message)
+        public async Task SendMessage(string userName, string message)
         {
-            await Clients.All.ReceiveMessage(user, message);
+            await Clients.All.ReceiveMessage(userName, message);
         }
 
         public async Task LeaveServer(UserModel user)
@@ -83,6 +74,25 @@ namespace ThousandFinal.Server.Hubs
             await base.OnDisconnectedAsync(exception);
             Console.WriteLine(exception);
             //Stop a game
+        }
+
+        public async Task TryJoinServer(UserModel user)
+        {
+            string exceptionInfo;
+
+            if (activeUsers.Count() < 3)
+            {
+                string id = Context.ConnectionId;
+                activeUsers.Add(id, user);
+
+                await Clients.Caller.ReceiveJoin(user);
+                await Clients.Others.ReceiveOtherUserJoin(user);
+            }
+            else
+            {
+                exceptionInfo = "There are already 3 players";
+                await Clients.Caller.ReceiveCanNotJoin(exceptionInfo);
+            }
         }
     }
 }

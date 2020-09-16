@@ -8,11 +8,14 @@ namespace ThousandFinal.Shared.Communication
 {
     public interface IHubServer
     {
-        Task JoinServer(UserModel user);
+        Task TryJoinServer(UserModel user);
 
+        Task GetUsers();
         Task SendMessage(string user, string message);
         Task LeaveServer(UserModel user); //nie dziala
-        Task GetUsers();
+
+
+
 
         Task StartGame();
         Task DealCards();
@@ -20,7 +23,5 @@ namespace ThousandFinal.Shared.Communication
         //Task StartRound();
         //Task PlayCard();
         //Task GiveCard();
-
-        
     }
 }
