@@ -1,0 +1,9 @@
+﻿<p>@UserName</p>
+<p>@numberOfCards cards</p>
+
+@code {
+    [CascadingParameter] public HubConnection hubConnection { get; set; }
+    //[CascadingParameter] public GameComponent GameComponent { get; set; }
+    [Parameter] public string UserName { get; set; }
+    [Parameter] public int numberOfCards { get; set; }
+}

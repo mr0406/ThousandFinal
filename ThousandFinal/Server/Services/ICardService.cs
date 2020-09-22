@@ -10,6 +10,8 @@ namespace ThousandFinal.Server.Services
     {
         void CreateCards();
         List<CardModel> ShuffleCards();
-        List<CardModel> DistributeCards(List<string> playerNames);
+        void DistributeCards(List<UserModel> players);
+
+        void GiveAdditionalCardsToAuctionWinner(List<CardModel> cards, List<UserModel> players, int auctionWinnerIndex);
     }
 }

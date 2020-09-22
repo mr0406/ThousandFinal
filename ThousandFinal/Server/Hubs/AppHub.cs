@@ -11,64 +11,38 @@ namespace ThousandFinal.Server.Hubs
 {
     public class AppHub : Hub<IHubClient>, IHubServer
     {
-        private ICardService _cardService;
+        IGameService gameService;
 
-        private static Dictionary<string, UserModel> activeUsers = new Dictionary<string, UserModel>();
+        private static Dictionary<string, UserModel> users = new Dictionary<string, UserModel>();
         private static List<CardModel> cards = new List<CardModel>();
 
-        private static Suit mandatorySuit { get; set; }
-
-        public AppHub(ICardService cardService)
+        public AppHub(IGameService GameService)
         {
-            _cardService = cardService;
+            gameService = GameService;
         }
 
-        public async Task StartGame()
+        public async Task SendMessage(MessageModel message)
         {
-            for(int i = 0; i < 3; i++)
-            {
-                var leftIndex = (i + 1) % 3;
-                var rightIndex = (i + 2) % 3;
-
-                var leftPlayer = activeUsers.ElementAt(leftIndex).Value;
-                var rightPlayer = activeUsers.ElementAt(rightIndex).Value;
-                await Clients.Client(activeUsers.ElementAt(i).Key).ReceiveGameStarted(leftPlayer, rightPlayer);
-            }
-        }
-
-        public async Task SendMessage(string userName, string message)
-        {
-            await Clients.All.ReceiveMessage(userName, message);
+            await Clients.All.ReceiveMessage(message);
         }
 
         public async Task LeaveServer(UserModel user)
         {
             string id = Context.ConnectionId;
-            activeUsers.Remove(id);
+            users.Remove(id);
             await Clients.Others.ReceiveLeaveServer(user);
         }
 
         public async Task GetUsers()
         {
-            await Clients.Caller.ReceiveUsers(activeUsers.Values.ToList());
-        }
-
-        public async Task DealCards()
-        {
-            List<string> playerNames = activeUsers.Values.Take(3).Select(x => x.Name).ToList();
-
-            cards = _cardService.DistributeCards(playerNames);
-            foreach(var user in activeUsers)
-            {
-                List<CardModel> cardsForUser = cards.Where(x => x.OwnerName == user.Value.Name).ToList();
-                await Clients.Client(user.Key).ReceiveDealCards(cardsForUser);
-            }
+            await Clients.Caller.ReceiveUsers(users.Values.ToList());
+            //await Clients.All.ReceiveUsers(activeUsers.Values.ToList());
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             string id = Context.ConnectionId;
-            activeUsers.TryGetValue(id, out UserModel user);
+            users.TryGetValue(id, out UserModel user);
 
             await LeaveServer(user);
             await base.OnDisconnectedAsync(exception);
@@ -80,10 +54,10 @@ namespace ThousandFinal.Server.Hubs
         {
             string exceptionInfo;
 
-            if (activeUsers.Count() < 3)
+            if (users.Count() < 3)
             {
                 string id = Context.ConnectionId;
-                activeUsers.Add(id, user);
+                users.Add(id, user);
 
                 await Clients.Caller.ReceiveJoin(user);
                 await Clients.Others.ReceiveOtherUserJoin(user);
@@ -94,5 +68,93 @@ namespace ThousandFinal.Server.Hubs
                 await Clients.Caller.ReceiveCanNotJoin(exceptionInfo);
             }
         }
+
+        public async Task UserReadyChange()
+        {
+            string id = Context.ConnectionId;
+            users[id].IsReady = !users[id].IsReady;
+
+            await GetUsers();
+
+            string readyText = (users[id].IsReady == true) ? "is ready" : "is not ready";
+            MessageModel message = new MessageModel($"{users[id].Name} {readyText}", true);
+            await SendMessage(message);
+        }
+
+
+        public async Task TryStartGame()
+        {
+            if(users.Values.Where(x => x.IsReady == true).Count() != 3)
+            {
+                string id = Context.ConnectionId;
+                string text = $"there are only {users.Count()} players ready, we need 3 to start";
+                MessageModel message = new MessageModel($"{users[id].Name} tried to start, but {text}", true);
+                await SendMessage(message);
+                return;
+            }
+
+            await StartGame();
+        }
+
+        public async Task StartGame()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                var leftIndex = (i + 1) % 3;
+                var rightIndex = (i + 2) % 3;
+
+                var leftPlayer = users.ElementAt(leftIndex).Value;
+                var rightPlayer = users.ElementAt(rightIndex).Value;
+                //await Clients.Client(users.ElementAt(i).Key).ReceiveGameStarted(leftPlayer, rightPlayer);
+            }
+
+           // await StartRound();
+        }
+
+        //NEW
+
+        public void Bet(int points)
+        {
+            string id = Context.ConnectionId;
+            UserModel player = users[id];
+            gameService.Bet(player, points);
+        }
+
+        public void GiveUpAuction()
+        {
+            string id = Context.ConnectionId;
+            UserModel player = users[id];
+            gameService.GiveUpAuction(player);
+        }
+
+        public void GiveCardToPlayer(CardModel card, string playerWhoGetName)
+        {
+            string id = Context.ConnectionId;
+            UserModel playerWhoGive = users[id];
+            UserModel playerWhoGet = users.Values.SingleOrDefault(x => x.Name == playerWhoGetName);
+            gameService.GiveCardToPlayer(card, playerWhoGive, playerWhoGet);
+        }
+
+        public void RaisePointsToAchieve(int points)
+        {
+            string id = Context.ConnectionId;
+            UserModel player = users[id];
+            gameService.RaisePointsToAchieve(player, points);
+        }
+
+        public void DontRaisePointsToAchieve()
+        {
+            string id = Context.ConnectionId;
+            UserModel player = users[id];
+            gameService.DontRaisePointsToAchieve(player);
+        }
+
+        public void PlayCard(CardModel card)
+        {
+            string id = Context.ConnectionId;
+            UserModel player = users[id];
+            gameService.PlayCard(card, player);
+        }
+
     }
 }

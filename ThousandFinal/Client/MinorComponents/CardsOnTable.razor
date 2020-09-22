@@ -1,0 +1,21 @@
+﻿<div ondragover="event.preventDefault();"
+     ondragstart="event.dataTransfer.setData('', event.target.id);"
+     @ondrop="HandleDrop">
+    <div style="border: groove">
+        @foreach(var card in Cards)
+        {
+            <Card CardModel="card"></Card>
+        }
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] public Game Game { get; set; }
+    [Parameter] public List<CardModel> Cards { get; set; }
+
+    private async Task HandleDrop()
+    {
+        Console.WriteLine("Drop");
+        await Game.PlayCard();
+    }
+}

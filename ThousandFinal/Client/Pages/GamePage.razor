@@ -6,16 +6,16 @@
     <div style="border: dotted">
         @if (!joined)
         {
-            <LoginComponent></LoginComponent>
+            <Login></Login>
         }
         else
         {
             <div class="row">
                 <div class="col-9">
-                    <GameComponent @ref="GameComponent" User="User" Users="Users"></GameComponent>
+                    <Game User="User" Users="Users"></Game>
                 </div>
                 <div class="col-3">
-                    <ChatComponent User="User" Users="Users"></ChatComponent>
+                    <Chat User="User" Users="Users"></Chat>
                 </div>
             </div>
         }
@@ -24,7 +24,7 @@
 
 
 @code {
-    GameComponent GameComponent;
+    Game Game;
 
     public HubConnection hubConnection;
     public bool IsConnected => hubConnection.State == HubConnectionState.Connected;

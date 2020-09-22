@@ -7,10 +7,13 @@ namespace ThousandFinal.Shared.Models
     public class UserModel
     {
         public string Name { get; set; }
-        public bool IsActive { get; set; }
-        public int Points { get; set; }
-        public int PointsInCurrentRound { get; set; }
-        public int PointsToAchieve { get; set; }
+        public bool IsReady { get; set; } = false;
+
+        public bool GiveUpAuction { get; set; } = false;
+
+        public int Points { get; set; } = 0;
+        public int PointsInCurrentRound { get; set; } = 0;
+        public int PointsToAchieve { get; set; } = 0;
 
         public UserModel()
         {
@@ -20,10 +23,6 @@ namespace ThousandFinal.Shared.Models
         public UserModel(string name)
         {
             Name = name;
-            IsActive = false;
-            Points = 0;
-            PointsInCurrentRound = 0;
-            PointsToAchieve = 0;
         }
     }
 }

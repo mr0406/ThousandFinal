@@ -4,13 +4,11 @@
         <input @bind="userName" />
     </label>
 </div>
-<button @onclick="TryJoin" disabled="@(!IsConnected)">Join</button>
+<button @onclick="TryJoin">Join</button>
 <div style="color: red">@errorType</div>
 
 @code {
     [CascadingParameter] HubConnection hubConnection { get; set; }
-
-    public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
 
     public string userName;
     public string errorType;

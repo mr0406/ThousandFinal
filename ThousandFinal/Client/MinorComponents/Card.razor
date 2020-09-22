@@ -1,0 +1,38 @@
+﻿<div class="tousandCard p-2 m-1" draggable="true" @ondragstart="@(() => HandleDragStart(CardModel))">
+    <div style="align-self: flex-start; ">
+        <div style="color: @cardTextColor()">@CardModel.Rank</div>
+            <img src=@getImgLink(CardModel) style="display: block; margin: auto; width: 24px" />
+        </div>
+        <img src=@getImgLink(CardModel) style="display: block; margin: auto; width:64px" />
+        <div style="align-self: flex-end">
+            <img src=@getImgLink(CardModel) style=" display: block; margin: auto; width: 24px; transform: rotate(180deg)" />
+        <div style="transform: rotate(180deg); color: @cardTextColor()">@CardModel.Rank</div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] Game Game { get; set; }
+    [Parameter] public CardModel CardModel { get; set; }
+
+
+    public bool exposed { get; set; } = true;
+
+    private string getImgLink(CardModel CardModel)
+    {
+        return "/images/" + CardModel.Suit.ToString().ToLower() + ".ico";
+    }
+
+    private string cardTextColor()
+    {
+        if (CardModel.Suit == Suit.Clubs || CardModel.Suit == Suit.Spades)
+            return "#000000";
+        else
+            return "#D42929";
+    }
+
+    private void HandleDragStart(CardModel draggedCard)
+    {
+        Console.WriteLine("DragStart");
+        Game.PayloadCard = draggedCard;
+    }
+}

@@ -6,6 +6,7 @@ namespace ThousandFinal.Shared.Communication
 {
     public class ServerToClient
     {
+        //Administration and Chat
         public const string RECEIVE_JOIN = "ReceiveJoin";
         public const string RECEIVE_CAN_NOT_JOIN = "ReceiveCanNotJoin";
         public const string RECEIVE_OTHER_USER_JOIN = "ReceiveOtherUserJoin";
@@ -15,9 +16,13 @@ namespace ThousandFinal.Shared.Communication
         public const string RECEIVE_OTHER_USER_LEAVE = "ReceiveLeaveServer";
 
 
+        //MethodsForPlay
+        public const string RECEIVE_GAME_STARTED = "ReceiveGameStarted";
 
-        public const string START_GAME = "ReceiveGameStarted";
-
-        public const string DEAL_CARDS = "ReceiveDealCards";
+        public const string RECEIVE_REFRESH_PLAYERS = "ReceiveRefreshPlayers";
+        public const string RECEIVE_REFRESH_BOARD = "ReceiveRefreshBoard";
+        public const string RECEIVE_REFRESH_CARDS_TO_TAKE = "ReceiveRefreshCardsToTake";
+        public const string RECEIVE_REFRESH_PLAYERS_CARDS_NUMBER = "ReceiveRefreshPlayersCardsNumber";
+        public const string RECEIVE_REFRESH_MANDATORY = "ReceiveRefreshMandatory";
     }
 }

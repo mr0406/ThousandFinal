@@ -1,0 +1,137 @@
+﻿<CascadingValue Value="this">
+    <div style="border: dotted; min-height: 90vh; width: inherit;
+                    justify-content: center; display: flex; align-items: center">
+        @if (!GameStarted)
+        {
+            <p>Are you ready? </p>
+            <input type="checkbox" @value="@User.IsReady" @onchange="() => CheckBoxClick()" disabled="@checkBoxDisabled" />
+
+            <button @onclick="TryStartGame">Start</button>
+        }
+        else
+        {
+            <div id="resultTable" style="border: dotted; width: 20%; height: 100px; display: block; position: absolute;
+                                    margin-left: auto; margin-right: auto; top: 10px">
+                @foreach (var user in Users)
+                {
+                    <div>@user.Name : @user.Points pkt</div>
+                }
+            </div>
+
+            <div style="border: solid; width: 95%; height: 250px">
+                <div style="border: dotted; width: 10%; height: 200px; margin-left: 10px; display: inline-block; position: relative">
+                    <OtherPlayerHand User="leftUserName" numberOfCards="leftUserNumberOfCards"></OtherPlayerHand>
+                </div>
+
+                <div style="border: dotted; width: 40%; height: 200px; display: inline-block; position: relative; margin-left: 200px; margin-bottom: 10px">
+                    <CardsOnTable Cards="cardsOnTable"></CardsOnTable>
+                </div>
+
+                <div style="border: dotted; width: 10%; height: 200px; margin-left: 200px; display: inline-block; position: relative">
+                    <OtherPlayerHand User="rightUserName" numberOfCards="rightUserNumberOfCards"></OtherPlayerHand>
+                </div>
+            </div>
+
+            <div style="border: dotted; width: 70%; height: 200px; position: absolute; right:25%; left: 50%; bottom : 10px; margin-left: -35%">
+                <PlayersHand Cards="myCards"></PlayersHand>
+            </div>
+        }
+    </div>
+</CascadingValue>
+
+@code {
+    [CascadingParameter] public HubConnection hubConnection { get; set; }
+
+    [Parameter] public UserModel User { get; set; }
+    [Parameter] public List<UserModel> Users { get; set; }
+
+    public string leftUserName;
+    public int leftUserNumberOfCards;
+    public string rightUserName;
+    public int rightUserNumberOfCards;
+
+    private List<CardModel> myCards = new List<CardModel>();
+    private List<CardModel> cardsOnTable = new List<CardModel>();
+    private bool thereAreCardsToTake; //FIX
+    private List<CardModel> cardsToTake = new List<CardModel>(); //FIX
+
+    private Suit mandatorySuit;
+
+    public bool GameStarted = false;
+
+    public CardModel PayloadCard { get; set; }
+
+    public bool checkBoxDisabled { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection.On<string, string>(ServerToClient.RECEIVE_GAME_STARTED, (LeftUserName, RigtUserName) =>
+        {
+            leftUserName = LeftUserName;
+            rightUserName = RigtUserName;
+
+            GameStarted = true;
+            StateHasChanged();
+        });
+
+        hubConnection.On<List<UserModel>>(ServerToClient.RECEIVE_REFRESH_PLAYERS, (players) =>
+        {
+            Users = players;
+            StateHasChanged();
+        });
+
+        hubConnection.On<List<CardModel>, List<CardModel>>(ServerToClient.RECEIVE_REFRESH_BOARD, (handCards, tableCards) =>
+        {
+            myCards = handCards;
+            cardsOnTable = tableCards;
+            StateHasChanged();
+        });
+
+        hubConnection.On<bool, List<CardModel>>(ServerToClient.RECEIVE_REFRESH_CARDS_TO_TAKE , (cardsToTakeExists, newCardsToTake) =>
+        {
+            //1. Where cardsToTake exists and cards are null <- there are unknown, show 3 reverses
+            //2. Where cardsToTake exists and cards arent null <- there are known, show 3 cards
+            //3. Where cardsToTake dont exists <- dont show anything
+
+            thereAreCardsToTake = cardsToTakeExists;
+            cardsToTake = newCardsToTake;
+        });
+
+
+        hubConnection.On<Dictionary<string, int>>(ServerToClient.RECEIVE_REFRESH_PLAYERS_CARDS_NUMBER, (dictionary) =>
+        {
+            dictionary.TryGetValue(leftUserName, out leftUserNumberOfCards);
+            dictionary.TryGetValue(rightUserName, out rightUserNumberOfCards);
+            StateHasChanged();
+        });
+
+        hubConnection.On<Suit>(ServerToClient.RECEIVE_REFRESH_MANDATORY, (newMandatory) =>
+        {
+            mandatorySuit = newMandatory;
+            StateHasChanged();
+        });
+
+
+    }
+
+    void TryStartGame() => hubConnection.SendAsync(ClientToServer.TRY_START_GAME);
+
+    public async Task PlayCard()
+    {
+        if(PayloadCard != null)
+        {
+            //await hubConnection.SendAsync(ClientToServer.PLAY_CARD, PayloadCard);
+            //PayloadCard = null;
+        }
+    }
+
+    public async Task CheckBoxClick()
+    {
+        //checkBoxDisabled = true;
+        await hubConnection.SendAsync(ClientToServer.USER_READY_CHANGE);
+        //System.Threading.Thread.Sleep(3000);
+        //checkBoxDisabled = false;
+    }
+
+
+}

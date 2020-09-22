@@ -1,0 +1,8 @@
+﻿@foreach(var card in Cards)
+{
+    <Card CardModel="card"></Card>
+}
+
+@code {
+    [Parameter] public List<CardModel> Cards { get; set; }
+}

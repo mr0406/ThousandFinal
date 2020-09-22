@@ -8,10 +8,13 @@ namespace ThousandFinal.Server.Services
 {
     public class CardService : ICardService
     {
+        private IGameService gameService; 
+
         private List<CardModel> _cardsInOrder;
 
-        public CardService()
+        public CardService(GameService GameService)
         {
+            gameService = GameService;
             CreateCards();
         }
 
@@ -34,7 +37,7 @@ namespace ThousandFinal.Server.Services
             return shuffledCards;
         }
 
-        public List<CardModel> DistributeCards(List<string> playerNames)
+        public void DistributeCards(List<UserModel> players)
         {
             List<CardModel> shuffledCards = ShuffleCards();
 
@@ -42,15 +45,15 @@ namespace ThousandFinal.Server.Services
             while (i < 24)
             {
                 shuffledCards[i].Status = Status.InHand;
-                shuffledCards[i].OwnerName = playerNames[0];
+                shuffledCards[i].OwnerName = players[0].Name;
                 i++;
 
                 shuffledCards[i].Status = Status.InHand;
-                shuffledCards[i].OwnerName = playerNames[1];
+                shuffledCards[i].OwnerName = players[1].Name;
                 i++;
 
                 shuffledCards[i].Status = Status.InHand;
-                shuffledCards[i].OwnerName = playerNames[2];
+                shuffledCards[i].OwnerName = players[2].Name;
                 i++;
 
                 if (i == 6 || i == 13 || i == 20)
@@ -60,7 +63,15 @@ namespace ThousandFinal.Server.Services
                 }
             }
 
-            return shuffledCards;
+            gameService.RefreshCards(shuffledCards);
+        }
+
+        public void GiveAdditionalCardsToAuctionWinner(List<CardModel> cards, List<UserModel> players, int auctionWinnerIndex)
+        {
+            cards.Where(x => x.Status == Status.ToTake).ToList()
+                 .ForEach(x => { x.Status = Status.InHand; x.OwnerName = players[auctionWinnerIndex].Name; });
+
+            gameService.RefreshCards(cards);
         }
     }
 }

@@ -1,0 +1,11 @@
+﻿<h3>Current mandatory: </h3>
+<img src=@getImgLink(currentMandatory) style="display: block; margin: auto; width: 24px" />
+
+@code {
+    [Parameter] public Suit currentMandatory { get; set; }
+
+    private string getImgLink(Suit suitOfMandatory)
+    {
+        return "/images/" + suitOfMandatory.ToString().ToLower() + ".ico";
+    }
+}

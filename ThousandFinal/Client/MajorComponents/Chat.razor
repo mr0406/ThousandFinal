@@ -4,7 +4,7 @@
     <ul id="usersList">
         @foreach (var user in Users)
         {
-            <li>@user.Name</li>
+            <li>@user.Name, isReady: @user.IsReady</li>
         }
     </ul>
 
@@ -15,7 +15,18 @@
     <div style="height: 300px; width: 300px; border: 1px dashed gray;" class="overflow-auto">
         @foreach (var message in messages)
         {
-            <div>@message</div>
+            if (message.GeneratedFromServer)
+            {
+                <div style="background-color: gray">@message.Text</div>
+            }
+            else if (message.AuthorName == User.Name)
+            {
+                <div style="text-align: right">@message.Text</div>
+            }
+            else
+            {
+                <div>@message.AuthorName: @message.Text</div>
+            }
         }
     </div>
 
@@ -37,14 +48,14 @@
     [Parameter] public UserModel User { get; set; }
     [Parameter] public List<UserModel> Users { get; set; }
 
-    public List<string> messages = new List<string>();
+    public List<MessageModel> messages = new List<MessageModel>();
     public string messageInput;
 
     protected override async Task OnInitializedAsync()
     {
-        hubConnection.On<string, string>(ServerToClient.RECEIVE_MESSAGE, (string userName, string message) =>
+        hubConnection.On<MessageModel>(ServerToClient.RECEIVE_MESSAGE, (MessageModel message) =>
         {
-            messages.Add($"{userName} - {message}");
+            messages.Add(message);
             StateHasChanged();
         });
     }
@@ -53,7 +64,8 @@
     {
         if(!String.IsNullOrWhiteSpace(messageInput))
         {
-            await hubConnection.SendAsync(ClientToServer.SEND_MESSAGE, User.Name, messageInput);
+            MessageModel message = new MessageModel(messageInput, User);
+            await hubConnection.SendAsync(ClientToServer.SEND_MESSAGE, message);
             messageInput = "";
         }
     }

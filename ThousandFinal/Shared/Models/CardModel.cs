@@ -40,7 +40,8 @@ namespace ThousandFinal.Shared.Models
         Hearts,
         Diamonds,
         Clubs,
-        Spades
+        Spades,
+        None //For checking mandatory
     }
 
     public enum Status
@@ -48,7 +49,7 @@ namespace ThousandFinal.Shared.Models
         InDeck,
         InHand,
         ToTake,
-        Active,
+        OnTable,
         Won
     }
 }

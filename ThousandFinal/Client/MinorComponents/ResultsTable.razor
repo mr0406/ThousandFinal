@@ -1,0 +1,8 @@
+﻿@foreach(var player in Players)
+{
+    <h3>@player.Name, @player.Points points</h3>
+}
+
+@code {
+    [Parameter] public List<UserModel> Players { get; set; }
+}
