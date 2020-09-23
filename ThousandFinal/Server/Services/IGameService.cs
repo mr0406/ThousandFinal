@@ -9,7 +9,7 @@ namespace ThousandFinal.Server.Services
     public interface IGameService
     {
         //Game Circle Methods
-        void StartGame(List<UserModel> users);
+        void StartGame(Dictionary<string, UserModel> Users, List<UserModel> Players);
             void StartRound();
                 void StartAuctionPhase();
                 void EndAuctionPhase();
@@ -38,10 +38,13 @@ namespace ThousandFinal.Server.Services
             void PlayCard(CardModel card, UserModel playerWhoPlay);
 
         //Set Methods
-        public void SetAuctionWinner(int AuctionWinner);
+        void SetAuctionWinner(int AuctionWinner);
 
         //Refresh Methods
         void RefreshCards(List<CardModel> refreshedCards);
         void RefreshPlayers(List<UserModel> refreshedPlayers);
+
+        //SendMessage
+        void SendMessage(MessageModel message);
     }
 }

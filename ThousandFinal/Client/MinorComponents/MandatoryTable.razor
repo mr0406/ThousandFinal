@@ -1,5 +1,8 @@
 ﻿<h3>Current mandatory: </h3>
-<img src=@getImgLink(currentMandatory) style="display: block; margin: auto; width: 24px" />
+@if (currentMandatory != Suit.None)
+{
+    <img src=@getImgLink(currentMandatory) style="display: block; margin: auto; width: 24px" />
+}
 
 @code {
     [Parameter] public Suit currentMandatory { get; set; }

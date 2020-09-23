@@ -24,5 +24,9 @@ namespace ThousandFinal.Shared.Communication
         public const string RECEIVE_REFRESH_CARDS_TO_TAKE = "ReceiveRefreshCardsToTake";
         public const string RECEIVE_REFRESH_PLAYERS_CARDS_NUMBER = "ReceiveRefreshPlayersCardsNumber";
         public const string RECEIVE_REFRESH_MANDATORY = "ReceiveRefreshMandatory";
+
+        //Methods outside hub
+
+        public const string RECEIVE_REFRESH = "ReceiveRefresh";
     }
 }

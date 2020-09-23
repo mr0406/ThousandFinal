@@ -20,7 +20,7 @@
 
             <div style="border: solid; width: 95%; height: 250px">
                 <div style="border: dotted; width: 10%; height: 200px; margin-left: 10px; display: inline-block; position: relative">
-                    <OtherPlayerHand User="leftUserName" numberOfCards="leftUserNumberOfCards"></OtherPlayerHand>
+                    <OtherPlayerHand UserName="leftUserName" numberOfCards="leftUserNumberOfCards"></OtherPlayerHand>
                 </div>
 
                 <div style="border: dotted; width: 40%; height: 200px; display: inline-block; position: relative; margin-left: 200px; margin-bottom: 10px">
@@ -28,7 +28,7 @@
                 </div>
 
                 <div style="border: dotted; width: 10%; height: 200px; margin-left: 200px; display: inline-block; position: relative">
-                    <OtherPlayerHand User="rightUserName" numberOfCards="rightUserNumberOfCards"></OtherPlayerHand>
+                    <OtherPlayerHand UserName="rightUserName" numberOfCards="rightUserNumberOfCards"></OtherPlayerHand>
                 </div>
             </div>
 
@@ -108,6 +108,25 @@
         hubConnection.On<Suit>(ServerToClient.RECEIVE_REFRESH_MANDATORY, (newMandatory) =>
         {
             mandatorySuit = newMandatory;
+            StateHasChanged();
+        });
+
+
+        hubConnection.On<RefreshPackage>(ServerToClient.RECEIVE_REFRESH, (package) =>
+        {
+            Users = package.players;
+
+            leftUserName = package.leftPlayerName;
+            leftUserNumberOfCards = package.leftPlayerCardsNumber;
+            rightUserName = package.rightPlayerName;
+            rightUserNumberOfCards = package.rightPlayerCardsNumber;
+
+            cardsOnTable = package.cardsOnTable;
+            mandatorySuit = package.currentMandatory;
+
+            thereAreCardsToTake = package.cardsToTakeExists;
+            cardsToTake = package.cardsToTake;
+
             StateHasChanged();
         });
 

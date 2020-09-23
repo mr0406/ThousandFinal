@@ -12,6 +12,7 @@ namespace ThousandFinal.Shared.Models
 
         public MessageModel()
         {
+
         }
 
         public MessageModel(string text, UserModel author)

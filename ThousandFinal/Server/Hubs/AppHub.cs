@@ -23,7 +23,7 @@ namespace ThousandFinal.Server.Hubs
 
         public async Task SendMessage(MessageModel message)
         {
-            await Clients.All.ReceiveMessage(message);
+           await Clients.All.ReceiveMessage(message);
         }
 
         public async Task LeaveServer(UserModel user)
@@ -105,29 +105,29 @@ namespace ThousandFinal.Server.Hubs
 
                 var leftPlayer = users.ElementAt(leftIndex).Value;
                 var rightPlayer = users.ElementAt(rightIndex).Value;
-                //await Clients.Client(users.ElementAt(i).Key).ReceiveGameStarted(leftPlayer, rightPlayer);
+                await Clients.Client(users.ElementAt(i).Key).ReceiveGameStarted(leftPlayer.Name, rightPlayer.Name);
             }
 
-           // await StartRound();
+            gameService.StartGame(users, users.Values.ToList());
         }
 
-        //NEW
+        //user actions
 
-        public void Bet(int points)
+        public async Task Bet(int points)
         {
             string id = Context.ConnectionId;
             UserModel player = users[id];
             gameService.Bet(player, points);
         }
 
-        public void GiveUpAuction()
+        public async Task GiveUpAuction()
         {
             string id = Context.ConnectionId;
             UserModel player = users[id];
             gameService.GiveUpAuction(player);
         }
 
-        public void GiveCardToPlayer(CardModel card, string playerWhoGetName)
+        public async Task GiveCardToPlayer(CardModel card, string playerWhoGetName)
         {
             string id = Context.ConnectionId;
             UserModel playerWhoGive = users[id];
@@ -135,21 +135,21 @@ namespace ThousandFinal.Server.Hubs
             gameService.GiveCardToPlayer(card, playerWhoGive, playerWhoGet);
         }
 
-        public void RaisePointsToAchieve(int points)
+        public async Task RaisePointsToAchieve(int points)
         {
             string id = Context.ConnectionId;
             UserModel player = users[id];
             gameService.RaisePointsToAchieve(player, points);
         }
 
-        public void DontRaisePointsToAchieve()
+        public async Task DontRaisePointsToAchieve()
         {
             string id = Context.ConnectionId;
             UserModel player = users[id];
             gameService.DontRaisePointsToAchieve(player);
         }
 
-        public void PlayCard(CardModel card)
+        public async Task PlayCard(CardModel card)
         {
             string id = Context.ConnectionId;
             UserModel player = users[id];

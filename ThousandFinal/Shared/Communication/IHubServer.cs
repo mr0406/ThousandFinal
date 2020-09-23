@@ -20,11 +20,11 @@ namespace ThousandFinal.Shared.Communication
         Task TryStartGame();
 
         //Play
-        void Bet(int points);
-        void GiveUpAuction();
-        void GiveCardToPlayer(CardModel card, string playerWhoGetName);
-        void RaisePointsToAchieve(int points);
-        void DontRaisePointsToAchieve();
-        void PlayCard(CardModel card);
+        Task Bet(int points);
+        Task GiveUpAuction();
+        Task GiveCardToPlayer(CardModel card, string playerWhoGetName);
+        Task RaisePointsToAchieve(int points);
+        Task DontRaisePointsToAchieve();
+        Task PlayCard(CardModel card);
     }
 }
