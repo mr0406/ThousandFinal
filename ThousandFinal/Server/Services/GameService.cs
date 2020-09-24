@@ -34,8 +34,8 @@ namespace ThousandFinal.Server.Services
 
         private Phase roundPhase;
         private IAuctionPhase auctionPhase;
-        private IRaisingPointsToAchievePhase raisingPointsToAchievePhase;
         private IGivingCardsPhase givingCardsPhase;
+        private IRaisingPointsToAchievePhase raisingPointsToAchievePhase;
         private IPlayingPhase playingPhase;
 
         public GameService(IHubContext<AppHub> HubContext)
