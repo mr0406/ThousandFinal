@@ -241,9 +241,9 @@ namespace ThousandFinal.Server.Services
                 int rightUserNumberOfCards = cards.Where(x => x.Status == Status.InHand)
                                                  .Where(x => x.OwnerName == playerPosition[i].rightUserName).Count();
 
-                refreshPackages.Add(new RefreshPackage(players[i].Name, playerCards, playerPosition[i].leftUserName, 
+                refreshPackages.Add(new RefreshPackage(players, players[i].Name, playerCards, playerPosition[i].leftUserName, 
                                                        leftUserNumberOfCards, playerPosition[i].rightUserName, rightUserNumberOfCards,
-                                                        cardsOnTable, MandatorySuit, cardsToTakeExists, cardsToTake));
+                                                       cardsOnTable, MandatorySuit, cardsToTakeExists, cardsToTake));
             }
             
             foreach (var user in users)
@@ -262,6 +262,16 @@ namespace ThousandFinal.Server.Services
                 //NICE!!!
                 hubContext.Clients.Client(user.Key).SendAsync(ServerToClient.RECEIVE_MESSAGE, new MessageModel(user.Value.Name, true));
             }
+        }
+
+        public void RefreshCards(List<CardModel> refreshedCards)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RefreshPlayers(List<UserModel> refreshedPlayers)
+        {
+            throw new NotImplementedException();
         }
     }
 }
