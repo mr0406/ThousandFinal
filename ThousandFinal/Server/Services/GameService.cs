@@ -327,6 +327,12 @@ namespace ThousandFinal.Server.Services
             cards.Where(x => x.Status == Status.OnTable).ToList()
                  .ForEach(x => { x.Status = Status.Won; x.OwnerName = players[fightWinner].Name; });
             //pointsinroundRefresh
+
+            foreach(var card in cards.Where(x => x.Status == Status.OnTable))
+            {
+                Console.WriteLine($"{card.Rank}, {card.Suit} - {card.OwnerName}");
+            }
+
         }
 
         public async Task PlayCard(CardModel card, UserModel player)
@@ -413,6 +419,9 @@ namespace ThousandFinal.Server.Services
 
         public bool CanPlaySameSuit(UserModel playerWhoPlay)
         {
+            if (bestCard == null)
+                return false;
+
             List<CardModel> playerCards = cards.Where(x => x.Status == Status.InHand && x.OwnerName == playerWhoPlay.Name).ToList();
             foreach (var checkedCard in playerCards)
             {
@@ -540,7 +549,11 @@ namespace ThousandFinal.Server.Services
             for (int i = 0; i < 3; i++)
             {
                 List<CardModel> playerCards = cards.Where(x => x.Status == Status.InHand)
-                                                   .Where(x => x.OwnerName == players[i].Name).ToList();
+                                                   .Where(x => x.OwnerName == players[i].Name)
+                                                   .ToList();
+
+                playerCards = playerCards.OrderBy(x => x.Suit).ThenByDescending(x => x.Rank).ToList();
+
 
                 int leftUserNumberOfCards = cards.Where(x => x.Status == Status.InHand)
                                                  .Where(x => x.OwnerName == playerPosition[i].leftUserName).Count();
@@ -557,7 +570,7 @@ namespace ThousandFinal.Server.Services
                 RefreshPackage playerRefreshPackage = refreshPackages.SingleOrDefault(x => x.userName == user.Value.Name);
                 await hubContext.Clients.Client(user.Key).SendAsync(ServerToClient.RECEIVE_REFRESH, playerRefreshPackage);
                 //WritePackageInfo(playerRefreshPackage);
-                //WriteWonCards();
+                WriteWonCards();
             }
         }
 

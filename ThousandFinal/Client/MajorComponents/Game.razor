@@ -10,17 +10,15 @@
         }
         else
         {
-            <div>@User.Name</div>
-            <MandatoryTable currentMandatory="mandatorySuit"></MandatoryTable>
-            <div id="resultTable" style="border: dotted; width: 20%; height: 100px; display: block; position: absolute;
-                                    margin-left: auto; margin-right: auto; top: 10px">
-                @if (Users != null)
-                {
-                    @foreach (var user in Users)
-                    {
-                        <div>@user.Name : @user.Points pkt</div>
-                    }
-                }
+            <div id="mandatory" style="border: dotted; width: 20%; height: 100px; display: block; position: absolute;
+                                    margin-left: -200px;  top: 10px">
+                <div>Name:@User.Name</div>
+                <MandatoryTable currentMandatory="mandatorySuit"></MandatoryTable>
+            </div>
+            <div id="resultTable" style="border: dotted; width: 30%; height: 100px; display: block; position: absolute;
+                                    margin-left: 600px; top: 10px">
+  
+                <ResultsTable Players="@Users"></ResultsTable>
             </div>
 
             <div style="color: green">
@@ -177,6 +175,11 @@
     public async Task PlayCard()
     {
         //Client side validation
+        if (PayloadCard.Status != Status.InHand)
+        {
+            Console.WriteLine("The card must be in hand");
+            return;
+        }
         if(Users[activePlayerIndex].Name != User.Name)
         {
             Console.WriteLine("Not your turn");
@@ -186,6 +189,7 @@
         if(PayloadCard != null)
         {
             await hubConnection.SendAsync(ClientToServer.PLAY_CARD, PayloadCard);
+            Console.WriteLine("Card should be played");
             PayloadCard = null;
         }
     }
@@ -193,6 +197,11 @@
     public async Task GiveCard(string playerWhoGetName)
     {
         //Client side validation
+        if (PayloadCard.Status != Status.InHand)
+        {
+            Console.WriteLine("The card must be in hand");
+            return;
+        }
         if(Users[activePlayerIndex].Name != User.Name)
         {
             Console.WriteLine("Not your turn");
@@ -201,7 +210,7 @@
 
         if(PayloadCard != null)
         {
-            await hubConnection.SendAsync(ClientToServer.GIVE_CARD_TO_PLAYER, PayloadCard, playerWhoGetName); 
+            await hubConnection.SendAsync(ClientToServer.GIVE_CARD_TO_PLAYER, PayloadCard, playerWhoGetName);
             Console.WriteLine("Card should be given");
             PayloadCard = null;
         }

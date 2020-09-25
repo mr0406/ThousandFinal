@@ -30,8 +30,8 @@ namespace ThousandFinal.Shared.Models
         Nine,
         Jack,
         Queen,
-        Ten,
         King,
+        Ten,
         Ace
     }
 
