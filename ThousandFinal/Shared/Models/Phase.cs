@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace ThousandFinal.Server.StaticClasses
+namespace ThousandFinal.Shared.Models
 {
     public enum Phase
     {

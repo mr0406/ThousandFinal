@@ -24,6 +24,8 @@ namespace ThousandFinal.Shared.Models
 
         public int indexOfActivePlayer {get; set;}
 
+        public Phase phase { get; set; }
+
         public RefreshPackage()
         {
 
@@ -31,7 +33,8 @@ namespace ThousandFinal.Shared.Models
 
         public RefreshPackage(List<UserModel> players, string userName, List<CardModel> userCards, 
             string leftPlayerName, int leftPlayerCardsNumber, string rightPlayerName, int rightPlayerCardsNumber, 
-            List<CardModel> cardsOnTable, Suit currentMandatory, bool cardsToTakeExists, List<CardModel> cardsToTake, int indexOfActivePlayer)
+            List<CardModel> cardsOnTable, Suit currentMandatory, bool cardsToTakeExists, List<CardModel> cardsToTake, 
+            int indexOfActivePlayer, Phase phase)
         {
             this.players = players;
             this.userName = userName;
@@ -45,6 +48,7 @@ namespace ThousandFinal.Shared.Models
             this.cardsToTakeExists = cardsToTakeExists;
             this.cardsToTake = cardsToTake;
             this.indexOfActivePlayer = indexOfActivePlayer;
+            this.phase = phase;
         }
     }
 }

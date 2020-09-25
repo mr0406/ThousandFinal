@@ -12,7 +12,7 @@
         {
             <div id="resultTable" style="border: dotted; width: 20%; height: 100px; display: block; position: absolute;
                                     margin-left: auto; margin-right: auto; top: 10px">
-                @if(Users != null)
+                @if (Users != null)
                 {
                     @foreach (var user in Users)
                     {
@@ -22,7 +22,7 @@
             </div>
 
             <div style="color: green">
-                @if(AmIActive())
+                @if (AmIActive())
                 {
                     <p>I AM ACTIVE</p>
                 }
@@ -42,9 +42,12 @@
                 </div>
             </div>
 
-            <div>
-                <button @onclick="GiveUpAuction">GiveUpAuction</button>
-            </div>
+            @if (phase == Phase.Auction)
+            {
+                <div>
+                    <button @onclick="GiveUpAuction">GiveUpAuction</button>
+                </div>
+            }
 
             <div style="border: dotted; width: 70%; height: 200px; position: absolute; right:25%; left: 50%; bottom : 10px; margin-left: -35%">
                 <PlayersHand Cards="myCards"></PlayersHand>
@@ -58,8 +61,6 @@
 
     [Parameter] public UserModel User { get; set; }
     [Parameter] public List<UserModel> Users { get; set; }
-
-
 
     public string leftUserName;
     public int leftUserNumberOfCards;
@@ -80,6 +81,8 @@
     public CardModel PayloadCard { get; set; }
 
     public bool checkBoxDisabled { get; set; } = false;
+
+    public Phase phase { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -145,6 +148,7 @@
             thereAreCardsToTake = package.cardsToTakeExists;
             cardsToTake = package.cardsToTake;
             activePlayerIndex = package.indexOfActivePlayer;
+            phase = package.phase;
             StateHasChanged();
         });
 
@@ -152,10 +156,27 @@
     }
 
     void TryStartGame() => hubConnection.SendAsync(ClientToServer.TRY_START_GAME);
-    void GiveUpAuction() => hubConnection.SendAsync(ClientToServer.GIVE_UP_AUCTION);
+    void GiveUpAuction()
+    {
+        //Client side validation
+        if(Users[activePlayerIndex].Name != User.Name)
+        {
+            Console.WriteLine("Not your turn");
+            return;
+        }
+
+        hubConnection.SendAsync(ClientToServer.GIVE_UP_AUCTION);
+    }
 
     public async Task PlayCard()
     {
+        //Client side validation
+        if(Users[activePlayerIndex].Name != User.Name)
+        {
+            Console.WriteLine("Not your turn");
+            return;
+        }
+
         if(PayloadCard != null)
         {
             //await hubConnection.SendAsync(ClientToServer.PLAY_CARD, PayloadCard);

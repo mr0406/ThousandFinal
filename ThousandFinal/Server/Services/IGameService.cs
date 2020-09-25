@@ -50,6 +50,6 @@ namespace ThousandFinal.Server.Services
         Task ActivePlayerChange(int indexOfActivePlayer);
 
         //USER REFRESH
-        Task Refresh(List<CardModel> RefreshedCards, List<UserModel> RefreshedPlayers, Suit MandatorySuit, bool showCardsOnTable);
+        Task Refresh();
     }
 }
