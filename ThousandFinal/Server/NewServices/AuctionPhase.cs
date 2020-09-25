@@ -56,7 +56,8 @@ namespace ThousandFinal.Server.NewServices
             currentPlayerIndex = TurnSystem.GetNextPlayerNumber(Phase.Auction, players, currentPlayerIndex);
 
             //Refresh on GameService
-            gameService.RefreshPlayers(players);
+            gameService.ActivePlayerChange(currentPlayerIndex);
+            //gameService.RefreshPlayers(players);
 
             if (highestBet == 300)
             {
@@ -77,13 +78,15 @@ namespace ThousandFinal.Server.NewServices
 
             currentPlayerIndex = TurnSystem.GetNextPlayerNumber(Phase.Auction, players, currentPlayerIndex);
 
-            gameService.RefreshPlayers(players);
-
+            //gameService.RefreshPlayers(players);
+            gameService.SendMessage(new MessageModel($"{player.Name} give up auction", true));
+            gameService.ActivePlayerChange(currentPlayerIndex);
             numberOfGiveUps++;
             if(numberOfGiveUps > 1)
             {
                 gameService.SetAuctionWinner(highestBetOwner);
                 gameService.EndAuctionPhase();
+                gameService.SendMessage(new MessageModel($"Next phase, after auction phase", true));
             }
         }
     }

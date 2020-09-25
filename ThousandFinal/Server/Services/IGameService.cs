@@ -9,42 +9,47 @@ namespace ThousandFinal.Server.Services
     public interface IGameService
     {
         //Game Circle Methods
-        void StartGame(Dictionary<string, UserModel> Users, List<UserModel> Players);
-            void StartRound();
-                void StartAuctionPhase();
-                void EndAuctionPhase();
-                void StartGivingCardsPhase();
-                void EndGivingCardsPhase();
-                void StartRaisingPointsToAchievePhase();
-                void EndRaisingPointsToAchievePhasePhase();
-                void StartPlayingPhase();
-                void EndPlayingPhase();
-            void EndRound();
-        void OnWin(string userName);
+        Task StartGame(Dictionary<string, UserModel> Users, List<UserModel> Players);
+        Task StartRound();
+        Task StartAuctionPhase();
+        Task EndAuctionPhase();
+        Task StartGivingCardsPhase();
+        Task EndGivingCardsPhase();
+        Task StartRaisingPointsToAchievePhase();
+        Task EndRaisingPointsToAchievePhasePhase();
+        Task StartPlayingPhase();
+        Task EndPlayingPhase();
+        Task EndRound();
+        Task OnWin(string userName);
 
         //Players Actions
-            //Auction Phase
-            void Bet(UserModel player, int pointsBet);
-            void GiveUpAuction(UserModel player);
+        //Auction Phase
+        Task Bet(UserModel player, int pointsBet);
+        Task GiveUpAuction(UserModel player);
 
-            //GivingCards Phase
-            void GiveCardToPlayer(CardModel card, UserModel PlayerWhoGive, UserModel PlayerWhoGet);
+        //GivingCards Phase
+        Task GiveCardToPlayer(CardModel card, UserModel PlayerWhoGive, UserModel PlayerWhoGet);
 
-            //RaisingPointsToAchieve Phase
-            void RaisePointsToAchieve(UserModel player, int points);
-            void DontRaisePointsToAchieve(UserModel player);
+        //RaisingPointsToAchieve Phase
+        Task RaisePointsToAchieve(UserModel player, int points);
+        Task DontRaisePointsToAchieve(UserModel player);
 
-            //Playing Phase
-            void PlayCard(CardModel card, UserModel playerWhoPlay);
+        //Playing Phase
+        Task PlayCard(CardModel card, UserModel playerWhoPlay);
 
         //Set Methods
-        void SetAuctionWinner(int AuctionWinner);
+        Task SetAuctionWinner(int AuctionWinner);
 
-        //Refresh Methods
-        void RefreshCards(List<CardModel> refreshedCards);
-        void RefreshPlayers(List<UserModel> refreshedPlayers);
+        //Refresh Method
+        //Local
+        Task RefreshCards(List<CardModel> cards);
 
         //SendMessage
-        void SendMessage(MessageModel message);
+        Task SendMessage(MessageModel message);
+
+        Task ActivePlayerChange(int indexOfActivePlayer);
+
+        //USER REFRESH
+        Task Refresh(List<CardModel> RefreshedCards, List<UserModel> RefreshedPlayers, Suit MandatorySuit, bool showCardsOnTable);
     }
 }

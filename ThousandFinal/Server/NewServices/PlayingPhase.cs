@@ -45,7 +45,7 @@ namespace ThousandFinal.Server.NewServices
         {
             gameService.EndPlayingPhase();
 
-            gameService.RefreshPlayers(players);
+            //gameService.RefreshPlayers(players);
             if(fightNumber < 7) //maybe wrong
             {
                 StartFight();
@@ -53,7 +53,7 @@ namespace ThousandFinal.Server.NewServices
             else
             {
                 AddPointsAfterRound();
-                gameService.RefreshPlayers(players);
+                //gameService.RefreshPlayers(players);
                 gameService.EndPlayingPhase();
             }
         }
@@ -83,7 +83,7 @@ namespace ThousandFinal.Server.NewServices
 
                 int cardIndex = Helper.GetCardIndex(cards, card);
                 cards[cardIndex].Status = Status.OnTable;
-                gameService.RefreshCards(cards);
+                //gameService.RefreshCards(cards);
 
                 numberOfCardsOnTable++;
                 currentPlayerIndex = TurnSystem.GetNextPlayerNumber(Phase.Playing, players, currentPlayerIndex);

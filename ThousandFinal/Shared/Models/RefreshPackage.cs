@@ -6,7 +6,7 @@ namespace ThousandFinal.Shared.Models
 {
     public class RefreshPackage
     {
-        public List<UserModel> players;
+        public List<UserModel> players { get; set; }
         public string userName { get; set; }
         public List<CardModel> userCards { get; set; }
 
@@ -22,6 +22,8 @@ namespace ThousandFinal.Shared.Models
         public bool cardsToTakeExists { get; set; }
         public List<CardModel> cardsToTake { get; set; }
 
+        public int indexOfActivePlayer {get; set;}
+
         public RefreshPackage()
         {
 
@@ -29,7 +31,7 @@ namespace ThousandFinal.Shared.Models
 
         public RefreshPackage(List<UserModel> players, string userName, List<CardModel> userCards, 
             string leftPlayerName, int leftPlayerCardsNumber, string rightPlayerName, int rightPlayerCardsNumber, 
-            List<CardModel> cardsOnTable, Suit currentMandatory, bool cardsToTakeExists, List<CardModel> cardsToTake)
+            List<CardModel> cardsOnTable, Suit currentMandatory, bool cardsToTakeExists, List<CardModel> cardsToTake, int indexOfActivePlayer)
         {
             this.players = players;
             this.userName = userName;
@@ -42,6 +44,7 @@ namespace ThousandFinal.Shared.Models
             this.currentMandatory = currentMandatory;
             this.cardsToTakeExists = cardsToTakeExists;
             this.cardsToTake = cardsToTake;
+            this.indexOfActivePlayer = indexOfActivePlayer;
         }
     }
 }

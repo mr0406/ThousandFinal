@@ -55,7 +55,7 @@ namespace ThousandFinal.Server.NewServices
             numberOfCardsGiven++;
             int cardIndex = Helper.GetCardIndex(cards, card);
             cards[cardIndex].OwnerName = PlayerWhoGet.Name;
-            gameService.RefreshCards(cards);
+            //gameService.RefreshCards(cards);
 
             if (numberOfCardsGiven > 1)
             {

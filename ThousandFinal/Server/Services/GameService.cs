@@ -27,6 +27,12 @@ namespace ThousandFinal.Server.Services
         private int firstPlayerInAuctionPhase = 0;
         private int auctionWinner = 0;
 
+        private Suit mandatorySuit = Suit.None;
+
+        private int indexOfActivePlayer = 0;
+
+        private bool showCardsOnTable = false;
+
         //those inrefaces are based on phase of round
         //when phase is other than interfacePhase, the interface is null //not null for truth
         //interfaces are creating when phase is changing
@@ -45,54 +51,57 @@ namespace ThousandFinal.Server.Services
         }
 
 
-        public void StartGame(Dictionary<string, UserModel> Users, List<UserModel> Players)
+        public async Task StartGame(Dictionary<string, UserModel> Users, List<UserModel> Players)
         {
             users = Users;
             players = Players;
-            StartRound();
+            Console.WriteLine($"playersNum : {players.Count()}");
+            await StartRound();
         }
 
-        public void StartRound()
+        public async Task StartRound()
         {
             roundNumber++;
             //Deal Cards
             _cardService.DistributeCards(players);
             obligatedPlayer = TurnSystem.ChooseNextObligatedPlayerIndex(obligatedPlayer);
-            SendMessage(new MessageModel("cud2", true));
-            StartAuctionPhase();
+            await SendMessage(new MessageModel("cud2", true));
+            await StartAuctionPhase();
         }
 
-        public void StartAuctionPhase()
+        public async Task StartAuctionPhase()
         {
             roundPhase = Phase.Auction;
             firstPlayerInAuctionPhase = TurnSystem.GetNextPlayerNumber(roundPhase, players, obligatedPlayer);
             auctionPhase = new AuctionPhase(this, players, firstPlayerInAuctionPhase, obligatedPlayer);
+
+            await Refresh();
         }
 
-        public void EndAuctionPhase()
+        public async Task EndAuctionPhase()
         {
             _cardService.GiveAdditionalCardsToAuctionWinner(cards, players, auctionWinner);
             StartGivingCardsPhase();
         }
 
-        public void StartGivingCardsPhase()
+        public async Task StartGivingCardsPhase()
         {
             roundPhase = Phase.GivingAdditionalCards;
             givingCardsPhase = new GivingCardsPhase(this, players, cards, auctionWinner);
         }
 
-        public void EndGivingCardsPhase()
+        public async Task EndGivingCardsPhase()
         {
             StartRaisingPointsToAchievePhase();
         }
 
-        public void StartRaisingPointsToAchievePhase()
+        public async Task StartRaisingPointsToAchievePhase()
         {
             roundPhase = Phase.RaisingPointsToAchieve;
             raisingPointsToAchievePhase = new RaisingPointsToAchievePhase(this, players, auctionWinner);
         }
 
-        public void EndRaisingPointsToAchievePhasePhase()
+        public async Task EndRaisingPointsToAchievePhasePhase()
         {
             StartPlayingPhase();
         }
@@ -103,12 +112,12 @@ namespace ThousandFinal.Server.Services
             playingPhase = new PlayingPhase(this, players, cards, auctionWinner);
         }
 
-        public void EndPlayingPhase()
+        public async Task EndPlayingPhase()
         {
             EndRound();
         }
 
-        public void EndRound()
+        public async Task EndRound()
         {
             //Check is winner
             bool isWinner = false; // zrobic
@@ -122,12 +131,12 @@ namespace ThousandFinal.Server.Services
             }
         }
 
-        public void OnWin(string userName)
+        public async Task OnWin(string userName)
         {
             throw new NotImplementedException();
         }
 
-        public void Bet(UserModel player, int pointsBet)
+        public async Task Bet(UserModel player, int pointsBet)
         {
             if(roundPhase != Phase.Auction)
             {
@@ -139,7 +148,7 @@ namespace ThousandFinal.Server.Services
             auctionPhase.Bet(player, pointsBet);
         }
 
-        public void GiveUpAuction(UserModel player)
+        public async Task GiveUpAuction(UserModel player)
         {
             if (roundPhase != Phase.Auction)
             {
@@ -149,9 +158,10 @@ namespace ThousandFinal.Server.Services
             }
 
             auctionPhase.GiveUpAuction(player);
+            await Refresh();
         }
 
-        public void GiveCardToPlayer(CardModel card, UserModel PlayerWhoGive, UserModel PlayerWhoGet)
+        public async Task GiveCardToPlayer(CardModel card, UserModel PlayerWhoGive, UserModel PlayerWhoGet)
         {
             if (roundPhase != Phase.GivingAdditionalCards)
             {
@@ -163,7 +173,7 @@ namespace ThousandFinal.Server.Services
             givingCardsPhase.GiveCardToPlayer(card, PlayerWhoGet, PlayerWhoGive);
         }
 
-        public void RaisePointsToAchieve(UserModel player, int points)
+        public async Task RaisePointsToAchieve(UserModel player, int points)
         {
             if (roundPhase != Phase.RaisingPointsToAchieve)
             {
@@ -175,7 +185,7 @@ namespace ThousandFinal.Server.Services
             raisingPointsToAchievePhase.RaisePointsToAchieve(player, points);
         }
 
-        public void DontRaisePointsToAchieve(UserModel player)
+        public async Task DontRaisePointsToAchieve(UserModel player)
         {
             if (roundPhase != Phase.RaisingPointsToAchieve)
             {
@@ -187,7 +197,7 @@ namespace ThousandFinal.Server.Services
             raisingPointsToAchievePhase.DontRaisePointsToAchieve(player);
         }
 
-        public void PlayCard(CardModel card, UserModel playerWhoPlay)
+        public async Task PlayCard(CardModel card, UserModel playerWhoPlay)
         {
             if (roundPhase != Phase.Playing)
             {
@@ -204,17 +214,18 @@ namespace ThousandFinal.Server.Services
 
 
 
-        public void SetAuctionWinner(int AuctionWinner)
+        public async Task SetAuctionWinner(int AuctionWinner)
         {
             auctionWinner = AuctionWinner;
         }
 
-        public void Refresh(List<CardModel> RefreshedCards, List<UserModel> RefreshedPlayers, Suit MandatorySuit, bool showCardsOnTable)
+        public async Task RefreshCards(List<CardModel> Cards)
         {
-            //PLAYERS
-            players = RefreshedPlayers;
-            //CARDS 
-            cards = RefreshedCards;
+            cards = Cards;
+        }
+
+        public async Task Refresh()
+        {
             //CARDS ON TABLE
             List<CardModel> cardsOnTable = cards.Where(x => x.Status == Status.OnTable).ToList();
             //CARDS TO TAKE
@@ -243,33 +254,65 @@ namespace ThousandFinal.Server.Services
 
                 refreshPackages.Add(new RefreshPackage(players, players[i].Name, playerCards, playerPosition[i].leftUserName, 
                                                        leftUserNumberOfCards, playerPosition[i].rightUserName, rightUserNumberOfCards,
-                                                       cardsOnTable, MandatorySuit, cardsToTakeExists, cardsToTake));
+                                                       cardsOnTable, mandatorySuit, cardsToTakeExists, cardsToTake, indexOfActivePlayer));
             }
             
             foreach (var user in users)
             {
                 RefreshPackage playerRefreshPackage = refreshPackages.SingleOrDefault(x => x.userName == user.Value.Name);
-                hubContext.Clients.Client(user.Key).SendAsync(ServerToClient.RECEIVE_REFRESH, playerRefreshPackage);
+                WritePackageInfo(playerRefreshPackage);
+                await hubContext.Clients.Client(user.Key).SendAsync(ServerToClient.RECEIVE_REFRESH, playerRefreshPackage);
             }
         }
 
         //ForTest
-        public void SendMessage(MessageModel message)
+        public async Task SendMessage(MessageModel message)
         {
-            hubContext.Clients.All.SendAsync(ServerToClient.RECEIVE_MESSAGE, message);
+            await hubContext.Clients.All.SendAsync(ServerToClient.RECEIVE_MESSAGE, message);
             foreach(var user in users)
             {
                 //NICE!!!
-                hubContext.Clients.Client(user.Key).SendAsync(ServerToClient.RECEIVE_MESSAGE, new MessageModel(user.Value.Name, true));
+                await hubContext.Clients.Client(user.Key).SendAsync(ServerToClient.RECEIVE_MESSAGE, new MessageModel(user.Value.Name, true));
             }
         }
 
-        public void RefreshCards(List<CardModel> refreshedCards)
+        public async Task ActivePlayerChange(int indexOfActivePlayer)
         {
+            this.indexOfActivePlayer = indexOfActivePlayer;
+        }
+
+        Task IGameService.StartPlayingPhase()
+        {
+            Console.WriteLine("ERRRORORORRR");
             throw new NotImplementedException();
         }
 
-        public void RefreshPlayers(List<UserModel> refreshedPlayers)
+        public void WritePackageInfo(RefreshPackage package)
+        {
+            Console.WriteLine("PACKAGE");
+            Console.WriteLine("Players: ");
+            foreach (var player in package.players)
+            {
+                Console.WriteLine(player.Name);
+            }
+            Console.WriteLine("--------------------");
+
+            Console.WriteLine("Cards: ");
+            foreach (var card in package.userCards)
+            {
+                Console.WriteLine($"{card.Rank}, {card.Suit}");
+            }
+            Console.WriteLine("--------------------");
+
+            Console.WriteLine("Other players: ");
+            Console.WriteLine($"{package.leftPlayerName} : {package.leftPlayerCardsNumber}");
+            Console.WriteLine($"{package.rightPlayerName} : {package.rightPlayerCardsNumber}");
+            Console.WriteLine("--------------------");
+            Console.WriteLine("--------------------");
+            Console.WriteLine("--------------------");
+        }
+
+        public Task Refresh(List<CardModel> RefreshedCards, List<UserModel> RefreshedPlayers, Suit MandatorySuit, bool showCardsOnTable)
         {
             throw new NotImplementedException();
         }

@@ -61,7 +61,7 @@ namespace ThousandFinal.Server.NewServices
             }
 
             players[currentPlayerIndex].PointsToAchieve = points;
-            gameService.RefreshPlayers(players);
+            //gameService.RefreshPlayers(players);
             gameService.EndRaisingPointsToAchievePhasePhase();
         }
     }

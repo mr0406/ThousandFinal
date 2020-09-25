@@ -12,9 +12,19 @@
         {
             <div id="resultTable" style="border: dotted; width: 20%; height: 100px; display: block; position: absolute;
                                     margin-left: auto; margin-right: auto; top: 10px">
-                @foreach (var user in Users)
+                @if(Users != null)
                 {
-                    <div>@user.Name : @user.Points pkt</div>
+                    @foreach (var user in Users)
+                    {
+                        <div>@user.Name : @user.Points pkt</div>
+                    }
+                }
+            </div>
+
+            <div style="color: green">
+                @if(AmIActive())
+                {
+                    <p>I AM ACTIVE</p>
                 }
             </div>
 
@@ -32,6 +42,10 @@
                 </div>
             </div>
 
+            <div>
+                <button @onclick="GiveUpAuction">GiveUpAuction</button>
+            </div>
+
             <div style="border: dotted; width: 70%; height: 200px; position: absolute; right:25%; left: 50%; bottom : 10px; margin-left: -35%">
                 <PlayersHand Cards="myCards"></PlayersHand>
             </div>
@@ -45,6 +59,8 @@
     [Parameter] public UserModel User { get; set; }
     [Parameter] public List<UserModel> Users { get; set; }
 
+
+
     public string leftUserName;
     public int leftUserNumberOfCards;
     public string rightUserName;
@@ -54,6 +70,8 @@
     private List<CardModel> cardsOnTable = new List<CardModel>();
     private bool thereAreCardsToTake; //FIX
     private List<CardModel> cardsToTake = new List<CardModel>(); //FIX
+
+    private int activePlayerIndex;
 
     private Suit mandatorySuit;
 
@@ -114,19 +132,19 @@
 
         hubConnection.On<RefreshPackage>(ServerToClient.RECEIVE_REFRESH, (package) =>
         {
-            Users = package.players;
+            WritePackageInfo(package);
 
+            //Users = package.players; //NULL - fix this
+            myCards = package.userCards;
             leftUserName = package.leftPlayerName;
             leftUserNumberOfCards = package.leftPlayerCardsNumber;
             rightUserName = package.rightPlayerName;
             rightUserNumberOfCards = package.rightPlayerCardsNumber;
-
             cardsOnTable = package.cardsOnTable;
             mandatorySuit = package.currentMandatory;
-
             thereAreCardsToTake = package.cardsToTakeExists;
             cardsToTake = package.cardsToTake;
-
+            activePlayerIndex = package.indexOfActivePlayer;
             StateHasChanged();
         });
 
@@ -134,6 +152,7 @@
     }
 
     void TryStartGame() => hubConnection.SendAsync(ClientToServer.TRY_START_GAME);
+    void GiveUpAuction() => hubConnection.SendAsync(ClientToServer.GIVE_UP_AUCTION);
 
     public async Task PlayCard()
     {
@@ -150,6 +169,38 @@
         await hubConnection.SendAsync(ClientToServer.USER_READY_CHANGE);
         //System.Threading.Thread.Sleep(3000);
         //checkBoxDisabled = false;
+    }
+
+    public void WritePackageInfo(RefreshPackage package)
+    {
+        Console.WriteLine("PACKAGE");
+        foreach (var player in package.players)
+        {
+            Console.WriteLine(player.Name);
+        }
+        Console.WriteLine("--------------------");
+
+        Console.WriteLine("Cards: ");
+        foreach (var card in package.userCards)
+        {
+            Console.WriteLine($"{card.Rank}, {card.Suit}");
+        }
+        Console.WriteLine("--------------------");
+
+        Console.WriteLine("Other players: ");
+        Console.WriteLine($"{package.leftPlayerName} : {package.leftPlayerCardsNumber}");
+        Console.WriteLine($"{package.rightPlayerName} : {package.rightPlayerCardsNumber}");
+        Console.WriteLine("--------------------");
+        Console.WriteLine("--------------------");
+        Console.WriteLine("--------------------");
+    }
+
+    public bool AmIActive()
+    {
+        if (Users[activePlayerIndex].Name == User.Name)
+            return true;
+
+        return false;
     }
 
 
