@@ -30,9 +30,9 @@
                 }
             </div>
 
-            <div style="border: solid; width: 95%; height: 250px">
+            <div style="border: solid; width: 55%; height: 250px">
                 <div style="border: dotted; width: 10%; height: 200px; margin-left: 10px; display: inline-block; position: relative">
-                    <OtherPlayerHand UserName="leftUserName" numberOfCards="leftUserNumberOfCards"></OtherPlayerHand>
+                    <OtherPlayerHand UserName="@leftUserName" numberOfCards="leftUserNumberOfCards"></OtherPlayerHand>
                 </div>
 
                 <div style="border: dotted; width: 40%; height: 200px; display: inline-block; position: relative; margin-left: 200px; margin-bottom: 10px">
@@ -40,7 +40,7 @@
                 </div>
 
                 <div style="border: dotted; width: 10%; height: 200px; margin-left: 200px; display: inline-block; position: relative">
-                    <OtherPlayerHand UserName="rightUserName" numberOfCards="rightUserNumberOfCards"></OtherPlayerHand>
+                    <OtherPlayerHand UserName="@rightUserName" numberOfCards="rightUserNumberOfCards"></OtherPlayerHand>
                 </div>
             </div>
 
@@ -145,7 +145,7 @@
         {
             WritePackageInfo(package);
 
-            Users = package.players; 
+            Users = package.players;
             myCards = package.userCards;
             leftUserName = package.leftPlayerName;
             leftUserNumberOfCards = package.leftPlayerCardsNumber;
@@ -186,7 +186,23 @@
         if(PayloadCard != null)
         {
             await hubConnection.SendAsync(ClientToServer.PLAY_CARD, PayloadCard);
-            Console.WriteLine("Card should be playerd");
+            PayloadCard = null;
+        }
+    }
+
+    public async Task GiveCard(string playerWhoGetName)
+    {
+        //Client side validation
+        if(Users[activePlayerIndex].Name != User.Name)
+        {
+            Console.WriteLine("Not your turn");
+            return;
+        }
+
+        if(PayloadCard != null)
+        {
+            await hubConnection.SendAsync(ClientToServer.GIVE_CARD_TO_PLAYER, PayloadCard, playerWhoGetName); 
+            Console.WriteLine("Card should be given");
             PayloadCard = null;
         }
     }

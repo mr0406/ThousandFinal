@@ -85,10 +85,10 @@ namespace ThousandFinal.Server.Services
         {
             _cardService.GiveAdditionalCardsToAuctionWinner(cards, players, auctionWinner);
             activePlayer = highestBetOwner;
-            //StartGivingCardsPhase(); //<- should be this
+            await StartGivingCardsPhase(); //<- should be this
 
-            pointsToAchieve = highestBet; //for now only
-            await StartPlayingPhase(); //for now only
+            //pointsToAchieve = highestBet; //for now only
+            //await StartPlayingPhase(); //for now only
 
         }
 
@@ -110,6 +110,7 @@ namespace ThousandFinal.Server.Services
         {
             //RaisingPointsToAchievePhaseSet
             roundPhase = Phase.RaisingPointsToAchieve;
+            await Refresh();
         }
 
         public async Task EndRaisingPointsToAchievePhasePhase()
@@ -139,7 +140,8 @@ namespace ThousandFinal.Server.Services
             bool isWinner = false; // zrobic
             if(isWinner)
             {
-                // zrobic
+                await hubContext.Clients.All.SendAsync(ServerToClient.RECEIVE_MESSAGE, new MessageModel("someone won", true));
+                //await OnWin();
             }
             else
             {
@@ -222,35 +224,31 @@ namespace ThousandFinal.Server.Services
         #endregion
 
         #region GivingCardsPhase
-        public async Task GiveCardToPlayer(CardModel card, UserModel PlayerWhoGive, UserModel PlayerWhoGet)
+        public async Task GiveCardToPlayer(CardModel card, UserModel PlayerWhoGive, string PlayerWhoGetName)
         {
-            int playerWhoGiveIndex = Helper.GetPlayerIndex(players, PlayerWhoGive.Name);
-
             //Validation
-            if (roundPhase != Phase.GivingAdditionalCards)
+            if (roundPhase != Phase.GivingAdditionalCards) //Move to client side
             {
                 Console.WriteLine("Wrong phase");
                 //Error
                 return;
             }
 
-            int numberOfCardsOfGettingPlayer = Helper.GetNumberOfPlayerCards(cards, PlayerWhoGet.Name);
-            if (numberOfCardsOfGettingPlayer > 7)
-            {
-                Console.WriteLine("Getting player has to many cards");
-                return;
-            }
+            Console.WriteLine($"Given card: {card.Rank}, {card.Suit}");
+            Console.WriteLine($"New owner: {PlayerWhoGetName}");
 
             numberOfCardsGiven++;
             int cardIndex = Helper.GetCardIndex(cards, card);
-            cards[cardIndex].OwnerName = PlayerWhoGet.Name;
+            cards[cardIndex].OwnerName = PlayerWhoGetName;
 
             if (numberOfCardsGiven > 1)
             {
-                //do it
+                Console.WriteLine("End of givingCardsPhase");
+                await EndGivingCardsPhase();
             }
             else
             {
+                Console.WriteLine("Card given");
                 await Refresh();
             }
         }
@@ -371,15 +369,56 @@ namespace ThousandFinal.Server.Services
 
         public bool CanPlayCard(CardModel card, UserModel playerWhoPlay)
         {
-            if (IsCardTheBest(card))
+            /* 
+             * 1. if you can play new best card                             <- PLAY BETTER CARD
+             * 2. if you cant play better card, you can play same suit      <- PLAY SAME SUIT
+             * 3. if you cant play better card, you cant play same suit, 
+             *      you can play mandatory suit                             <- PLAY MANDATORY SUIT
+             * 4. if you cant play new best card, you cant play same suit, 
+             * you cant play mandatory suit                                 <- YOU CAN PLAY ANY CARD
+             */
+
+            //1
+            if (IsNewBestCard(card)) 
             {
                 bestCard = card;
                 return true;
             }
-
-            if (!CanPlayNewBestCard(playerWhoPlay))
+            //2
+            if(!CanPlayNewBestCard(playerWhoPlay) && card.Suit == bestCard.Suit) 
+                return true;
+            //3
+            if (!CanPlayNewBestCard(playerWhoPlay) && !CanPlaySameSuit(playerWhoPlay) && card.Suit == mandatorySuit) 
+                return true;
+            //4
+            if (!CanPlayNewBestCard(playerWhoPlay) && !CanPlaySameSuit(playerWhoPlay) && !CanPlayMandatorySuit(playerWhoPlay))
                 return true;
 
+            return false;
+        }
+
+        public bool CanPlayMandatorySuit(UserModel playerWhoPlay)
+        {
+            if (mandatorySuit == Suit.None)
+                return false;
+
+            List<CardModel> playerCards = cards.Where(x => x.Status == Status.InHand && x.OwnerName == playerWhoPlay.Name).ToList();
+            foreach (var checkedCard in playerCards)
+            {
+                if (checkedCard.Suit == mandatorySuit)
+                    return true;
+            }
+            return false;
+        }
+
+        public bool CanPlaySameSuit(UserModel playerWhoPlay)
+        {
+            List<CardModel> playerCards = cards.Where(x => x.Status == Status.InHand && x.OwnerName == playerWhoPlay.Name).ToList();
+            foreach (var checkedCard in playerCards)
+            {
+                if (checkedCard.Suit == bestCard.Suit)
+                    return true;
+            }
             return false;
         }
 
@@ -388,13 +427,13 @@ namespace ThousandFinal.Server.Services
             List<CardModel> playerCards = cards.Where(x => x.Status == Status.InHand && x.OwnerName == playerWhoPlay.Name).ToList();
             foreach (var checkedCard in playerCards)
             {
-                if (IsCardTheBest(checkedCard))
+                if (IsNewBestCard(checkedCard))
                     return true;
             }
             return false;
         }
 
-        public bool IsCardTheBest(CardModel card)
+        public bool IsNewBestCard(CardModel card)
         {
             if (numberOfCardsOnTable == 0)
                 return true;
@@ -417,7 +456,9 @@ namespace ThousandFinal.Server.Services
                 if (QueenAndKing == 2)
                 {
                     mandatorySuit = playedCard.Suit;
-                    //ADD POINTS!!!!
+
+                    int playerIndex = Helper.GetPlayerIndex(players, playedCard.OwnerName);
+                    players[playerIndex].PointsInCurrentRound += Helper.GetMandatoryValue(playedCard.Suit);
                 }
             }
         }
@@ -515,8 +556,8 @@ namespace ThousandFinal.Server.Services
             {
                 RefreshPackage playerRefreshPackage = refreshPackages.SingleOrDefault(x => x.userName == user.Value.Name);
                 await hubContext.Clients.Client(user.Key).SendAsync(ServerToClient.RECEIVE_REFRESH, playerRefreshPackage);
-                WritePackageInfo(playerRefreshPackage);
-                WriteWonCards();
+                //WritePackageInfo(playerRefreshPackage);
+                //WriteWonCards();
             }
         }
 

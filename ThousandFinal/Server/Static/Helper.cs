@@ -58,7 +58,19 @@ namespace ThousandFinal.Server.StaticClasses
                 case Rank.Queen: return 3;
                 case Rank.Jack: return 4;
                 case Rank.Nine: return 0;
-                default: return 0;
+                default: return -1;
+            }
+        }
+
+        public static int GetMandatoryValue(Suit suit)
+        {
+            switch (suit)
+            {
+                case Suit.Hearts: return 100;
+                case Suit.Diamonds: return 80;
+                case Suit.Clubs: return 60;
+                case Suit.Spades: return 40;
+                default: return -1;
             }
         }
     }

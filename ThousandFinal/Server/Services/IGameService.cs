@@ -28,7 +28,7 @@ namespace ThousandFinal.Server.Services
         Task GiveUpAuction(UserModel player);
 
         //GivingCards Phase
-        Task GiveCardToPlayer(CardModel card, UserModel PlayerWhoGive, UserModel PlayerWhoGet);
+        Task GiveCardToPlayer(CardModel card, UserModel PlayerWhoGive, string PlayerWhoGetName);
 
         //RaisingPointsToAchieve Phase
         Task RaisePointsToAchieve(UserModel player, int points);

@@ -1,9 +1,24 @@
-﻿<p>@UserName</p>
-<p>@numberOfCards cards</p>
+﻿<div ondragover="event.preventDefault();"
+     ondragstart="event.dataTransfer.setData('', event.target.id);"
+     @ondrop="HandleDrop">
+    <p>@UserName</p>
+    <p>@numberOfCards cards</p>
+</div>
 
 @code {
-    [CascadingParameter] public HubConnection hubConnection { get; set; }
-    //[CascadingParameter] public GameComponent GameComponent { get; set; }
+    [CascadingParameter] public Game Game { get; set; }
     [Parameter] public string UserName { get; set; }
     [Parameter] public int numberOfCards { get; set; }
-}
+
+    private async Task HandleDrop()
+    {
+        //Client side validation
+        if(numberOfCards > 7)
+        {
+            return;
+        }
+
+        Console.WriteLine($"Drop to: {UserName}");
+        await Game.GiveCard(UserName);
+    }
+ }

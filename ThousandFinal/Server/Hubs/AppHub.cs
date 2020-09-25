@@ -117,43 +117,42 @@ namespace ThousandFinal.Server.Hubs
         {
             string id = Context.ConnectionId;
             UserModel player = users[id];
-            gameService.Bet(player, points);
+            await gameService.Bet(player, points);
         }
 
         public async Task GiveUpAuction()
         {
             string id = Context.ConnectionId;
             UserModel player = users[id];
-            gameService.GiveUpAuction(player);
+            await gameService.GiveUpAuction(player);
         }
 
         public async Task GiveCardToPlayer(CardModel card, string playerWhoGetName)
         {
             string id = Context.ConnectionId;
             UserModel playerWhoGive = users[id];
-            UserModel playerWhoGet = users.Values.SingleOrDefault(x => x.Name == playerWhoGetName);
-            gameService.GiveCardToPlayer(card, playerWhoGive, playerWhoGet);
+            await gameService.GiveCardToPlayer(card, playerWhoGive, playerWhoGetName);
         }
 
         public async Task RaisePointsToAchieve(int points)
         {
             string id = Context.ConnectionId;
             UserModel player = users[id];
-            gameService.RaisePointsToAchieve(player, points);
+            await gameService.RaisePointsToAchieve(player, points);
         }
 
         public async Task DontRaisePointsToAchieve()
         {
             string id = Context.ConnectionId;
             UserModel player = users[id];
-            gameService.DontRaisePointsToAchieve(player);
+            await gameService.DontRaisePointsToAchieve(player);
         }
 
         public async Task PlayCard(CardModel card)
         {
             string id = Context.ConnectionId;
             UserModel player = users[id];
-            gameService.PlayCard(card, player);
+            await gameService.PlayCard(card, player);
         }
 
     }
