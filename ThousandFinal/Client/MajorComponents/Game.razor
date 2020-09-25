@@ -10,6 +10,8 @@
         }
         else
         {
+            <div>@User.Name</div>
+            <MandatoryTable currentMandatory="mandatorySuit"></MandatoryTable>
             <div id="resultTable" style="border: dotted; width: 20%; height: 100px; display: block; position: absolute;
                                     margin-left: auto; margin-right: auto; top: 10px">
                 @if (Users != null)
@@ -42,10 +44,16 @@
                 </div>
             </div>
 
-            @if (phase == Phase.Auction)
+            @if (AmIActive() && phase == Phase.Auction)
             {
                 <div>
                     <button @onclick="GiveUpAuction">GiveUpAuction</button>
+                </div>
+            }
+            @if (AmIActive() && phase == Phase.RaisingPointsToAchieve)
+            {
+                <div>
+                    <button @onclick="DontRaisePointsToAchieve">DontRaisePointsToAchieve</button>
                 </div>
             }
 
@@ -137,7 +145,7 @@
         {
             WritePackageInfo(package);
 
-            //Users = package.players; //NULL - fix this
+            Users = package.players; 
             myCards = package.userCards;
             leftUserName = package.leftPlayerName;
             leftUserNumberOfCards = package.leftPlayerCardsNumber;
@@ -158,14 +166,12 @@
     void TryStartGame() => hubConnection.SendAsync(ClientToServer.TRY_START_GAME);
     void GiveUpAuction()
     {
-        //Client side validation
-        if(Users[activePlayerIndex].Name != User.Name)
-        {
-            Console.WriteLine("Not your turn");
-            return;
-        }
-
         hubConnection.SendAsync(ClientToServer.GIVE_UP_AUCTION);
+    }
+
+    void DontRaisePointsToAchieve()
+    {
+        hubConnection.SendAsync(ClientToServer.DONT_RAISE_POINTS_TO_ACHIEVE);
     }
 
     public async Task PlayCard()
@@ -179,8 +185,9 @@
 
         if(PayloadCard != null)
         {
-            //await hubConnection.SendAsync(ClientToServer.PLAY_CARD, PayloadCard);
-            //PayloadCard = null;
+            await hubConnection.SendAsync(ClientToServer.PLAY_CARD, PayloadCard);
+            Console.WriteLine("Card should be playerd");
+            PayloadCard = null;
         }
     }
 
@@ -195,24 +202,11 @@
     public void WritePackageInfo(RefreshPackage package)
     {
         Console.WriteLine("PACKAGE");
-        foreach (var player in package.players)
-        {
-            Console.WriteLine(player.Name);
-        }
-        Console.WriteLine("--------------------");
 
-        Console.WriteLine("Cards: ");
-        foreach (var card in package.userCards)
+        foreach (var card in package.cardsOnTable)
         {
             Console.WriteLine($"{card.Rank}, {card.Suit}");
         }
-        Console.WriteLine("--------------------");
-
-        Console.WriteLine("Other players: ");
-        Console.WriteLine($"{package.leftPlayerName} : {package.leftPlayerCardsNumber}");
-        Console.WriteLine($"{package.rightPlayerName} : {package.rightPlayerCardsNumber}");
-        Console.WriteLine("--------------------");
-        Console.WriteLine("--------------------");
         Console.WriteLine("--------------------");
     }
 
@@ -223,6 +217,4 @@
 
         return false;
     }
-
-
 }

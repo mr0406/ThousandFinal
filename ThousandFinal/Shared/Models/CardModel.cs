@@ -28,9 +28,9 @@ namespace ThousandFinal.Shared.Models
     public enum Rank
     {
         Nine,
-        Ten,
         Jack,
         Queen,
+        Ten,
         King,
         Ace
     }

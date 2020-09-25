@@ -24,6 +24,9 @@ namespace ThousandFinal.Server.Services
 
             foreach (var suit in (Suit[])Enum.GetValues(typeof(Suit)))
             {
+                if (suit == Suit.None)
+                    continue;
+
                 foreach (var rank in (Rank[])Enum.GetValues(typeof(Rank)))
                 {
                     _cardsInOrder.Add(new CardModel(rank, suit, Status.InDeck));

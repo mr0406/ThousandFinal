@@ -31,6 +31,7 @@ namespace ThousandFinal.Server.Static
 
             if (phase == Phase.Playing)
             {
+                Console.WriteLine($"Active Player: {players[(currentPlayerNumber + 1) % 3].Name}");
                 return (currentPlayerNumber + 1) % 3;
             }
 

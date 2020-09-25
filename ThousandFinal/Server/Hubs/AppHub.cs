@@ -108,9 +108,7 @@ namespace ThousandFinal.Server.Hubs
                 await Clients.Client(users.ElementAt(i).Key).ReceiveGameStarted(leftPlayer.Name, rightPlayer.Name);
             }
 
-            Console.WriteLine("Here");
             await gameService.StartGame(users, users.Values.ToList());
-            Console.WriteLine("Here2");
         }
 
         //user actions
