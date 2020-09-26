@@ -1,4 +1,4 @@
-﻿<div style="border: dotted">
+﻿<div style="border: dotted;">
     <hr />
     <div>Users: </div>
     <ul id="usersList">
@@ -12,16 +12,16 @@
 
     <div>Messages: </div>
 
-    <div style="height: 300px; width: 300px; border: 1px dashed gray;" class="overflow-auto">
+    <div style="height: 300px; min-width: 10vw; max-width: 30vw; border: 1px dashed gray;" class="overflow-auto">
         @foreach (var message in messages)
         {
             if (message.GeneratedFromServer)
             {
-                <div style="background-color: gray">@message.Text</div>
+                <div style="background-color: gray; max-width: 100%">@message.Text</div>
             }
             else if (message.AuthorName == User.Name)
             {
-                <div style="text-align: right">@message.Text</div>
+                <div style="text-align: right; max-width: 30vw">@message.Text</div>
             }
             else
             {
@@ -35,7 +35,7 @@
     <div class="form-group">
         <label>
             Message:
-            <input @bind="messageInput" size="40" />
+            <input @bind="messageInput" style="width: 30vw;"/>
         </label>
     </div>
     <button @onclick="Send">Send</button>
