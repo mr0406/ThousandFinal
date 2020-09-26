@@ -17,6 +17,7 @@ namespace ThousandFinal.Shared.Models
 
         public UserModel()
         {
+
         }
 
         public UserModel(string name)

@@ -175,12 +175,17 @@
     public async Task PlayCard()
     {
         //Client side validation
+        if(phase != Phase.Playing)
+        {
+            Console.WriteLine("Wrong phase");
+            return;
+        }
         if (PayloadCard.Status != Status.InHand)
         {
             Console.WriteLine("The card must be in hand");
             return;
         }
-        if(Users[activePlayerIndex].Name != User.Name)
+        if(!AmIActive())
         {
             Console.WriteLine("Not your turn");
             return;
@@ -197,12 +202,17 @@
     public async Task GiveCard(string playerWhoGetName)
     {
         //Client side validation
+        if(phase != Phase.GivingAdditionalCards)
+        {
+            Console.WriteLine("Wrong phase");
+            return;
+        }
         if (PayloadCard.Status != Status.InHand)
         {
             Console.WriteLine("The card must be in hand");
             return;
         }
-        if(Users[activePlayerIndex].Name != User.Name)
+        if(!AmIActive())
         {
             Console.WriteLine("Not your turn");
             return;

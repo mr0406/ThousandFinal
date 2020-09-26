@@ -14,17 +14,12 @@ namespace ThousandFinal.Server.Hubs
         IGameService gameService;
 
         private static Dictionary<string, UserModel> users = new Dictionary<string, UserModel>();
-        private static List<CardModel> cards = new List<CardModel>();
 
-        public AppHub(IGameService GameService)
-        {
+        public AppHub(IGameService GameService) =>
             gameService = GameService;
-        }
 
-        public async Task SendMessage(MessageModel message)
-        {
+        public async Task SendMessage(MessageModel message) =>
            await Clients.All.ReceiveMessage(message);
-        }
 
         public async Task LeaveServer(UserModel user)
         {
@@ -33,11 +28,8 @@ namespace ThousandFinal.Server.Hubs
             await Clients.Others.ReceiveLeaveServer(user);
         }
 
-        public async Task GetUsers()
-        {
+        public async Task GetUsers() =>
             await Clients.Caller.ReceiveUsers(users.Values.ToList());
-            //await Clients.All.ReceiveUsers(activeUsers.Values.ToList());
-        }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
@@ -60,7 +52,8 @@ namespace ThousandFinal.Server.Hubs
                 users.Add(id, user);
 
                 await Clients.Caller.ReceiveJoin(user);
-                await Clients.Others.ReceiveOtherUserJoin(user);
+                //await Clients.Others.ReceiveOtherUserJoin(user);
+                await Clients.Others.ReceiveMessage(new MessageModel($"{user.Name} joined server", true));
             }
             else
             {
@@ -107,11 +100,10 @@ namespace ThousandFinal.Server.Hubs
                 var rightPlayer = users.ElementAt(rightIndex).Value;
                 await Clients.Client(users.ElementAt(i).Key).ReceiveGameStarted(leftPlayer.Name, rightPlayer.Name);
             }
-
             await gameService.StartGame(users, users.Values.ToList());
         }
 
-        //user actions
+        //Users Actions
 
         public async Task Bet(int points)
         {
@@ -149,11 +141,10 @@ namespace ThousandFinal.Server.Hubs
         }
 
         public async Task PlayCard(CardModel card)
-        {
+        { 
             string id = Context.ConnectionId;
             UserModel player = users[id];
             await gameService.PlayCard(card, player);
         }
-
     }
 }

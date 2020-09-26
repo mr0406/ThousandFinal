@@ -9,8 +9,8 @@ namespace ThousandFinal.Server.Services
     public interface IGameService
     {
         //Game Circle Methods
-        Task StartGame(Dictionary<string, UserModel> Users, List<UserModel> Players);
-        Task StartRound();
+        Task StartGame(Dictionary<string, UserModel> Users, List<UserModel> Players); // OK
+        Task StartRound();                                                            // OK
         Task StartAuctionPhase();
         Task EndAuctionPhase();
         Task StartGivingCardsPhase();
@@ -23,33 +23,45 @@ namespace ThousandFinal.Server.Services
         Task OnWin(string userName);
 
         //Players Actions
-        //Auction Phase
         Task Bet(UserModel player, int pointsBet);
         Task GiveUpAuction(UserModel player);
 
-        //GivingCards Phase
         Task GiveCardToPlayer(CardModel card, UserModel PlayerWhoGive, string PlayerWhoGetName);
 
-        //RaisingPointsToAchieve Phase
         Task RaisePointsToAchieve(UserModel player, int points);
         Task DontRaisePointsToAchieve(UserModel player);
 
-        //Playing Phase
         Task PlayCard(CardModel card, UserModel playerWhoPlay);
 
         //Set Methods
         Task SetAuctionWinner(int AuctionWinner);
-
+        Task ActivePlayerChange(int indexOfActivePlayer);
         //Refresh Method
         //Local
         Task RefreshCards(List<CardModel> cards);
-
         //SendMessage
         Task SendMessage(MessageModel message);
 
-        Task ActivePlayerChange(int indexOfActivePlayer);
-
         //USER REFRESH
         Task Refresh();
+
+        //Additional
+        Task StartFight();
+        Task EndFight();
+        Task GiveCardsToWinnerPlayer();
+
+        bool CanPlayThisCard(CardModel card, UserModel playerWhoPlay);
+        bool IsNewBestCard(CardModel card);
+        bool CanPlayNewBestCard(UserModel playerWhoPlay);
+        bool CanPlaySameSuit(UserModel playerWhoPlay);
+        bool CanPlayMandatorySuit(UserModel playerWhoPlay);
+
+        void TryMandatoryChange(CardModel playedCard);
+        CardModel GetBetterCard(CardModel pastBestCard, CardModel pretendendCard);
+        void AddPointsAfterRound();
+
+        //Debug
+        void WritePackageInfo(RefreshPackage package);
+        void WriteWonCards();  
     }
 }
