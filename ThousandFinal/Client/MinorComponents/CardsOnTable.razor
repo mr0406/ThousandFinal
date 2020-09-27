@@ -1,15 +1,13 @@
 ﻿<div ondragover="event.preventDefault();"
      ondragstart="event.dataTransfer.setData('', event.target.id);"
-     @ondrop="HandleDrop">
-    <div style="border: groove">
-        @if (Cards != null)
-        {
-            @foreach (var card in Cards)
-            {
-                <Card CardModel="card"></Card>
-            }
-        }
-    </div>
+     @ondrop="HandleDrop" style="border: dotted; min-width: 40%; min-height: 200px; border: groove;">
+    @if (Cards != null)
+     {
+        @foreach (var card in Cards)
+         {
+            <Card CardModel="card"></Card>
+         }
+     }
 </div>
 
 @code {
