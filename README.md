@@ -5,7 +5,7 @@ Nie wszystkie klasy/identyfikatory mają swój styl, niektóre są nadane "na pr
 ## Klasy oraz identyfikatory pliku Game.razor
 
 ### Identyfikatory
-mandatory -> Okienko w lewym górnym rogu z nickiem oraz "mandatory" kartą.
+mandatory -> Okienko w lewym górnym rogu z nickiem oraz meldunkiem
 
 resultTable -> Okienko na górze na środku z graczami oraz ich wynikiem.
 
