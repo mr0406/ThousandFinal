@@ -35,7 +35,7 @@
     <div class="form-group">
         <label>
             Message:
-            <input @bind="messageInput" style="max-width: 25vw;"/>
+            <input @bind="messageInput" style="max-width: 25vw;" @onkeyup="@KeyPress"/>
         </label>
     </div>
     <button @onclick="Send">Send</button>
@@ -68,6 +68,12 @@
             await hubConnection.SendAsync(ClientToServer.SEND_MESSAGE, message);
             messageInput = "";
         }
+    }
+
+    async Task KeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            await Send();
     }
 
 }

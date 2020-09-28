@@ -1,7 +1,7 @@
 ﻿<div class="form-group">
     <label>
         User:
-        <input @bind="userName" />
+        <input @bind="userName" @onkeyup="@KeyPress"/>
     </label>
 </div>
 <button @onclick="TryJoin">Join</button>
@@ -17,6 +17,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+
+
         hubConnection.On(ServerToClient.RECEIVE_CAN_NOT_JOIN, (string exception) =>
         {
             errorType = exception;
@@ -24,6 +26,12 @@
         });
     }
 
-    void TryJoin() => hubConnection.SendAsync(ClientToServer.TRY_JOIN_SERVER, new UserModel(userName));
+    async Task TryJoin() => await hubConnection.SendAsync(ClientToServer.TRY_JOIN_SERVER, new UserModel(userName));
+
+    async Task KeyPress(KeyboardEventArgs e)
+    {
+        if(e.Key == "Enter")
+            await TryJoin();
+    }
 
 }
