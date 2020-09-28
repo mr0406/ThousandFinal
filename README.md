@@ -49,3 +49,20 @@ message -> Klasa wiadomości gracza, innych graczy oraz serwera.
 ## Klasy oraz identyfikatory pliku Login.razor
 
 Może kiedyś coś tu będzie.
+
+
+## Pozostałe klasy oraz identyfikatory
+
+### Identyfikatory
+
+gameFrame -> Kontener zawierający gre oraz czat.
+
+currentMandatory -> Obecny meldunek, ikonka w oknie "mandatory".
+
+## Klasy
+
+cardsOnTable -> Są to karty położone na stole. Jest to klasa bo nie wiem do końca czy to jest generowane oddzielnie dla każdej karty czy nie i nie wiem jak zachowywałyby się 2 elementy o tym samym ID, więc zrobiłem klase.
+
+**otherPlayerHand** -> Kontener zawierający karty, które w ręce trzyma inny gracz. Zrobiłem z tego klase bo może kiedys będzie trzeba zrobić oddzielny styl na lewego i prawego gracza.
+
+**playerPoints** -> Znacznik <Span> zawierający punkty graczy w tabeli wyników resultTable.
