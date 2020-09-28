@@ -29,31 +29,44 @@
             </div>
 
             <div style="border: solid; width: 90%; height: 250px">
+
                 <div style="border: dotted; width: 10%; height: 200px; margin-left: 10px; display: inline-block; position: relative;">
                     <OtherPlayerHand UserName="@leftUserName" numberOfCards="leftUserNumberOfCards"></OtherPlayerHand>
                 </div>
 
-                <div style="border: dotted; width: 70%; height: 200px; display: inline-block; position: relative; margin: 0 auto;">
-                    <CardsOnTable Cards="cardsOnTable"></CardsOnTable>
-                </div>
+                @if (phase == Phase.Auction)
+                {
+                    if (AmIActive())
+                    {
+                        <AuctionBoard lastHighest="highestBet"></AuctionBoard>
+                    }
+                }
+
+                @if (phase == Phase.GivingAdditionalCards)
+                {
+
+                }
+
+                @if (phase == Phase.RaisingPointsToAchieve)
+                {
+                    if (AmIActive())
+                    {
+                        <RaisingPointsBoard playerBet="highestBet"></RaisingPointsBoard>
+                    }
+                }
+
+
+                @if (phase == Phase.Playing)
+                {
+                    <div style="border: dotted; width: 70%; height: 200px; display: inline-block; position: relative; margin: 0 auto;">
+                        <CardsOnTable Cards="cardsOnTable"></CardsOnTable>
+                    </div>
+                }
 
                 <div style="border: dotted; width: 10%; height: 200px; margin-right: 10px; display: inline-block; position: relative;">
                     <OtherPlayerHand UserName="@rightUserName" numberOfCards="rightUserNumberOfCards"></OtherPlayerHand>
                 </div>
             </div>
-
-            @if (AmIActive() && phase == Phase.Auction)
-            {
-                <div>
-                    <button @onclick="GiveUpAuction">GiveUpAuction</button>
-                </div>
-            }
-            @if (AmIActive() && phase == Phase.RaisingPointsToAchieve)
-            {
-                <div>
-                    <button @onclick="DontRaisePointsToAchieve">DontRaisePointsToAchieve</button>
-                </div>
-            }
 
             <div style="border: dotted; width: 70%; height: 240px; position: absolute; right: 25%; left: 50%; bottom : 10px; margin-left: -35%; display: flex; overflow-x: scroll;">
                 <PlayersHand Cards="myCards"></PlayersHand>
@@ -89,6 +102,8 @@
     public bool checkBoxDisabled { get; set; } = false;
 
     public Phase phase { get; set; }
+
+    public int highestBet { get; set; } = 100;
 
     protected override async Task OnInitializedAsync()
     {
@@ -155,6 +170,7 @@
             cardsToTake = package.cardsToTake;
             activePlayerIndex = package.indexOfActivePlayer;
             phase = package.phase;
+            highestBet = package.highestBet;
             StateHasChanged();
         });
 
@@ -162,15 +178,6 @@
     }
 
     void TryStartGame() => hubConnection.SendAsync(ClientToServer.TRY_START_GAME);
-    void GiveUpAuction()
-    {
-        hubConnection.SendAsync(ClientToServer.GIVE_UP_AUCTION);
-    }
-
-    void DontRaisePointsToAchieve()
-    {
-        hubConnection.SendAsync(ClientToServer.DONT_RAISE_POINTS_TO_ACHIEVE);
-    }
 
     public async Task PlayCard()
     {

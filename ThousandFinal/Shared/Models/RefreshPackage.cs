@@ -26,6 +26,8 @@ namespace ThousandFinal.Shared.Models
 
         public Phase phase { get; set; }
 
+        public int highestBet { get; set; }
+
         public RefreshPackage()
         {
 
@@ -34,7 +36,7 @@ namespace ThousandFinal.Shared.Models
         public RefreshPackage(List<UserModel> players, string userName, List<CardModel> userCards, 
             string leftPlayerName, int leftPlayerCardsNumber, string rightPlayerName, int rightPlayerCardsNumber, 
             List<CardModel> cardsOnTable, Suit currentMandatory, bool cardsToTakeExists, List<CardModel> cardsToTake, 
-            int indexOfActivePlayer, Phase phase)
+            int indexOfActivePlayer, Phase phase, int highestBet)
         {
             this.players = players;
             this.userName = userName;
@@ -49,6 +51,7 @@ namespace ThousandFinal.Shared.Models
             this.cardsToTake = cardsToTake;
             this.indexOfActivePlayer = indexOfActivePlayer;
             this.phase = phase;
+            this.highestBet = highestBet;
         }
     }
 }

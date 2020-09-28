@@ -180,7 +180,7 @@ namespace ThousandFinal.Server.Services
             highestBetOwner = playerIndex;
 
             players.ForEach(x => x.PointsToAchieve = 0);
-            players[highestBetOwner].PointsToAchieve = highestBetOwner = highestBet;
+            players[highestBetOwner].PointsToAchieve = highestBet;
 
             //Turn change
             activePlayer = TurnSystem.GetNextPlayerNumber(Phase.Auction, players, activePlayer);
@@ -199,6 +199,7 @@ namespace ThousandFinal.Server.Services
         public async Task GiveUpAuction(UserModel player)
         {
             int playerIndex = Helper.GetPlayerIndex(players, player);
+            players[playerIndex].GiveUpAuction = true; 
 
             numberOfGiveUps++;
             if (numberOfGiveUps > 1)
@@ -521,7 +522,8 @@ namespace ThousandFinal.Server.Services
 
                 refreshPackages.Add(new RefreshPackage(players, players[i].Name, playerCards, playerPosition[i].leftUserName, 
                                                        leftUserNumberOfCards, playerPosition[i].rightUserName, rightUserNumberOfCards,
-                                                       cardsOnTable, mandatorySuit, cardsToTakeExists, cardsToTake, activePlayer, roundPhase));
+                                                       cardsOnTable, mandatorySuit, cardsToTakeExists, cardsToTake, activePlayer, 
+                                                       roundPhase, highestBet));
             }
             
             foreach (var element in usersDict)
