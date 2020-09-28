@@ -1,6 +1,6 @@
 ﻿<div ondragover="event.preventDefault();"
      ondragstart="event.dataTransfer.setData('', event.target.id);"
-     @ondrop="HandleDrop" style="border: dotted; min-width: 40%; min-height: 200px; border: groove;">
+     @ondrop="HandleDrop" style="border: dotted; min-width: 40%; min-height: 200px; border: groove; display: flex;">
     @if (Cards != null)
      {
         @foreach (var card in Cards)
