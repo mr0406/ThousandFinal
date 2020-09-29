@@ -25,6 +25,6 @@ namespace ThousandFinal.Shared.Communication
         Task GiveCardToPlayer(CardModel card, string playerWhoGetName);
         Task RaisePointsToAchieve(int points);
         Task DontRaisePointsToAchieve();
-        Task PlayCard(CardModel card);
+        Task PlayCard(CardModel card, CardModel bestCardOnTable);
     }
 }

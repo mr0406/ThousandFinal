@@ -140,11 +140,11 @@ namespace ThousandFinal.Server.Hubs
             await gameService.DontRaisePointsToAchieve(player);
         }
 
-        public async Task PlayCard(CardModel card)
+        public async Task PlayCard(CardModel card, CardModel newBestCard)
         { 
             string id = Context.ConnectionId;
             UserModel player = users[id];
-            await gameService.PlayCard(card, player);
+            await gameService.PlayCard(card, newBestCard, player);
         }
     }
 }

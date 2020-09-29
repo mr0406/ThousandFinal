@@ -69,7 +69,7 @@
             </div>
 
             <div style="border: dotted; width: 70%; height: 240px; position: absolute; right: 25%; left: 50%; bottom : 10px; margin-left: -35%; display: flex; overflow-x: scroll;">
-                <PlayersHand Cards="myCards"></PlayersHand>
+                <PlayersHand Cards="playerCards"></PlayersHand>
             </div>
         }
     </div>
@@ -86,14 +86,14 @@
     public string rightUserName;
     public int rightUserNumberOfCards;
 
-    private List<CardModel> myCards = new List<CardModel>();
-    private List<CardModel> cardsOnTable = new List<CardModel>();
-    private bool thereAreCardsToTake; //FIX
-    private List<CardModel> cardsToTake = new List<CardModel>(); //FIX
+    public List<CardModel> playerCards = new List<CardModel>();
+    public List<CardModel> cardsOnTable = new List<CardModel>();
+    public bool thereAreCardsToTake; //FIX
+    public List<CardModel> cardsToTake = new List<CardModel>(); //FIX
 
-    private int activePlayerIndex;
+    public int activePlayerIndex;
 
-    private Suit mandatorySuit;
+    public Suit mandatorySuit;
 
     public bool GameStarted = false;
 
@@ -104,6 +104,8 @@
     public Phase phase { get; set; }
 
     public int highestBet { get; set; } = 100;
+
+    public CardModel bestCardOnTable { get; set; } = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -124,7 +126,7 @@
 
         hubConnection.On<List<CardModel>, List<CardModel>>(ServerToClient.RECEIVE_REFRESH_BOARD, (handCards, tableCards) =>
         {
-            myCards = handCards;
+            playerCards = handCards;
             cardsOnTable = tableCards;
             StateHasChanged();
         });
@@ -159,7 +161,7 @@
             WritePackageInfo(package);
 
             Users = package.players;
-            myCards = package.userCards;
+            playerCards = package.userCards;
             leftUserName = package.leftPlayerName;
             leftUserNumberOfCards = package.leftPlayerCardsNumber;
             rightUserName = package.rightPlayerName;
@@ -171,6 +173,7 @@
             activePlayerIndex = package.indexOfActivePlayer;
             phase = package.phase;
             highestBet = package.highestBet;
+            bestCardOnTable = package.bestCardOnTable;
             StateHasChanged();
         });
 
@@ -182,25 +185,16 @@
     public async Task PlayCard()
     {
         //Client side validation
-        if(phase != Phase.Playing)
-        {
-            Console.WriteLine("Wrong phase");
-            return;
-        }
         if (PayloadCard.Status != Status.InHand)
         {
             Console.WriteLine("The card must be in hand");
             return;
         }
-        if(!AmIActive())
-        {
-            Console.WriteLine("Not your turn");
-            return;
-        }
 
         if(PayloadCard != null)
         {
-            await hubConnection.SendAsync(ClientToServer.PLAY_CARD, PayloadCard);
+            CardModel newBestCard = GetBetterCard(bestCardOnTable, PayloadCard);
+            await hubConnection.SendAsync(ClientToServer.PLAY_CARD, PayloadCard, newBestCard);
             Console.WriteLine("Card should be played");
             PayloadCard = null;
         }
@@ -258,5 +252,98 @@
             return true;
 
         return false;
+    }
+
+
+    //NEW
+
+    public bool CanPlayThisCard()
+    {
+        /* 
+        * 1. if you can play new best card                             <- PLAY BETTER CARD
+        * 2. if you cant play better card, you can play same suit      <- PLAY SAME SUIT
+        * 3. if you cant play better card, you cant play same suit, 
+        *      you can play mandatory suit                             <- PLAY MANDATORY SUIT
+        * 4. if you cant play new best card, you cant play same suit, 
+        * you cant play mandatory suit                                 <- YOU CAN PLAY ANY CARD
+        */
+
+        //1
+        if (IsNewBestCard(PayloadCard))
+        {
+            bestCardOnTable = PayloadCard;
+            return true;
+        }
+        //2
+        if(!CanPlayNewBestCard() && PayloadCard.Suit == bestCardOnTable.Suit)
+            return true;
+        //3
+        if (!CanPlayNewBestCard() && !CanPlaySameSuit() && PayloadCard.Suit == mandatorySuit)
+            return true;
+        //4
+        if (!CanPlayNewBestCard() && !CanPlaySameSuit() && !CanPlayMandatorySuit())
+            return true;
+
+        return false;
+    }
+
+    public bool CanPlayMandatorySuit()
+    {
+        if (mandatorySuit == Suit.None)
+            return false;
+
+        foreach (var checkedCard in playerCards)
+        {
+            if (checkedCard.Suit == mandatorySuit)
+                return true;
+        }
+        return false;
+    }
+
+    public bool CanPlaySameSuit()
+    {
+        if (bestCardOnTable == null)
+            return false;
+
+        foreach (var checkedCard in playerCards)
+        {
+            if (checkedCard.Suit == bestCardOnTable.Suit)
+                return true;
+        }
+        return false;
+    }
+
+    public bool CanPlayNewBestCard()
+    {
+        foreach (var checkedCard in playerCards)
+        {
+            if (IsNewBestCard(checkedCard))
+                return true;
+        }
+        return false;
+    }
+
+    public bool IsNewBestCard(CardModel card)
+    {
+        if (cardsOnTable.Count() == 0)
+            return true;
+
+        CardModel betterCard = GetBetterCard(bestCardOnTable, card);
+        if (betterCard.Rank == card.Rank && betterCard.Suit == card.Suit)
+            return true;
+
+        return false;
+    }
+
+    public CardModel GetBetterCard(CardModel pastBestCard, CardModel pretendendCard)
+    {
+        if (mandatorySuit != Suit.None && pastBestCard.Suit != mandatorySuit && pretendendCard.Suit == mandatorySuit)
+            return pretendendCard;
+
+        else if (pastBestCard.Suit == pretendendCard.Suit && pastBestCard.Rank < pretendendCard.Rank)
+            return pretendendCard;
+
+        else
+            return pastBestCard;
     }
 }

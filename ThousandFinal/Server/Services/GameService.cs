@@ -311,117 +311,35 @@ namespace ThousandFinal.Server.Services
             {
                 Console.WriteLine($"{card.Rank}, {card.Suit} - {card.OwnerName}");
             }
-
         }
 
-        public async Task PlayCard(CardModel card, UserModel player)
+        public async Task PlayCard(CardModel card, CardModel newBestCard, UserModel player)
         {
             int playerIndex = Helper.GetPlayerIndex(players, player);
 
-            bool canPlay = CanPlayThisCard(card, player);
-            if (canPlay)
+            TryMandatoryChange(card); //checking 
+
+
+            int cardIndex = Helper.GetCardIndex(cards, card);
+            numberOfCardsOnTable++;
+            cards[cardIndex].Status = Status.OnTable;
+            cards[cardIndex].positionOnTable = numberOfCardsOnTable;
+
+            bestCard = newBestCard;
+
+            if (numberOfCardsOnTable > 2)
             {
-                TryMandatoryChange(card); //checking 
-
-                int cardIndex = Helper.GetCardIndex(cards, card);
-                cards[cardIndex].Status = Status.OnTable;
-
-                numberOfCardsOnTable++;
-                if (numberOfCardsOnTable > 2)
-                {
-                    //Fight End
-                    //Give cards to player
-                    numberOfCardsOnTable = 0;
-                    await EndFight();
-                }
-                else
-                {
-                    activePlayer = TurnSystem.GetNextPlayerNumber(Phase.Playing, players, activePlayer);
-                    await Refresh();
-                }
-
+                cards.ForEach(x => x.positionOnTable = -1);
+                //Fight End
+                //Give cards to player
+                numberOfCardsOnTable = 0;
+                await EndFight();
             }
-        }
-
-        public bool CanPlayThisCard(CardModel card, UserModel playerWhoPlay)
-        {
-            /* 
-             * 1. if you can play new best card                             <- PLAY BETTER CARD
-             * 2. if you cant play better card, you can play same suit      <- PLAY SAME SUIT
-             * 3. if you cant play better card, you cant play same suit, 
-             *      you can play mandatory suit                             <- PLAY MANDATORY SUIT
-             * 4. if you cant play new best card, you cant play same suit, 
-             * you cant play mandatory suit                                 <- YOU CAN PLAY ANY CARD
-             */
-
-            //1
-            if (IsNewBestCard(card)) 
+            else
             {
-                bestCard = card;
-                return true;
+                activePlayer = TurnSystem.GetNextPlayerNumber(Phase.Playing, players, activePlayer);
+                await Refresh();
             }
-            //2
-            if(!CanPlayNewBestCard(playerWhoPlay) && card.Suit == bestCard.Suit) 
-                return true;
-            //3
-            if (!CanPlayNewBestCard(playerWhoPlay) && !CanPlaySameSuit(playerWhoPlay) && card.Suit == mandatorySuit) 
-                return true;
-            //4
-            if (!CanPlayNewBestCard(playerWhoPlay) && !CanPlaySameSuit(playerWhoPlay) && !CanPlayMandatorySuit(playerWhoPlay))
-                return true;
-
-            return false;
-        }
-
-        public bool CanPlayMandatorySuit(UserModel playerWhoPlay)
-        {
-            if (mandatorySuit == Suit.None)
-                return false;
-
-            List<CardModel> playerCards = cards.Where(x => x.Status == Status.InHand && x.OwnerName == playerWhoPlay.Name).ToList();
-            foreach (var checkedCard in playerCards)
-            {
-                if (checkedCard.Suit == mandatorySuit)
-                    return true;
-            }
-            return false;
-        }
-
-        public bool CanPlaySameSuit(UserModel playerWhoPlay)
-        {
-            if (bestCard == null)
-                return false;
-
-            List<CardModel> playerCards = cards.Where(x => x.Status == Status.InHand && x.OwnerName == playerWhoPlay.Name).ToList();
-            foreach (var checkedCard in playerCards)
-            {
-                if (checkedCard.Suit == bestCard.Suit)
-                    return true;
-            }
-            return false;
-        }
-
-        public bool CanPlayNewBestCard(UserModel playerWhoPlay)
-        {
-            List<CardModel> playerCards = cards.Where(x => x.Status == Status.InHand && x.OwnerName == playerWhoPlay.Name).ToList();
-            foreach (var checkedCard in playerCards)
-            {
-                if (IsNewBestCard(checkedCard))
-                    return true;
-            }
-            return false;
-        }
-
-        public bool IsNewBestCard(CardModel card)
-        {
-            if (numberOfCardsOnTable == 0)
-                return true;
-
-            CardModel betterCard = GetBetterCard(bestCard, card);
-            if (betterCard.Rank == card.Rank && betterCard.Suit == card.Suit)
-                return true;
-
-            return false;
         }
 
         public void TryMandatoryChange(CardModel playedCard)
@@ -493,7 +411,7 @@ namespace ThousandFinal.Server.Services
         public async Task Refresh()
         {
             //CARDS ON TABLE
-            List<CardModel> cardsOnTable = cards.Where(x => x.Status == Status.OnTable).ToList();
+            List<CardModel> cardsOnTable = cards.Where(x => x.Status == Status.OnTable).OrderBy(x => x.positionOnTable).ToList();
             //CARDS TO TAKE
             List<CardModel> cardsToTake;
             bool cardsToTakeExists = true;
@@ -525,7 +443,7 @@ namespace ThousandFinal.Server.Services
                 refreshPackages.Add(new RefreshPackage(players, players[i].Name, playerCards, playerPosition[i].leftUserName, 
                                                        leftUserNumberOfCards, playerPosition[i].rightUserName, rightUserNumberOfCards,
                                                        cardsOnTable, mandatorySuit, cardsToTakeExists, cardsToTake, activePlayer, 
-                                                       roundPhase, highestBet));
+                                                       roundPhase, highestBet, bestCard));
             }
             
             foreach (var element in usersDict)

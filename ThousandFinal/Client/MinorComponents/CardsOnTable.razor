@@ -28,19 +28,40 @@
 
     private async Task HandleDrop()
     {
-        dropClass = "";
+        if(dropClass != "can-drop")
+        {
+            dropClass = "";
+            return;
+        }
 
+        dropClass = "";
         Console.WriteLine("Drop");
         await Game.PlayCard();
     }
 
     private async Task HandleEnter()
     {
-        //MILION WARUNKÓW TU BEDZIE
-        if(Game.phase == Phase.Playing && Game.AmIActive())
-            dropClass = "can-drop";
-        else
+        if(Game.phase != Phase.Playing)
+        {
             dropClass = "no-drop";
+            return;
+        }
+
+        if(!Game.AmIActive())
+        {
+            dropClass = "no-drop";
+            return;
+        }
+
+        if (CanPlayThisCard())
+        {
+            dropClass = "can-drop";
+        }
+        else
+        {
+            dropClass = "no-drop";
+        }
+
     }
 
     private async Task HandleLeave()
@@ -48,4 +69,8 @@
         dropClass = "";
     }
 
+    public bool CanPlayThisCard()
+    {
+        return Game.CanPlayThisCard();
+    }
 }

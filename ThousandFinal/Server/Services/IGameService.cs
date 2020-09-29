@@ -31,7 +31,7 @@ namespace ThousandFinal.Server.Services
         Task RaisePointsToAchieve(UserModel player, int points);
         Task DontRaisePointsToAchieve(UserModel player);
 
-        Task PlayCard(CardModel card, UserModel playerWhoPlay);
+        Task PlayCard(CardModel card, CardModel newBestCard, UserModel playerWhoPlay);
 
         //Set Methods
         Task SetAuctionWinner(int AuctionWinner);
@@ -49,12 +49,6 @@ namespace ThousandFinal.Server.Services
         Task StartFight();
         Task EndFight();
         Task GiveCardsToWinnerPlayer();
-
-        bool CanPlayThisCard(CardModel card, UserModel playerWhoPlay);
-        bool IsNewBestCard(CardModel card);
-        bool CanPlayNewBestCard(UserModel playerWhoPlay);
-        bool CanPlaySameSuit(UserModel playerWhoPlay);
-        bool CanPlayMandatorySuit(UserModel playerWhoPlay);
 
         void TryMandatoryChange(CardModel playedCard);
         CardModel GetBetterCard(CardModel pastBestCard, CardModel pretendendCard);

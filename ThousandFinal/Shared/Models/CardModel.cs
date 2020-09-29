@@ -10,6 +10,7 @@ namespace ThousandFinal.Shared.Models
         public Suit Suit { get; set; }
         public Status Status { get; set; }
         public string OwnerName { get; set; }
+        public int positionOnTable { get; set; }
 
         public CardModel()
         {
@@ -22,6 +23,7 @@ namespace ThousandFinal.Shared.Models
             Suit = suit;
             Status = status;
             OwnerName = "";
+            positionOnTable = -1;
         }
     }
 

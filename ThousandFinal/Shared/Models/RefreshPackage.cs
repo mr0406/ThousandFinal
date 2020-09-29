@@ -28,15 +28,17 @@ namespace ThousandFinal.Shared.Models
 
         public int highestBet { get; set; }
 
+        public CardModel bestCardOnTable { get; set; }
+
         public RefreshPackage()
         {
 
         }
 
-        public RefreshPackage(List<UserModel> players, string userName, List<CardModel> userCards, 
-            string leftPlayerName, int leftPlayerCardsNumber, string rightPlayerName, int rightPlayerCardsNumber, 
-            List<CardModel> cardsOnTable, Suit currentMandatory, bool cardsToTakeExists, List<CardModel> cardsToTake, 
-            int indexOfActivePlayer, Phase phase, int highestBet)
+        public RefreshPackage(List<UserModel> players, string userName, List<CardModel> userCards,
+            string leftPlayerName, int leftPlayerCardsNumber, string rightPlayerName, int rightPlayerCardsNumber,
+            List<CardModel> cardsOnTable, Suit currentMandatory, bool cardsToTakeExists, List<CardModel> cardsToTake,
+            int indexOfActivePlayer, Phase phase, int highestBet, CardModel bestCardOnTable)
         {
             this.players = players;
             this.userName = userName;
@@ -52,6 +54,7 @@ namespace ThousandFinal.Shared.Models
             this.indexOfActivePlayer = indexOfActivePlayer;
             this.phase = phase;
             this.highestBet = highestBet;
+            this.bestCardOnTable = bestCardOnTable;
         }
     }
 }
