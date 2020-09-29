@@ -59,6 +59,8 @@ gameFrame -> Kontener zawierający gre oraz czat.
 
 currentMandatory -> Obecny meldunek, ikonka w oknie "mandatory".
 
+cardContainer -> Kontener pojedyńczej karty w ręce gracza.
+
 ## Klasy
 
 cardsOnTable -> Są to karty położone na stole. Jest to klasa bo nie wiem do końca czy to jest generowane oddzielnie dla każdej karty czy nie i nie wiem jak zachowywałyby się 2 elementy o tym samym ID, więc zrobiłem klase.
@@ -66,3 +68,15 @@ cardsOnTable -> Są to karty położone na stole. Jest to klasa bo nie wiem do k
 **otherPlayerHand** -> Kontener zawierający karty, które w ręce trzyma inny gracz. Zrobiłem z tego klase bo może kiedys będzie trzeba zrobić oddzielny styl na lewego i prawego gracza.
 
 **playerPoints** -> Znacznik <Span> zawierający punkty graczy w tabeli wyników resultTable.
+
+smallImg -> Mały obrazek kolory karty w lewym górnym i prawym dolnym rogu karty w ręce gracza
+
+no-drop, can-drop -> DO OPISANIA !!!!!
+
+cardColorContainer -> Kontener w którym jest napis oraz mała ikonka koloru karty na kartach na ręce gracza.
+
+smallCardColorImage -> Mały obrazek koloru karty w lewym górnym i prawym dolnym rogu karty na ręce gracza.
+
+bigCardColorImage -> Obrazek koloru na środku karty w ręce gracza.
+
+**cardColorText** -> Tekst nad/pod małym obrazkiem symbolizującym kolor karty na ręce gracza.
