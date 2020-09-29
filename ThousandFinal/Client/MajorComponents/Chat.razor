@@ -1,31 +1,32 @@
-﻿<div style="border: dotted;">
+﻿<div id="chatContainer">
     <hr />
-    <div>Users: </div>
-    <ul id="usersList">
+    <span class="playerList" id="usersHeader">Users: </span>
+
+    <ul class="playerList">
         @foreach (var user in Users)
         {
-            <li>@user.Name</li>
+            <li class="playerList">@user.Name</li>
         }
     </ul>
 
     <hr />
 
-    <div>Messages: </div>
+    <div id="messages">Messages: </div>
 
-    <div style="height: 300px; min-width: 10vw; max-width: 30vw; border: 1px dashed gray;" class="overflow-auto">
+    <div  id="messages"> <! –– class="overflow-auto" ––>
         @foreach (var message in messages)
         {
             if (message.GeneratedFromServer)
             {
-                <div style="background-color: gray; max-width: 100%">@message.Text</div>
+                <div  class="message" id="serverMessage">@message.Text</div>
             }
             else if (message.AuthorName == User.Name)
             {
-                <div style="text-align: right; max-width: 30vw">@message.Text</div>
+                <div class="message" id="myMessage" >@message.Text</div>
             }
             else
             {
-                <div>@message.AuthorName: @message.Text</div>
+                <div class="message" id="othersMessage" >@message.AuthorName: @message.Text</div>
             }
         }
     </div>

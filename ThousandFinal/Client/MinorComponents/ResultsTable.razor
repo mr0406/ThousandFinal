@@ -1,6 +1,6 @@
 ﻿@foreach(var player in Players)
 {
-    <p>@player.Name, @player.Points points, @player.PointsInCurrentRound roundPoints, @player.PointsToAchieve toAchieve</p>
+    <span class="playerPoints">@player.Name, @player.Points points, @player.PointsInCurrentRound roundPoints, @player.PointsToAchieve toAchieve</span>
 }
 
 @code {

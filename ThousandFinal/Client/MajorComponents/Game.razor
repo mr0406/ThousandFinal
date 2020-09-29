@@ -1,6 +1,6 @@
 ﻿<CascadingValue Value="this">
-    <div style="border: dotted; min-height: 90vh; width: inherit;
-                    justify-content: center; display: flex; align-items: center">
+    <div id="gameContainer">
+
         @if (!GameStarted)
         {
             <p>Are you ready? </p>
@@ -10,13 +10,13 @@
         }
         else
         {
-            <div id="mandatory" style="width: 20%; height: 100px; display: block; position: absolute;
-                                    left: 2vw;  top: 1vw; background-color: rgba(184, 255, 118, 0.3)">
+            <div id="mandatory">
+
                 <div>Name:@User.Name</div>
                 <MandatoryTable currentMandatory="mandatorySuit"></MandatoryTable>
+
             </div>
-            <div id="resultTable" style="border: dotted; width: 30%; height: 100px; display: block; position: absolute;
-                                    left: 20vw; top: 1vw">
+            <div id="resultTable">
   
                 <ResultsTable Players="@Users"></ResultsTable>
             </div>
@@ -28,9 +28,9 @@
                 }
             </div>
 
-            <div style="border: solid; width: 90%; height: 250px">
+            <div id="tableContainer">
 
-                <div style="border: dotted; width: 10%; height: 200px; margin-left: 10px; display: inline-block; position: relative;">
+                <div class="otherPlayer" id="leftPlayer">
                     <OtherPlayerHand UserName="@leftUserName" numberOfCards="leftUserNumberOfCards"></OtherPlayerHand>
                 </div>
 
@@ -58,17 +58,17 @@
 
                 @if (phase == Phase.Playing)
                 {
-                    <div style="border: dotted; width: 70%; height: 200px; display: inline-block; position: relative; margin: 0 auto;">
+                    <div id="table">
                         <CardsOnTable Cards="cardsOnTable"></CardsOnTable>
                     </div>
                 }
 
-                <div style="border: dotted; width: 10%; height: 200px; margin-right: 10px; display: inline-block; position: relative;">
+                <div class="otherPlayer" id="rightPlayer">
                     <OtherPlayerHand UserName="@rightUserName" numberOfCards="rightUserNumberOfCards"></OtherPlayerHand>
                 </div>
             </div>
 
-            <div style="border: dotted; width: 70%; height: 240px; position: absolute; right: 25%; left: 50%; bottom : 10px; margin-left: -35%; display: flex; overflow-x: scroll;">
+            <div id="playerCards">
                 <PlayersHand Cards="playerCards"></PlayersHand>
             </div>
         }

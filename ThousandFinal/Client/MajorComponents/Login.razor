@@ -5,7 +5,7 @@
     </label>
 </div>
 <button @onclick="TryJoin">Join</button>
-<div style="color: red">@errorType</div>
+<div class="error">@errorType</div>
 
 @code {
     [CascadingParameter] HubConnection hubConnection { get; set; }

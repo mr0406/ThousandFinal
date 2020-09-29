@@ -1,16 +1,6 @@
-﻿<style>
-    .can-drop {
-        background-color: green;
-    }
-
-    .no-drop {
-        background-color: red;
-    }
-</style>
-
-<div ondragover="event.preventDefault();"
+﻿<div ondragover="event.preventDefault();"
      ondragstart="event.dataTransfer.setData('', event.target.id);"
-     @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass">
+     @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass otherPlayerHand">
     <p>@UserName</p>
     <p>@numberOfCards cards</p>
 </div>

@@ -1,16 +1,6 @@
-﻿<style>
-    .can-drop {
-        background-color: green;
-    }
-
-    .no-drop {
-        background-color: red;
-    }
-</style>
-<div ondragover="event.preventDefault();"
+﻿<div ondragover="event.preventDefault();"
      ondragstart="event.dataTransfer.setData('', event.target.id);"
-     @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass"
-     style="border: dotted; min-width: 40%; min-height: 200px; border: groove; display: flex;">
+     @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass cardsOnTable">
     @if (Cards != null)
      {
         @foreach (var card in Cards)

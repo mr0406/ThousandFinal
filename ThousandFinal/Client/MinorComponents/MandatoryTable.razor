@@ -1,7 +1,7 @@
 ﻿<div>Mandatory: @currentMandatory</div>
 @if (currentMandatory != Suit.None)
 {
-    <img src=@getImgLink(currentMandatory) style="display: block; margin: auto; width: 24px" />
+    <img src=@getImgLink(currentMandatory) id="currentMandatory" />
 }
 
 @code {
