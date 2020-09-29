@@ -220,39 +220,7 @@ app {
     background-color: red;
 }
 
-.playerCardsContainer {
-    height: 185px;
-    width: 150px;
-    min-width: 150px;
-    border-radius: 15px;
-    background: rgb(230,230,230);
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    transition: .2s;
-    clear: both;
-    position: relative;
-    margin: 0;
-    padding: 0;
-}
-
-.smallImg {
-    display: block;
-    margin: auto;
-    width: 24px;
-}
-
-#bottomImg {
-    transform: rotate(180deg)
-}
-
-#bigImg {
-    display: block;
-    margin: auto;
-    width: 64px
-}
-
-.cardContainer {
+#cardContainer {
     height: 185px;
     width: 150px;
     min-width: 150px;
@@ -285,9 +253,12 @@ app {
     display: block;
     margin: auto;
     width: 24px;
-    transform: rotate(180deg);
 }
+
+
 /* Poniżej jest styl Game.razor */
+
+
 #mandatory {
     width: 20%;
     height: 100px;
