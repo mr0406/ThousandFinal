@@ -79,4 +79,4 @@ smallCardColorImage -> Mały obrazek koloru karty w lewym górnym i prawym dolny
 
 bigCardColorImage -> Obrazek koloru na środku karty w ręce gracza.
 
-cardColorText -> Tekst nad/pod małym obrazkiem symbolizującym kolor karty na ręce gracza.
+**cardColorText** -> Tekst nad/pod małym obrazkiem symbolizującym kolor karty na ręce gracza.
