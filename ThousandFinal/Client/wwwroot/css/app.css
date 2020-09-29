@@ -212,6 +212,14 @@ app {
     display: flex;
 }
 
+.can-drop {
+    background-color: green;
+}
+
+.no-drop {
+    background-color: red;
+}
+
 
 /* Poniżej jest styl Game.razor */
 #mandatory {
