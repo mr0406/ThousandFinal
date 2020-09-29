@@ -1,6 +1,16 @@
-﻿<div ondragover="event.preventDefault();"
+﻿<style>
+    .can-drop {
+        background-color: green;
+    }
+
+    .no-drop {
+        background-color: red;
+    }
+</style>
+<div ondragover="event.preventDefault();"
      ondragstart="event.dataTransfer.setData('', event.target.id);"
-     @ondrop="HandleDrop" style="border: dotted; min-width: 40%; min-height: 200px; border: groove; display: flex;">
+     @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass"
+     style="border: dotted; min-width: 40%; min-height: 200px; border: groove; display: flex;">
     @if (Cards != null)
      {
         @foreach (var card in Cards)
@@ -14,9 +24,28 @@
     [CascadingParameter] public Game Game { get; set; }
     [Parameter] public List<CardModel> Cards { get; set; }
 
+    string dropClass { get; set; } = "";
+
     private async Task HandleDrop()
     {
+        dropClass = "";
+
         Console.WriteLine("Drop");
         await Game.PlayCard();
     }
+
+    private async Task HandleEnter()
+    {
+        //MILION WARUNKÓW TU BEDZIE
+        if(Game.phase == Phase.Playing && Game.AmIActive())
+            dropClass = "can-drop";
+        else
+            dropClass = "no-drop";
+    }
+
+    private async Task HandleLeave()
+    {
+        dropClass = "";
+    }
+
 }

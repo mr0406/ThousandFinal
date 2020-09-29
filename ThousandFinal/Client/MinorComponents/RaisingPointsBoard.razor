@@ -4,7 +4,7 @@
     <button disabled="@IsDisabled(i)" @onclick="@(() => RaisePointsToAchieve(tempInt))">@i</button>
 }
 
-<button @onclick="DontRaisePointsToAchieve">GiveUpAuction</button>
+<button @onclick="DontRaisePointsToAchieve">DontRaisePoints</button>
 
 @code {
     [CascadingParameter] public Game Game { get; set; }

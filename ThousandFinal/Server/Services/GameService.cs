@@ -284,6 +284,8 @@ namespace ThousandFinal.Server.Services
 
         public async Task EndFight()
         {
+            await Refresh();
+            System.Threading.Thread.Sleep(2000);
             await GiveCardsToWinnerPlayer();
             await Refresh();
             if (fightNumber < 7) //maybe wrong

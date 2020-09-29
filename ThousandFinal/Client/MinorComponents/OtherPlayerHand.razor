@@ -1,6 +1,16 @@
-﻿<div ondragover="event.preventDefault();"
+﻿<style>
+    .can-drop {
+        background-color: green;
+    }
+
+    .no-drop {
+        background-color: red;
+    }
+</style>
+
+<div ondragover="event.preventDefault();"
      ondragstart="event.dataTransfer.setData('', event.target.id);"
-     @ondrop="HandleDrop">
+     @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass">
     <p>@UserName</p>
     <p>@numberOfCards cards</p>
 </div>
@@ -10,15 +20,30 @@
     [Parameter] public string UserName { get; set; }
     [Parameter] public int numberOfCards { get; set; }
 
+    string dropClass { get; set; } = "";
+
     private async Task HandleDrop()
     {
         //Client side validation
         if(numberOfCards > 7)
-        {
             return;
-        }
+
+        dropClass = "";
 
         Console.WriteLine($"Drop to: {UserName}");
         await Game.GiveCard(UserName);
+    }
+
+    private async Task HandleEnter()
+    {
+        if(Game.phase == Phase.GivingAdditionalCards && numberOfCards < 8)
+            dropClass = "can-drop";
+        else
+            dropClass = "no-drop";
+    }
+
+    private async Task HandleLeave()
+    {
+        dropClass = "";
     }
  }
