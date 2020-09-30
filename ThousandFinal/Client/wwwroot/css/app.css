@@ -221,8 +221,8 @@ app {
 
 #cardContainer {
     height: 185px;
-    width: 150px;
-    min-width: 150px;
+    width: 100px;
+    min-width: 80px;
     border-radius: 15px;
     background: rgb(230,230,230);
     display: flex;
@@ -304,15 +304,14 @@ app {
 
 #playerCards {
     border: dotted;
-    width: 70%;
     height: 240px;
     position: absolute;
-    right: 25%;
-    left: 50%;
+    right: 1px;
+    left: 2%;
     bottom: 10px;
-    margin-left: -35%;
     display: flex;
     overflow-x: scroll;
+    background-color: white;
 }
 
 #gameContainer {
