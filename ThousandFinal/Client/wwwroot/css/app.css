@@ -205,7 +205,6 @@ app {
 }
 
 #cardsOnTable {
-    border: dotted;
     min-width: 40%;
     min-height: 200px;
     border: groove;
