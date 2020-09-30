@@ -40,6 +40,8 @@ myMessage -> Wiadomość wysłana przez gracza.
 
 othersMessage -> Wiadomość wysłana przez innych graczy   // NAZWA DO ZMIANY???
 
+messageForm -> Pole do wpisywania wiadomości na czat.
+
 ### Klasy
 
 **playerList** -> Klasa zawierająca liste graczy.
