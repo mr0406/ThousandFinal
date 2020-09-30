@@ -1,10 +1,10 @@
 ﻿@for (int i = 110; i <= 300; i = i + 10)
 {
     var tempInt = i;
-    <button disabled="@IsDisabled(i)" @onclick="@(() => RaisePointsToAchieve(tempInt))">@i</button>
+    <button class="raiseButton" disabled="@IsDisabled(i)" @onclick="@(() => RaisePointsToAchieve(tempInt))">@i</button>
 }
 
-<button @onclick="DontRaisePointsToAchieve">DontRaisePoints</button>
+<button id="giveupButton" @onclick="DontRaisePointsToAchieve">DontRaisePoints</button>
 
 @code {
     [CascadingParameter] public Game Game { get; set; }

@@ -1,9 +1,6 @@
 ﻿<div ondragover="event.preventDefault();"
      ondragstart="event.dataTransfer.setData('', event.target.id);"
-     @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass" style="min-width: 40%;
-    min-height: 200px;
-    border: groove;
-    display: flex;">
+     @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass" id="cardsOnTable">
     <!--Nie działa klasa: cardsOnTable z app.css, dlatego wrzucone lokalnie tutaj-->
     @if (Cards != null)
     {

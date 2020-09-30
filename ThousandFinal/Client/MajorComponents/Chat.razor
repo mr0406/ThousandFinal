@@ -11,7 +11,7 @@
 
     <hr />
 
-    <div id="messages">Messages: </div>
+    <div id="messagesHeader">Messages: </div>
 
     <div  id="messages"> <! –– class="overflow-auto" ––>
         @foreach (var message in messages)
@@ -33,10 +33,10 @@
 
     <hr />
 
-    <div class="form-group">
+    <div> <! ––class="form-group" ––>>
         <label>
             Message:
-            <input @bind="messageInput" style="max-width: 25vw;" @onkeyup="@KeyPress"/>
+            <input @bind="messageInput" id="messageForm" @onkeyup="@KeyPress"/>
         </label>
     </div>
     <button @onclick="Send">Send</button>
