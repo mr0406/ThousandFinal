@@ -13,7 +13,7 @@ tableContainer -> Kontener zawierający graczy po lewej, prawej, oraz stół
 
 gameContainer -> Kontener zawierający wszystkie elementy gry, a więc nie zawiera czatu.
 
-**rightPlayer, leftPlayer** -> Kontener gracza po prawej oraz lewej stronie.
+rightPlayer, leftPlayer -> Gracze po prawej oraz lewej stronie.
 
 table -> Stół z kartami.
 
@@ -40,6 +40,8 @@ myMessage -> Wiadomość wysłana przez gracza.
 
 othersMessage -> Wiadomość wysłana przez innych graczy   // NAZWA DO ZMIANY???
 
+messageForm -> Pole do wpisywania wiadomości na czat.
+
 ### Klasy
 
 **playerList** -> Klasa zawierająca liste graczy.
@@ -61,9 +63,13 @@ currentMandatory -> Obecny meldunek, ikonka w oknie "mandatory".
 
 cardContainer -> Kontener pojedyńczej karty w ręce gracza.
 
-## Klasy
+cardsOnTable -> Stół. Kontener kart położonych na stole.
 
-cardsOnTable -> Są to karty położone na stole. Jest to klasa bo nie wiem do końca czy to jest generowane oddzielnie dla każdej karty czy nie i nie wiem jak zachowywałyby się 2 elementy o tym samym ID, więc zrobiłem klase.
+raisingPoints -> Kontener z przyciskami do aukcji.
+
+giveupButton -> Przycisk do pasowania w trakcie aukcji i po aukcji.
+
+## Klasy
 
 **otherPlayerHand** -> Kontener zawierający karty, które w ręce trzyma inny gracz. Zrobiłem z tego klase bo może kiedys będzie trzeba zrobić oddzielny styl na lewego i prawego gracza.
 
@@ -80,3 +86,5 @@ smallCardColorImage -> Mały obrazek koloru karty w lewym górnym i prawym dolny
 bigCardColorImage -> Obrazek koloru na środku karty w ręce gracza.
 
 **cardColorText** -> Tekst nad/pod małym obrazkiem symbolizującym kolor karty na ręce gracza.
+
+raiseButton -> Klasa obejmująca przyciski z liczbami podczas aukcji.
