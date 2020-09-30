@@ -61,9 +61,9 @@ currentMandatory -> Obecny meldunek, ikonka w oknie "mandatory".
 
 cardContainer -> Kontener pojedyńczej karty w ręce gracza.
 
-## Klasy
+cardsOnTable -> Stół. Kontener kart położonych na stole.
 
-cardsOnTable -> Są to karty położone na stole. Jest to klasa bo nie wiem do końca czy to jest generowane oddzielnie dla każdej karty czy nie i nie wiem jak zachowywałyby się 2 elementy o tym samym ID, więc zrobiłem klase.
+## Klasy
 
 **otherPlayerHand** -> Kontener zawierający karty, które w ręce trzyma inny gracz. Zrobiłem z tego klase bo może kiedys będzie trzeba zrobić oddzielny styl na lewego i prawego gracza.
 
