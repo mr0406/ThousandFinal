@@ -22,8 +22,7 @@ namespace ThousandFinal.Server.Hubs
 
         public async Task LeaveServer(UserModel user)
         {
-            string id = Context.ConnectionId;
-            users.Remove(id);
+            users.Remove(Context.ConnectionId);
             await Clients.Others.ReceiveLeaveServer(user);
         }
 
@@ -73,13 +72,12 @@ namespace ThousandFinal.Server.Hubs
             await SendMessage(message);
         }
 
-
         public async Task TryStartGame()
         {
             if(users.Values.Where(x => x.IsReady == true).Count() != 3)
             {
                 string id = Context.ConnectionId;
-                string text = $"there are only {users.Count()} players ready, we need 3 to start";
+                string text = $"not enough players";
                 MessageModel message = new MessageModel($"{users[id].Name} tried to start, but {text}", true);
                 await SendMessage(message);
                 return;

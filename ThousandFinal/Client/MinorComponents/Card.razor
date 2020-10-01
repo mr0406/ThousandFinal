@@ -23,9 +23,6 @@
     [CascadingParameter] Game Game { get; set; }
     [Parameter] public CardModel CardModel { get; set; }
 
-
-    public bool exposed { get; set; } = true;
-
     private string getImgLink(CardModel CardModel)
     {
         return "/images/" + CardModel.Suit.ToString().ToLower() + ".ico";
@@ -41,6 +38,9 @@
 
     private void HandleDragStart(CardModel draggedCard)
     {
+        if (draggedCard.Status == Status.InHand)
+            return;
+
         Console.WriteLine("DragStart");
         Game.PayloadCard = draggedCard;
     }
