@@ -6,48 +6,83 @@ namespace ThousandFinal.Shared.Models
 {
     public class RefreshPackage
     {
-        //PlayerInfo
-        public string userName { get; set; }
-        public List<CardModel> userCards { get; set; }
+        public PlayerSpecificInfo playerSpecificInfo { get; set; }
+        public GameInfo gameInfo { get; set; }
+        public CardsInfo cardsInfo { get; set; }
 
-        //OtherPlayersInfo
+        public RefreshPackage() { }
+
+        public RefreshPackage(PlayerSpecificInfo playerSpecificInfo, 
+                              GameInfo gameInfo, CardsInfo cardsInfo)
+        {
+            this.playerSpecificInfo = playerSpecificInfo;
+            this.gameInfo = gameInfo;
+            this.cardsInfo = cardsInfo;
+        }
+    }
+
+    public class PlayerSpecificInfo
+    {
+        public string playerName { get; set; }
+        public List<CardModel> playerCards { get; set; }
+
         public string leftPlayerName { get; set; }
         public int leftPlayerCardsNumber { get; set; }
         public string rightPlayerName { get; set; }
         public int rightPlayerCardsNumber { get; set; }
 
-        //GameInfo
-        public List<UserModel> players { get; set; }
-        public List<CardModel> cardsOnTable { get; set; }
-        public Suit currentMandatory { get; set; }
-        public bool cardsToTakeExists { get; set; }
-        public List<CardModel> cardsToTake { get; set; }
-        public int indexOfActivePlayer {get; set;}
-        public Phase phase { get; set; }
-        public int highestBet { get; set; }
-        public CardModel bestCardOnTable { get; set; }
+        public PlayerSpecificInfo() { }
 
-        public RefreshPackage() { }
-
-        public RefreshPackage(List<UserModel> players, string userName, List<CardModel> userCards,
-            string leftPlayerName, int leftPlayerCardsNumber, string rightPlayerName, int rightPlayerCardsNumber,
-            List<CardModel> cardsOnTable, Suit currentMandatory, bool cardsToTakeExists, List<CardModel> cardsToTake,
-            int indexOfActivePlayer, Phase phase, int highestBet, CardModel bestCardOnTable)
+        public PlayerSpecificInfo(string playerName, List<CardModel> playerCards,
+                                  string leftPlayerName, int leftPlayerCardsNumber,
+                                  string rightPlayerName, int rightPlayerCardsNumber)
         {
-            this.players = players;
-            this.userName = userName;
-            this.userCards = userCards;
+            this.playerName = playerName;
+            this.playerCards = playerCards;
+
             this.leftPlayerName = leftPlayerName;
             this.leftPlayerCardsNumber = leftPlayerCardsNumber;
             this.rightPlayerName = rightPlayerName;
             this.rightPlayerCardsNumber = rightPlayerCardsNumber;
-            this.cardsOnTable = cardsOnTable;
+        }
+    }
+
+    public class GameInfo
+    {
+        public List<UserModel> players { get; set; }
+        public int indexOfActivePlayer { get; set; }
+        public Suit currentMandatory { get; set; }
+        public Phase phase { get; set; }
+        public int highestBet { get; set; }
+
+        public GameInfo() { }
+
+        public GameInfo(List<UserModel> players, int indexOfActivePlayer, 
+                        Suit currentMandatory, Phase phase, int highestBet)
+        {
+            this.players = players;
             this.currentMandatory = currentMandatory;
-            this.cardsToTakeExists = cardsToTakeExists;
-            this.cardsToTake = cardsToTake;
             this.indexOfActivePlayer = indexOfActivePlayer;
             this.phase = phase;
             this.highestBet = highestBet;
+        }
+    }
+
+    public class CardsInfo
+    {
+        public List<CardModel> cardsOnTable { get; set; }
+        public CardModel bestCardOnTable { get; set; }
+        public List<CardModel> cardsToTake { get; set; }
+        public bool cardsToTakeExists { get; set; }
+
+        public CardsInfo() { }
+
+        public CardsInfo(List<CardModel> cardsOnTable, CardModel bestCardOnTable, 
+                         List<CardModel> cardsToTake, bool cardsToTakeExists)
+        {
+            this.cardsOnTable = cardsOnTable;
+            this.cardsToTakeExists = cardsToTakeExists;
+            this.cardsToTake = cardsToTake;
             this.bestCardOnTable = bestCardOnTable;
         }
     }

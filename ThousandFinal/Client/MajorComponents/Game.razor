@@ -13,9 +13,17 @@
             <div id="mandatory">
 
                 <div>Name:@User.Name</div>
-                <MandatoryTable currentMandatory="mandatorySuit"></MandatoryTable>
+                <MandatoryTable currentMandatory="@mandatorySuit"></MandatoryTable>
 
             </div>
+
+            <div>
+                @if(cardsToTakeExists)
+                {
+                    <CardsToTake Cards="@cardsToTake"></CardsToTake>
+                }
+            </div>
+
             <div id="resultTable">
 
                 <ResultsTable Players="@Users"></ResultsTable>
@@ -92,7 +100,7 @@
 
     public List<CardModel> playerCards = new List<CardModel>();
     public List<CardModel> cardsOnTable = new List<CardModel>();
-    public bool thereAreCardsToTake;
+    public bool cardsToTakeExists { get; set; } = true;
     public List<CardModel> cardsToTake = new List<CardModel>(); //FIX
 
     public int activePlayerIndex;
@@ -128,56 +136,25 @@
             StateHasChanged();
         });
 
-        hubConnection.On<List<CardModel>, List<CardModel>>(ServerToClient.RECEIVE_REFRESH_BOARD, (handCards, tableCards) =>
-        {
-            playerCards = handCards;
-            cardsOnTable = tableCards;
-            StateHasChanged();
-        });
-
-        hubConnection.On<bool, List<CardModel>>(ServerToClient.RECEIVE_REFRESH_CARDS_TO_TAKE, (cardsToTakeExists, newCardsToTake) =>
-        {
-            //1. Where cardsToTake exists and cards are null <- there are unknown, show 3 reverses
-            //2. Where cardsToTake exists and cards arent null <- there are known, show 3 cards
-            //3. Where cardsToTake dont exists <- dont show anything
-
-            thereAreCardsToTake = cardsToTakeExists;
-            cardsToTake = newCardsToTake;
-        });
-
-
-        hubConnection.On<Dictionary<string, int>>(ServerToClient.RECEIVE_REFRESH_PLAYERS_CARDS_NUMBER, (dictionary) =>
-        {
-            dictionary.TryGetValue(leftUserName, out leftUserNumberOfCards);
-            dictionary.TryGetValue(rightUserName, out rightUserNumberOfCards);
-            StateHasChanged();
-        });
-
-        hubConnection.On<Suit>(ServerToClient.RECEIVE_REFRESH_MANDATORY, (newMandatory) =>
-        {
-            mandatorySuit = newMandatory;
-            StateHasChanged();
-        });
-
-
         hubConnection.On<RefreshPackage>(ServerToClient.RECEIVE_REFRESH, (package) =>
         {
-            WritePackageInfo(package);
+            playerCards = package.playerSpecificInfo.playerCards;
+            leftUserName = package.playerSpecificInfo.leftPlayerName;
+            leftUserNumberOfCards = package.playerSpecificInfo.leftPlayerCardsNumber;
+            rightUserName = package.playerSpecificInfo.rightPlayerName;
+            rightUserNumberOfCards = package.playerSpecificInfo.rightPlayerCardsNumber;
 
-            Users = package.players;
-            playerCards = package.userCards;
-            leftUserName = package.leftPlayerName;
-            leftUserNumberOfCards = package.leftPlayerCardsNumber;
-            rightUserName = package.rightPlayerName;
-            rightUserNumberOfCards = package.rightPlayerCardsNumber;
-            cardsOnTable = package.cardsOnTable;
-            mandatorySuit = package.currentMandatory;
-            thereAreCardsToTake = package.cardsToTakeExists;
-            cardsToTake = package.cardsToTake;
-            activePlayerIndex = package.indexOfActivePlayer;
-            phase = package.phase;
-            highestBet = package.highestBet;
-            bestCardOnTable = package.bestCardOnTable;
+            Users = package.gameInfo.players;
+            activePlayerIndex = package.gameInfo.indexOfActivePlayer;
+            mandatorySuit = package.gameInfo.currentMandatory;
+            phase = package.gameInfo.phase;
+            highestBet = package.gameInfo.highestBet;
+
+            cardsOnTable = package.cardsInfo.cardsOnTable;
+            bestCardOnTable = package.cardsInfo.bestCardOnTable;
+            cardsToTakeExists = package.cardsInfo.cardsToTakeExists;
+            cardsToTake = package.cardsInfo.cardsToTake;
+
             StateHasChanged();
         });
     }
@@ -239,17 +216,6 @@
         await hubConnection.SendAsync(ClientToServer.USER_READY_CHANGE);
         //System.Threading.Thread.Sleep(3000);
         //checkBoxDisabled = false;
-    }
-
-    public void WritePackageInfo(RefreshPackage package)
-    {
-        Console.WriteLine("PACKAGE");
-
-        foreach (var card in package.cardsOnTable)
-        {
-            Console.WriteLine($"{card.Rank}, {card.Suit}");
-        }
-        Console.WriteLine("--------------------");
     }
 
     public bool AmIActive()

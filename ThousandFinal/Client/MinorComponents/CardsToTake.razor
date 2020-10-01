@@ -1,0 +1,21 @@
+﻿<div>
+    @if (Cards.Count() != 0)
+    {
+        @foreach (var card in Cards)
+        {
+            <Card CardModel="card"></Card>
+        }
+    }
+    else
+    {
+        @for(int i = 0; i < 3; i++)
+        {
+            <div>obrócona karta</div>
+        }
+    }
+</div>
+
+@code {
+    [CascadingParameter] public Game Game { get; set; }
+    [Parameter] public List<CardModel> Cards { get; set; }
+}

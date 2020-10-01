@@ -9,10 +9,8 @@ namespace ThousandFinal.Server.Static
 {
     public static class TurnSystem
     {
-        public static int ChooseNextObligatedPlayerIndex(int currentObligatedPlayerNumber)
-        {
-            return (currentObligatedPlayerNumber + 1) % 3;
-        }
+        public static int ChooseNextObligatedPlayerIndex(int currentObligatedPlayerNumber) 
+                            => (currentObligatedPlayerNumber + 1) % 3;
 
         public static int GetNextPlayerNumber(Phase phase, List<UserModel> players, int currentPlayerNumber)
         {
@@ -31,7 +29,6 @@ namespace ThousandFinal.Server.Static
 
             if (phase == Phase.Playing)
             {
-                Console.WriteLine($"Active Player: {players[(currentPlayerNumber + 1) % 3].Name}");
                 return (currentPlayerNumber + 1) % 3;
             }
 

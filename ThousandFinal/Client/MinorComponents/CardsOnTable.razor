@@ -1,7 +1,6 @@
 ﻿<div ondragover="event.preventDefault();"
      ondragstart="event.dataTransfer.setData('', event.target.id);"
      @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass" id="cardsOnTable">
-    <!--Nie działa klasa: cardsOnTable z app.css, dlatego wrzucone lokalnie tutaj-->
     @if (Cards != null)
     {
         @foreach (var card in Cards)

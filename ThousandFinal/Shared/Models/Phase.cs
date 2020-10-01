@@ -9,6 +9,7 @@ namespace ThousandFinal.Shared.Models
         Auction,
         GivingAdditionalCards,
         RaisingPointsToAchieve,
-        Playing
+        Playing,
+        Waiting //NO ACTIONS FROM USERS 
     }
 }

@@ -35,12 +35,11 @@ namespace ThousandFinal.Server.Services
 
         //Set Methods
         Task SetAuctionWinner(int AuctionWinner);
-        Task ActivePlayerChange(int indexOfActivePlayer);
+        //Task ActivePlayerChange(int indexOfActivePlayer);
         //Refresh Method
         //Local
         Task RefreshCards(List<CardModel> cards);
         //SendMessage
-        Task SendMessage(MessageModel message);
 
         //USER REFRESH
         Task Refresh();
@@ -53,8 +52,5 @@ namespace ThousandFinal.Server.Services
         void TryMandatoryChange(CardModel playedCard);
         CardModel GetBetterCard(CardModel pastBestCard, CardModel pretendendCard);
         void AddPointsAfterRound();
-
-        //Debug
-        void WriteWonCards();  
     }
 }
