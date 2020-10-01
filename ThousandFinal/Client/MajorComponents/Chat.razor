@@ -65,8 +65,7 @@
     {
         if(!String.IsNullOrWhiteSpace(messageInput))
         {
-            MessageModel message = new MessageModel(messageInput, User);
-            await hubConnection.SendAsync(ClientToServer.SEND_MESSAGE, message);
+            await hubConnection.SendAsync(ClientToServer.SEND_MESSAGE, new MessageModel(messageInput, User));
             messageInput = "";
         }
     }

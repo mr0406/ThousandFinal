@@ -29,25 +29,12 @@
         }
 
         dropClass = "";
-        Console.WriteLine("Drop");
         await Game.PlayCard();
     }
 
     private async Task HandleEnter()
     {
-        if(Game.phase != Phase.Playing)
-        {
-            dropClass = "no-drop";
-            return;
-        }
-
-        if(!Game.AmIActive())
-        {
-            dropClass = "no-drop";
-            return;
-        }
-
-        if (CanPlayThisCard())
+        if(Game.phase == Phase.Playing && Game.AmIActive() && CanPlayThisCard())
         {
             dropClass = "can-drop";
         }
@@ -55,7 +42,6 @@
         {
             dropClass = "no-drop";
         }
-
     }
 
     private async Task HandleLeave()

@@ -18,13 +18,7 @@
         return true;
     }
 
-    void DontRaisePointsToAchieve()
-    {
-        Game.hubConnection.SendAsync(ClientToServer.DONT_RAISE_POINTS_TO_ACHIEVE);
-    }
+    void RaisePointsToAchieve(int points) => Game.hubConnection.SendAsync(ClientToServer.RAISE_POINTS_TO_ACHIEVE, points);
 
-    void RaisePointsToAchieve(int points)
-    {
-        Game.hubConnection.SendAsync(ClientToServer.RAISE_POINTS_TO_ACHIEVE, points);
-    }
+    void DontRaisePointsToAchieve() => Game.hubConnection.SendAsync(ClientToServer.DONT_RAISE_POINTS_TO_ACHIEVE);
 }

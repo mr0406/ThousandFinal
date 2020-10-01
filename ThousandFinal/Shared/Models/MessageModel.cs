@@ -10,10 +10,7 @@ namespace ThousandFinal.Shared.Models
         public string AuthorName { get; set; }
         public bool GeneratedFromServer { get; set; } = false;
 
-        public MessageModel()
-        {
-
-        }
+        public MessageModel() { }
 
         public MessageModel(string text, UserModel author)
         {

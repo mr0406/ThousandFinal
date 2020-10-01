@@ -6,34 +6,28 @@ namespace ThousandFinal.Shared.Models
 {
     public class RefreshPackage
     {
-        public List<UserModel> players { get; set; }
+        //PlayerInfo
         public string userName { get; set; }
         public List<CardModel> userCards { get; set; }
 
+        //OtherPlayersInfo
         public string leftPlayerName { get; set; }
         public int leftPlayerCardsNumber { get; set; }
         public string rightPlayerName { get; set; }
         public int rightPlayerCardsNumber { get; set; }
 
+        //GameInfo
+        public List<UserModel> players { get; set; }
         public List<CardModel> cardsOnTable { get; set; }
-
         public Suit currentMandatory { get; set; }
-
         public bool cardsToTakeExists { get; set; }
         public List<CardModel> cardsToTake { get; set; }
-
         public int indexOfActivePlayer {get; set;}
-
         public Phase phase { get; set; }
-
         public int highestBet { get; set; }
-
         public CardModel bestCardOnTable { get; set; }
 
-        public RefreshPackage()
-        {
-
-        }
+        public RefreshPackage() { }
 
         public RefreshPackage(List<UserModel> players, string userName, List<CardModel> userCards,
             string leftPlayerName, int leftPlayerCardsNumber, string rightPlayerName, int rightPlayerCardsNumber,

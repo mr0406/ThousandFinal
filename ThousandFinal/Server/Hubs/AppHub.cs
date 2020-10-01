@@ -15,8 +15,7 @@ namespace ThousandFinal.Server.Hubs
 
         private static Dictionary<string, UserModel> users = new Dictionary<string, UserModel>();
 
-        public AppHub(IGameService GameService) =>
-            gameService = GameService;
+        public AppHub(IGameService GameService) => gameService = GameService;
 
         public async Task SendMessage(MessageModel message) =>
            await Clients.All.ReceiveMessage(message);
@@ -104,46 +103,39 @@ namespace ThousandFinal.Server.Hubs
         }
 
         //Users Actions
-
         public async Task Bet(int points)
         {
-            string id = Context.ConnectionId;
-            UserModel player = users[id];
+            UserModel player = users[Context.ConnectionId];
             await gameService.Bet(player, points);
         }
 
         public async Task GiveUpAuction()
         {
-            string id = Context.ConnectionId;
-            UserModel player = users[id];
+            UserModel player = users[Context.ConnectionId];
             await gameService.GiveUpAuction(player);
         }
 
         public async Task GiveCardToPlayer(CardModel card, string playerWhoGetName)
         {
-            string id = Context.ConnectionId;
-            UserModel playerWhoGive = users[id];
-            await gameService.GiveCardToPlayer(card, playerWhoGive, playerWhoGetName);
+            UserModel player = users[Context.ConnectionId];
+            await gameService.GiveCardToPlayer(card, player, playerWhoGetName);
         }
 
         public async Task RaisePointsToAchieve(int points)
         {
-            string id = Context.ConnectionId;
-            UserModel player = users[id];
+            UserModel player = users[Context.ConnectionId];
             await gameService.RaisePointsToAchieve(player, points);
         }
 
         public async Task DontRaisePointsToAchieve()
         {
-            string id = Context.ConnectionId;
-            UserModel player = users[id];
+            UserModel player = users[Context.ConnectionId];
             await gameService.DontRaisePointsToAchieve(player);
         }
 
         public async Task PlayCard(CardModel card, CardModel newBestCard)
-        { 
-            string id = Context.ConnectionId;
-            UserModel player = users[id];
+        {
+            UserModel player = users[Context.ConnectionId];
             await gameService.PlayCard(card, newBestCard, player);
         }
     }

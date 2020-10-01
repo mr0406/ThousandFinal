@@ -17,14 +17,8 @@
 
         return true;
     }
+    
+    void Bet(int points) => Game.hubConnection.SendAsync(ClientToServer.BET, points);
 
-    void GiveUpAuction()
-    {
-        Game.hubConnection.SendAsync(ClientToServer.GIVE_UP_AUCTION);
-    }
-
-    void Bet(int points)
-    {
-        Game.hubConnection.SendAsync(ClientToServer.BET, points);
-    }
+    void GiveUpAuction() => Game.hubConnection.SendAsync(ClientToServer.GIVE_UP_AUCTION);
 }

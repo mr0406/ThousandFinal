@@ -17,8 +17,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-
-
         hubConnection.On(ServerToClient.RECEIVE_CAN_NOT_JOIN, (string exception) =>
         {
             errorType = exception;

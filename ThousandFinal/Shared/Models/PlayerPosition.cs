@@ -10,10 +10,7 @@ namespace ThousandFinal.Shared.Models
         public string leftUserName { get; set; }
         public string rightUserName { get; set; }
 
-        public PlayerPosition()
-        {
-
-        }
+        public PlayerPosition() { }
 
         public PlayerPosition(string UserName, string LeftUserName, string RightUserName)
         {

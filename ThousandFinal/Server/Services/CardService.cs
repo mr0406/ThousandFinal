@@ -69,7 +69,7 @@ namespace ThousandFinal.Server.Services
             gameService.RefreshCards(shuffledCards);
         }
 
-        public void GiveAdditionalCardsToAuctionWinner(List<CardModel> cards, List<UserModel> players, int auctionWinnerIndex)
+        public void GiveCardsToAuctionWinner(List<CardModel> cards, List<UserModel> players, int auctionWinnerIndex)
         {
             cards.Where(x => x.Status == Status.ToTake).ToList()
                  .ForEach(x => { x.Status = Status.InHand; x.OwnerName = players[auctionWinnerIndex].Name; });

@@ -12,10 +12,7 @@ namespace ThousandFinal.Shared.Models
         public string OwnerName { get; set; }
         public int positionOnTable { get; set; }
 
-        public CardModel()
-        {
-
-        }
+        public CardModel() { }
 
         public CardModel(Rank rank, Suit suit, Status status)
         {

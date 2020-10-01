@@ -56,7 +56,7 @@ namespace ThousandFinal.Server.StaticClasses
                 case Rank.Ten: return 10;
                 case Rank.King: return 4;
                 case Rank.Queen: return 3;
-                case Rank.Jack: return 4;
+                case Rank.Jack: return 2;
                 case Rank.Nine: return 0;
                 default: return -1;
             }
@@ -71,6 +71,22 @@ namespace ThousandFinal.Server.StaticClasses
                 case Suit.Clubs: return 60;
                 case Suit.Spades: return 40;
                 default: return -1;
+            }
+        }
+
+        public static int RoundToTens(int value)
+        {
+            switch(value % 10)
+            {
+                case 0:
+                    return value;
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                    return value - (value % 10);
+                default:
+                    return value + (10 - (value % 10));
             }
         }
     }

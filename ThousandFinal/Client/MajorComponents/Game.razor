@@ -17,7 +17,7 @@
 
             </div>
             <div id="resultTable">
-  
+
                 <ResultsTable Players="@Users"></ResultsTable>
             </div>
 
@@ -88,7 +88,7 @@
 
     public List<CardModel> playerCards = new List<CardModel>();
     public List<CardModel> cardsOnTable = new List<CardModel>();
-    public bool thereAreCardsToTake; //FIX
+    public bool thereAreCardsToTake;
     public List<CardModel> cardsToTake = new List<CardModel>(); //FIX
 
     public int activePlayerIndex;
@@ -131,7 +131,7 @@
             StateHasChanged();
         });
 
-        hubConnection.On<bool, List<CardModel>>(ServerToClient.RECEIVE_REFRESH_CARDS_TO_TAKE , (cardsToTakeExists, newCardsToTake) =>
+        hubConnection.On<bool, List<CardModel>>(ServerToClient.RECEIVE_REFRESH_CARDS_TO_TAKE, (cardsToTakeExists, newCardsToTake) =>
         {
             //1. Where cardsToTake exists and cards are null <- there are unknown, show 3 reverses
             //2. Where cardsToTake exists and cards arent null <- there are known, show 3 cards
@@ -176,8 +176,6 @@
             bestCardOnTable = package.bestCardOnTable;
             StateHasChanged();
         });
-
-
     }
 
     void TryStartGame() => hubConnection.SendAsync(ClientToServer.TRY_START_GAME);
@@ -191,10 +189,14 @@
             return;
         }
 
-        if(PayloadCard != null)
+        if (PayloadCard != null)
         {
-            CardModel newBestCard = GetBetterCard(bestCardOnTable, PayloadCard);
-            await hubConnection.SendAsync(ClientToServer.PLAY_CARD, PayloadCard, newBestCard);
+            if (NoCardOnBoard() || IsBetterAsSameSuit(PayloadCard) || IsBetterBecouseOfMandatory(PayloadCard))
+            {
+                bestCardOnTable = PayloadCard;
+            }
+
+            await hubConnection.SendAsync(ClientToServer.PLAY_CARD, PayloadCard, bestCardOnTable);
             Console.WriteLine("Card should be played");
             PayloadCard = null;
         }
@@ -203,7 +205,7 @@
     public async Task GiveCard(string playerWhoGetName)
     {
         //Client side validation
-        if(phase != Phase.GivingAdditionalCards)
+        if (phase != Phase.GivingAdditionalCards)
         {
             Console.WriteLine("Wrong phase");
             return;
@@ -213,13 +215,13 @@
             Console.WriteLine("The card must be in hand");
             return;
         }
-        if(!AmIActive())
+        if (!AmIActive())
         {
             Console.WriteLine("Not your turn");
             return;
         }
 
-        if(PayloadCard != null)
+        if (PayloadCard != null)
         {
             await hubConnection.SendAsync(ClientToServer.GIVE_CARD_TO_PLAYER, PayloadCard, playerWhoGetName);
             Console.WriteLine("Card should be given");
@@ -254,35 +256,55 @@
         return false;
     }
 
-
-    //NEW
-
     public bool CanPlayThisCard()
     {
-        /* 
-        * 1. if you can play new best card                             <- PLAY BETTER CARD
-        * 2. if you cant play better card, you can play same suit      <- PLAY SAME SUIT
-        * 3. if you cant play better card, you cant play same suit, 
-        *      you can play mandatory suit                             <- PLAY MANDATORY SUIT
-        * 4. if you cant play new best card, you cant play same suit, 
-        * you cant play mandatory suit                                 <- YOU CAN PLAY ANY CARD
-        */
-
-        //1
-        if (IsNewBestCard(PayloadCard))
+        if (PayloadCard.Status != Status.InHand)
         {
-            bestCardOnTable = PayloadCard;
+            Console.WriteLine("Not in hand");
+            return false;
+        }
+
+        Console.WriteLine("******************");
+        if(bestCardOnTable != null)
+        {
+            Console.WriteLine($"Best card on the table {bestCardOnTable.Rank}, {bestCardOnTable.Suit}");
+        }
+        Console.WriteLine("******************");
+
+        if(NoCardOnBoard())
+        {
+            Console.WriteLine("no best card on board");
             return true;
         }
-        //2
-        if(!CanPlayNewBestCard() && PayloadCard.Suit == bestCardOnTable.Suit)
+
+        if (IsBetterAsSameSuit(PayloadCard))
+        {
+            Console.WriteLine("new best as same suit");
             return true;
-        //3
-        if (!CanPlayNewBestCard() && !CanPlaySameSuit() && PayloadCard.Suit == mandatorySuit)
+        }
+
+        if (!CanPlayBetterAsSameSuit() && IsSameSuit(PayloadCard))
+        {
+            Console.WriteLine("same suit");
             return true;
-        //4
-        if (!CanPlayNewBestCard() && !CanPlaySameSuit() && !CanPlayMandatorySuit())
+        }
+
+        if (!CanPlaySameSuit() && IsBetterBecouseOfMandatory(PayloadCard))
+        {
+            Console.WriteLine("new best becouse of mandatory");
             return true;
+        }
+        if (!CanPlayBetterAsSameSuit() && !CanPlayBetterBecouseOfMandatory() && IsMandatorySuit(PayloadCard))
+        {
+            Console.WriteLine("same suit as mandatory");
+            return true;
+        }
+
+        if(!CanPlaySameSuit() && !CanPlayMandatorySuit())
+        {
+            Console.WriteLine("any card played");
+            return true;
+        }
 
         return false;
     }
@@ -290,60 +312,102 @@
     public bool CanPlayMandatorySuit()
     {
         if (mandatorySuit == Suit.None)
+        {
             return false;
+        }
 
         foreach (var checkedCard in playerCards)
         {
             if (checkedCard.Suit == mandatorySuit)
+            {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    public bool NoCardOnBoard()
+    {
+        if(bestCardOnTable == null)
+        {
+            return true;
         }
         return false;
     }
 
     public bool CanPlaySameSuit()
     {
-        if (bestCardOnTable == null)
-            return false;
-
         foreach (var checkedCard in playerCards)
         {
             if (checkedCard.Suit == bestCardOnTable.Suit)
+            {
                 return true;
+            }
         }
         return false;
     }
 
-    public bool CanPlayNewBestCard()
+    public bool IsBetterAsSameSuit(CardModel newCard)
     {
-        foreach (var checkedCard in playerCards)
+        if (bestCardOnTable.Suit == newCard.Suit && bestCardOnTable.Rank < newCard.Rank)
         {
-            if (IsNewBestCard(checkedCard))
-                return true;
+            Console.WriteLine($"{newCard.Rank}, {newCard.Suit} is better than {bestCardOnTable.Rank}, {bestCardOnTable.Suit}");
+            return true;
         }
         return false;
     }
 
-    public bool IsNewBestCard(CardModel card)
+    public bool IsSameSuit(CardModel newCard)
     {
-        if (cardsOnTable.Count() == 0)
+        if (bestCardOnTable.Suit == newCard.Suit)
+        {
             return true;
-
-        CardModel betterCard = GetBetterCard(bestCardOnTable, card);
-        if (betterCard.Rank == card.Rank && betterCard.Suit == card.Suit)
-            return true;
-
+        }
         return false;
     }
 
-    public CardModel GetBetterCard(CardModel pastBestCard, CardModel pretendendCard)
+    public bool CanPlayBetterAsSameSuit()
     {
-        if (mandatorySuit != Suit.None && pastBestCard.Suit != mandatorySuit && pretendendCard.Suit == mandatorySuit)
-            return pretendendCard;
+        foreach (var card in playerCards)
+        {
+            if (IsBetterAsSameSuit(card))
+            {
+                Console.WriteLine($"CAN PLAY FUCKING BETTER CARD");
+                return true;
+            }
+        }
+        return false;
+    }
 
-        else if (pastBestCard.Suit == pretendendCard.Suit && pastBestCard.Rank < pretendendCard.Rank)
-            return pretendendCard;
+    public bool IsBetterBecouseOfMandatory(CardModel newCard)
+    {
+        if (bestCardOnTable.Suit != mandatorySuit && newCard.Suit == mandatorySuit)
+        {
+            Console.WriteLine($"{newCard.Rank}, {newCard.Suit} is better than {bestCardOnTable.Rank}, {bestCardOnTable.Suit}");
+            return true;
+        }
+        return false;
+    }
 
-        else
-            return pastBestCard;
+    public bool IsMandatorySuit(CardModel newCard)
+    {
+        if (mandatorySuit == newCard.Suit)
+        {
+            Console.WriteLine($"{newCard.Rank}, {newCard.Suit} is mandatorySuit: {mandatorySuit}");
+            return true;
+        }
+        return false;
+    }
+
+    public bool CanPlayBetterBecouseOfMandatory()
+    {
+        foreach (var card in playerCards)
+        {
+            if (IsBetterBecouseOfMandatory(card))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

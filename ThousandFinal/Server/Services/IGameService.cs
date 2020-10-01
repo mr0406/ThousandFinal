@@ -9,8 +9,8 @@ namespace ThousandFinal.Server.Services
     public interface IGameService
     {
         //Game Circle Methods
-        Task StartGame(Dictionary<string, UserModel> Users, List<UserModel> Players); // OK
-        Task StartRound();                                                            // OK
+        Task StartGame(Dictionary<string, UserModel> Users, List<UserModel> Players); 
+        Task StartRound();                                                            
         Task StartAuctionPhase();
         Task EndAuctionPhase();
         Task StartGivingCardsPhase();
@@ -55,7 +55,6 @@ namespace ThousandFinal.Server.Services
         void AddPointsAfterRound();
 
         //Debug
-        void WritePackageInfo(RefreshPackage package);
         void WriteWonCards();  
     }
 }

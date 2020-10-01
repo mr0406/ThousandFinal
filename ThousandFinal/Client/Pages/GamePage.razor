@@ -23,8 +23,6 @@
 
 
 @code {
-    Game Game;
-
     public HubConnection hubConnection;
 
     public bool joined = false;
@@ -61,11 +59,10 @@
         hubConnection.On<UserModel>(ServerToClient.RECEIVE_OTHER_USER_LEAVE, (user) =>
         {
             hubConnection.SendAsync(ClientToServer.GET_USERS);
-        //var encodedMsg = $"{user.Name} left server.";
-        //messages.Add(encodedMsg);
-        StateHasChanged();
+            //var encodedMsg = $"{user.Name} left server.";
+            //messages.Add(encodedMsg);
+            StateHasChanged();
         });
-
 
         await hubConnection.StartAsync();
     }
