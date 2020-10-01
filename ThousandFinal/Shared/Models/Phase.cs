@@ -10,6 +10,6 @@ namespace ThousandFinal.Shared.Models
         GivingAdditionalCards,
         RaisingPointsToAchieve,
         Playing,
-        Waiting //NO ACTIONS FROM USERS 
+        //Waiting //NO ACTIONS FROM USERS //PROBLEM WITH THIS //CONSIDER THIS IDEA
     }
 }

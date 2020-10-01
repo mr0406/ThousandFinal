@@ -87,10 +87,12 @@ namespace ThousandFinal.Server.Services
 
         public async Task EndAuctionPhase()
         {
+            await Refresh();
+
             if(highestBet == 100)
             {
                 showCardsToTake = true;
-                roundPhase = Phase.Waiting;
+                //roundPhase = Phase.Waiting; //CONSIDER THIS
                 await Refresh();
 
                 await Task.Delay(2000);
@@ -256,13 +258,12 @@ namespace ThousandFinal.Server.Services
 
         public async Task EndFight()
         {
-            roundPhase = Phase.Waiting;
+            //roundPhase = Phase.Waiting;
             await Refresh();
-
-            await Task.Delay(2000);
-
+            System.Threading.Thread.Sleep(2000);
             await GiveCardsToWinnerPlayer();
-            if (fightNumber < 6) //maybe wrong
+
+            if (fightNumber < 6) 
             {
                 await StartFight();
             }
