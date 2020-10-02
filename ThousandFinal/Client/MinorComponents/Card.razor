@@ -2,7 +2,7 @@
 
     <div class="cardColorContainer">
 
-        <div class="cardColorText" style="color: @cardTextColor()">@CardModel.Rank</div>
+        <div class="cardColorText" style="color: @cardTextColor()">@GetSymbol(CardModel)</div>
 
             <img src=@getImgLink(CardModel)  draggable= "false" class="smallCardColorImage" />
 
@@ -14,7 +14,7 @@
 
             <img src=@getImgLink(CardModel) draggable= "false" class="smallCardColorImage" style="transform: rotate(180deg);"/>
 
-        <div class="cardColorText" style="transform: rotate(180deg); color: @cardTextColor()">@CardModel.Rank</div>
+        <div class="cardColorText" style="transform: rotate(180deg); color: @cardTextColor()">@GetSymbol(CardModel)</div>
 
     </div>
 </div>
@@ -48,5 +48,19 @@
     private void HandleDragStart(CardModel draggedCard)
     {
         Game.PayloadCard = draggedCard;
+    }
+
+    private string GetSymbol(CardModel card)
+    {
+        switch(card.Rank)
+        {
+            case Rank.Ace: return "A";
+            case Rank.Ten: return "10";
+            case Rank.King: return "K";
+            case Rank.Queen: return "Q";
+            case Rank.Jack: return "J";
+            case Rank.Nine: return "9";
+            default: return "ERROR";
+        }
     }
 }
