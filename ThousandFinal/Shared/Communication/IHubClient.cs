@@ -18,7 +18,6 @@ namespace ThousandFinal.Shared.Communication
         Task ReceiveLeaveServer(UserModel user);
 
         //OnGameStart
-
         Task ReceiveGameStarted(string leftUserName, string rightUserName);
 
         //GameService

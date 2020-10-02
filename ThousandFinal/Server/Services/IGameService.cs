@@ -18,39 +18,53 @@ namespace ThousandFinal.Server.Services
         Task StartRaisingPointsToAchievePhase();
         Task EndRaisingPointsToAchievePhasePhase();
         Task StartPlayingPhase();
+        Task StartFight();
+        Task EndFight();
         Task EndPlayingPhase();
         Task EndRound();
-        Task OnWin(string userName);
+
+        //Waiting methods
+        Task ShowCardsToTakeForAWhile();
+        Task ShowCardsAfterFightForAWhile();
 
         //Players Actions
         Task Bet(UserModel player, int pointsBet);
         Task GiveUpAuction(UserModel player);
-
         Task GiveCardToPlayer(CardModel card, UserModel PlayerWhoGive, string PlayerWhoGetName);
-
         Task RaisePointsToAchieve(UserModel player, int points);
         Task DontRaisePointsToAchieve(UserModel player);
-
         Task PlayCard(CardModel card, CardModel newBestCard, UserModel playerWhoPlay);
 
-        //Set Methods
-        Task SetAuctionWinner(int AuctionWinner);
-        //Task ActivePlayerChange(int indexOfActivePlayer);
-        //Refresh Method
-        //Local
-        Task RefreshCards(List<CardModel> cards);
-        //SendMessage
-
-        //USER REFRESH
-        Task Refresh();
-
-        //Additional
-        Task StartFight();
-        Task EndFight();
+        //Additional methods
+        void SetAuctionWinner(int AuctionWinner);
+        void RefreshCards(List<CardModel> cards);
         Task GiveCardsToWinnerPlayer();
-
         void TryMandatoryChange(CardModel playedCard);
         CardModel GetBetterCard(CardModel pastBestCard, CardModel pretendendCard);
         void AddPointsAfterRound();
+
+        //Refresh
+        Task Refresh();
+
+        //Phase set methods
+        void SetStartAuctionPhase();
+        void SetRaisingPointsToAchievePhase();
+        void SetGivingCardsPhase();
+        void SetPlayingPhase();
+        void SetFight();
+
+        //New methods after refactor
+        void AddPointsToPlayer(int playerIndex);
+
+        void PutCardOnTable(CardModel card);
+
+        bool CardIsQueenOrKing(CardModel card);
+        bool PlayerHasQueenAndKing(CardModel card);
+        void ChangeMandatory(CardModel card);
+
+        //Refresh help methods
+        CardsInfo CreateCardsInfo();
+        PlayerSpecificInfo CreatePlayerSpecificInfo(List<PlayerPosition> playersPositions, int playerIndex);
+        Task SendRefreshPackages(List<RefreshPackage> refreshPackages);
     }
 }

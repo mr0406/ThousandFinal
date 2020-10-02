@@ -11,7 +11,7 @@ namespace ThousandFinal.Server.Services
         void CreateCards();
         List<CardModel> ShuffleCards();
         void DistributeCards(List<UserModel> players);
-
-        void GiveCardsToAuctionWinner(List<CardModel> cards, List<UserModel> players, int auctionWinnerIndex);
+        void GiveCardsToAuctionWinner(List<CardModel> cards, 
+                List<UserModel> players, int auctionWinnerIndex);
     }
 }

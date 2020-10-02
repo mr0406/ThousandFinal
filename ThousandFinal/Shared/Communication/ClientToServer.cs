@@ -13,9 +13,10 @@ namespace ThousandFinal.Shared.Communication
         public const string LEAVE_SERVER = "LeaveServer";
         public const string TRY_START_GAME = "TryStartGame";
 
+        //Ready action
         public const string USER_READY_CHANGE = "UserReadyChange";
 
-        //Player actions
+        //Game actions
         public const string BET = "Bet";
         public const string GIVE_UP_AUCTION = "GiveUpAuction";
         public const string GIVE_CARD_TO_PLAYER = "GiveCardToPlayer";

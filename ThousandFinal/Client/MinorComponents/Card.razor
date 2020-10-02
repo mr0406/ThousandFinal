@@ -1,4 +1,4 @@
-﻿<div id="cardContainer" draggable="true" @ondragstart="@(() => HandleDragStart(CardModel))">
+﻿<div id="cardContainer" draggable="@IsDraggable()" @ondragstart="@(() => HandleDragStart(CardModel))">
 
     <div class="cardColorContainer">
 
@@ -23,6 +23,15 @@
     [CascadingParameter] Game Game { get; set; }
     [Parameter] public CardModel CardModel { get; set; }
 
+    private string IsDraggable()
+    {
+        if(CardModel.Status == Status.InHand)
+        {
+            return "true";
+        }
+        return "false";
+    }
+
     private string getImgLink(CardModel CardModel)
     {
         return "/images/" + CardModel.Suit.ToString().ToLower() + ".ico";
@@ -38,10 +47,6 @@
 
     private void HandleDragStart(CardModel draggedCard)
     {
-        if (draggedCard.Status == Status.InHand)
-            return;
-
-        Console.WriteLine("DragStart");
         Game.PayloadCard = draggedCard;
     }
 }

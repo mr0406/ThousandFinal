@@ -10,7 +10,7 @@
     [CascadingParameter] public Game Game { get; set; }
     [Parameter] public int lastHighest { get; set; }
 
-    bool IsDisabled(int i)
+    private bool IsDisabled(int i)
     {
         if (lastHighest < i)
             return false;

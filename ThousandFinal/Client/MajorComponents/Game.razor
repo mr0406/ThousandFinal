@@ -52,6 +52,11 @@
                     }
                 }
 
+                @if(phase == Phase.PlayerWon)
+                {
+                    <h1 style="color: green">Winner: @getWinnerName()</h1>
+                }
+
                 @if (phase == Phase.GivingAdditionalCards)
                 {
 
@@ -380,4 +385,6 @@
         }
         return false;
     }
+
+    public string getWinnerName() => Users.SingleOrDefault(x => x.Points >= 1000).Name;
 }

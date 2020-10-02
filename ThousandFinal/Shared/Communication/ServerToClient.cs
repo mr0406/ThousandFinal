@@ -14,19 +14,12 @@ namespace ThousandFinal.Shared.Communication
         public const string RECEIVE_USERS = "ReceiveUsers";
         public const string RECEIVE_MESSAGE = "ReceiveMessage";
         public const string RECEIVE_OTHER_USER_LEAVE = "ReceiveLeaveServer";
-
+        public const string RECEIVE_REFRESH_PLAYERS = "ReceiveRefreshPlayers";
 
         //MethodsForPlay
         public const string RECEIVE_GAME_STARTED = "ReceiveGameStarted";
 
-        public const string RECEIVE_REFRESH_PLAYERS = "ReceiveRefreshPlayers";
-        public const string RECEIVE_REFRESH_BOARD = "ReceiveRefreshBoard";
-        public const string RECEIVE_REFRESH_CARDS_TO_TAKE = "ReceiveRefreshCardsToTake";
-        public const string RECEIVE_REFRESH_PLAYERS_CARDS_NUMBER = "ReceiveRefreshPlayersCardsNumber";
-        public const string RECEIVE_REFRESH_MANDATORY = "ReceiveRefreshMandatory";
-
         //Methods outside hub
-
         public const string RECEIVE_REFRESH = "ReceiveRefresh";
     }
 }

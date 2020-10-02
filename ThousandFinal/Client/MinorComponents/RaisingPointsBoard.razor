@@ -10,7 +10,7 @@
     [CascadingParameter] public Game Game { get; set; }
     [Parameter] public int playerBet { get; set; }
 
-    bool IsDisabled(int i)
+    private bool IsDisabled(int i)
     {
         if (playerBet < i)
             return false;
