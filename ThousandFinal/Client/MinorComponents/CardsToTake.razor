@@ -1,5 +1,4 @@
-﻿<div>
-    @if (Cards.Count() != 0)
+﻿   @if (Cards.Count() != 0)
     {
         @foreach (var card in Cards)
         {
@@ -13,7 +12,7 @@
             <HiddenCard></HiddenCard>
         }
     }
-</div>
+
 
 @code {
     [CascadingParameter] public Game Game { get; set; }

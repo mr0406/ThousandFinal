@@ -1,7 +1,7 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+* {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
 a, .btn-link {
@@ -186,8 +186,11 @@ app {
 
 /* Styl ogólny */
 
-#testcostam {
-    font-size: 100px;
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -15px;
+    margin-right: -15px;
 }
 
 .error {
@@ -255,31 +258,29 @@ app {
 }
 
 #raisingPoints{
-    width: 238px;
-    display: inline-block;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
+    display: grid;
+    margin: auto;
     position: absolute;
 }
 
 #giveupButton{
-    margin-left: 51px;
+    margin-left: auto;
+    margin-right: auto;
     margin-top: 4px;
-    width: 136px;
     text-align: center;
 }
 
 .raiseButton{
     margin-top: 3px;
-    width: 44px;
-    height: 31px;
 }
 
+#cardsToTake{
+    top: 1%;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+}
 /* Poniżej jest styl Game.razor */
-
-
 #mandatory {
     width: 20%;
     height: 100px;
@@ -296,8 +297,8 @@ app {
     height: 100px;
     display: block;
     position: absolute;
-    left: 20vw;
-    top: 1vw;
+    top: 1%;
+    right: 3%;
 }
 
 #tableContainer {
@@ -337,11 +338,11 @@ app {
     border: dotted;
     height: 240px;
     position: absolute;
-    right: 1px;
+    right: 2%;
     left: 2%;
     bottom: 10px;
     display: flex;
-    overflow-x: scroll;
+    overflow-x: hidden;
     background-color: white;
 }
 
@@ -378,7 +379,7 @@ app {
     width: 100%;
     float: left;
     text-align: center;
-    text-transform: uppercase;
+    text-transform: none;
     color: white;
     border-radius: initial;
 }
