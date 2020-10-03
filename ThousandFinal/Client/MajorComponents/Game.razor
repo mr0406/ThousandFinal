@@ -10,7 +10,7 @@
         }
         else
         {
-            <div class="row" id="row1">
+            //<div class="row" id="row1">
                 <div id="mandatory">
 
                     <div>Name:@User.Name</div>
@@ -29,9 +29,9 @@
 
                     <ResultsTable Players="@Users"></ResultsTable>
                 </div>
-            </div>
+            //</div>
 
-            <div class="row" id="row2">
+            //<div class="row" id="row2">
                 <div style="color: green">
                     @if (AmIActive())
                     {
@@ -88,13 +88,13 @@
                         <OtherPlayerHand UserName="@rightUserName" numberOfCards="rightUserNumberOfCards"></OtherPlayerHand>
                     </div>
                 </div>
-            </div>
+            //</div>
 
-            <div class="row" id="row3">
+            //<div class="row" id="row3">
                 <div id="playerCards">
                     <PlayersHand Cards="playerCards"></PlayersHand>
                 </div>
-            </div>
+            //</div>
         }
     </div>
 </CascadingValue>
