@@ -2,6 +2,13 @@
 
 Nie wszystkie klasy/identyfikatory mają swój styl, niektóre są nadane "na przyszłość" w razie gdyby były potrzebne, takie klasy będę zaznaczał pogrubieniem.
 
+## Kolory
+Kolory są zapisane na początku pliku app.css w zmiennych, dzięki czemu nie trzeba za każdym razem wartości rgb, a wystarczy nazwę zmiennej.
+Kolory są zaczerpnięte z palety: https://coolors.co/00a878-d8f1a0-fdf7ec-fe5234-0b0500
+Dostępne kolory: --green, --lghtgreen, --white, --red, --black
+Zastosowanie koloru, przykład: background-color: var(--white);
+
+
 ## Klasy oraz identyfikatory pliku Game.razor
 
 ### Identyfikatory
