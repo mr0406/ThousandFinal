@@ -1,11 +1,31 @@
 ﻿<div class="form-group">
     <label>
-        User:
-        <input @bind="userName" @onkeyup="@KeyPress"/>
+        Room:
+        <input @bind="newRoomName" @onkeyup="@AddRoomPressKey" />
+        <button @onclick="@AddRoom">Add</button>
     </label>
 </div>
-<button @onclick="TryJoin">Join</button>
-<div class="error">@errorType</div>
+
+<div>
+    @for (int i = 0; i < roomDTOs.Count(); i++)
+    {
+        int temp = i;
+        <span>@(temp + 1). @roomDTOs[i].Name : @roomDTOs[i].NumOfUsers/3</span>
+        <button @onclick="@(() => (ChooseRoom(temp)))">Choose</button>
+    }
+</div>
+
+@if (choosenRoom != null)
+{
+    <div>Join to @choosenRoom.Name:</div>
+    <div class="form-group">
+        <label>
+            User:
+            <input @bind="userName" @onkeyup="@JoinPressKey" />
+            <button @onclick="TryJoin">Join</button>
+        </label>
+    </div>
+}
 
 @code {
     [CascadingParameter] HubConnection hubConnection { get; set; }
@@ -13,23 +33,47 @@
     public string userName;
     public string errorType;
 
-    public int numOfUsers;
+    public List<RoomDTO> roomDTOs = new List<RoomDTO>();
+
+    public string newRoomName { get; set; }
+    public RoomDTO choosenRoom { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        hubConnection.On(ServerToClient.RECEIVE_CAN_NOT_JOIN, (string exception) =>
+        hubConnection.On(ServerToClient.RECEIVE_GET_ROOMS, (List<RoomDTO> roomDTOs) =>
         {
-            errorType = exception;
+            this.roomDTOs = roomDTOs;
             StateHasChanged();
         });
+
+        await hubConnection.SendAsync(ClientToServer.GET_ROOMS);
     }
 
-    async Task TryJoin() => await hubConnection.SendAsync(ClientToServer.TRY_JOIN_SERVER, new UserModel(userName));
-
-    async Task KeyPress(KeyboardEventArgs e)
+    async Task TryJoin()
     {
-        if(e.Key == "Enter")
+        if (!String.IsNullOrWhiteSpace(userName) && choosenRoom.NumOfUsers < 3)
+        {
+            await hubConnection.SendAsync(ClientToServer.JOIN_ROOM, userName, choosenRoom.Name);
+        }
+    }
+
+    async Task AddRoom() => await hubConnection.SendAsync(ClientToServer.CREATE_ROOM, newRoomName);
+
+    async Task JoinPressKey(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
             await TryJoin();
+    }
+
+    async Task AddRoomPressKey(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            await AddRoom();
+    }
+
+    async Task ChooseRoom(int roomNumber)
+    {
+        choosenRoom = roomDTOs[roomNumber];
     }
 
 }

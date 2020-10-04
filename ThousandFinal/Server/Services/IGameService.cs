@@ -9,7 +9,7 @@ namespace ThousandFinal.Server.Services
     public interface IGameService
     {
         //Game Circle Methods
-        Task StartGame(Dictionary<string, UserModel> Users, List<UserModel> Players); 
+        Task StartGame(List<UserModel> Players); 
         Task StartRound();                                                            
         Task StartAuctionPhase();
         Task EndAuctionPhase();

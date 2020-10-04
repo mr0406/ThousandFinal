@@ -8,17 +8,12 @@ namespace ThousandFinal.Shared.Communication
 {
     public interface IHubClient
     {
-        //Administration
-        Task ReceiveJoin(UserModel user);
-        Task ReceiveCanNotJoin(string exceptionInfo);
-        Task ReceiveOtherUserJoin(UserModel user);
-
         Task ReceiveUsers(List<UserModel> users);
         Task ReceiveMessage(MessageModel message);
         Task ReceiveLeaveServer(UserModel user);
 
         //OnGameStart
-        Task ReceiveGameStarted(string leftUserName, string rightUserName);
+        Task ReceiveGameStarted();
 
         //GameService
         Task ReceiveRefreshPlayers(List<UserModel> players);
@@ -26,5 +21,9 @@ namespace ThousandFinal.Shared.Communication
         Task ReceiveRefreshCardsToTake(bool cardsToTakeExists, List<CardModel> cardsToTake);
         Task ReceiveRefreshPlayersCardsNumber(Dictionary<string, int> userNames_CardNumber); 
         Task ReceiveRefreshMandatory(Suit mandatorySuit);
+
+        //Rooms
+        Task ReceiveJoinRoom(UserModel user);
+        Task ReceiveGetRooms(List<RoomDTO> roomDTOs);
     }
 }

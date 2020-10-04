@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
+using ThousandFinal.Server.Models;
 using ThousandFinal.Server.Services;
 using ThousandFinal.Shared.Communication;
 using ThousandFinal.Shared.Models;
@@ -11,76 +13,69 @@ namespace ThousandFinal.Server.Hubs
 {
     public class AppHub : Hub<IHubClient>, IHubServer
     {
-        IGameService gameService;
+        private readonly IServiceProvider provider;
 
-        private static Dictionary<string, UserModel> users = new Dictionary<string, UserModel>();
+        private static List<Room> rooms = new List<Room>();
+        private static List< UserModel> users = new List<UserModel>();
 
-        public AppHub(IGameService GameService) => gameService = GameService;
-
-        public async Task SendMessage(MessageModel message) =>
-           await Clients.All.ReceiveMessage(message);
+        public AppHub(IServiceProvider provider) 
+        {
+            this.provider = provider;
+        } 
 
         public async Task LeaveServer(UserModel user)
         {
-            users.Remove(Context.ConnectionId);
+            await RemoveUserByName(user.Name);
             await Clients.Others.ReceiveLeaveServer(user);
         }
 
-        public async Task GetUsers() =>
-            await Clients.Caller.ReceiveUsers(users.Values.ToList());
-
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            string id = Context.ConnectionId;
-            users.TryGetValue(id, out UserModel user);
+            await RemoveUserByConnectionId(Context.ConnectionId);
 
-            await LeaveServer(user);
+            //await LeaveServer(user);
             await base.OnDisconnectedAsync(exception);
             Console.WriteLine(exception);
             //Stop a game
         }
 
-        public async Task TryJoinServer(UserModel user)
-        {
-            string exceptionInfo;
-
-            if (users.Count() < 3)
-            {
-                string id = Context.ConnectionId;
-                users.Add(id, user);
-
-                await Clients.Caller.ReceiveJoin(user);
-                //await Clients.Others.ReceiveOtherUserJoin(user);
-                await Clients.Others.ReceiveMessage(new MessageModel($"{user.Name} joined server", true));
-            }
-            else
-            {
-                exceptionInfo = "There are already 3 players";
-                await Clients.Caller.ReceiveCanNotJoin(exceptionInfo);
-            }
-        }
-
         public async Task UserReadyChange()
         {
-            string id = Context.ConnectionId;
-            users[id].IsReady = !users[id].IsReady;
-
-            await GetUsers();
-
-            string readyText = (users[id].IsReady == true) ? "is ready" : "is not ready";
-            MessageModel message = new MessageModel($"{users[id].Name} {readyText}", true);
-            await SendMessage(message);
+            int userId = users.FindIndex(x => x.ConnectionId == Context.ConnectionId);
+            users[userId].IsReady = !users[userId].IsReady;
+            int roomId = rooms.FindIndex(x => x.Name == users[userId].RoomName);
+            rooms[roomId].Users.SingleOrDefault(x => x.ConnectionId == Context.ConnectionId).IsReady = users[userId].IsReady;
         }
 
         public async Task TryStartGame()
         {
-            if(users.Values.Where(x => x.IsReady == true).Count() != 3)
+            int userId = users.FindIndex(x => x.ConnectionId == Context.ConnectionId);
+            int roomId = rooms.FindIndex(x => x.Name == users[userId].RoomName);
+
+            int numberOfReadyUsers = 0;
+            foreach(var user in rooms[roomId].Users)
             {
-                string id = Context.ConnectionId;
+                if (user.IsReady)
+                    numberOfReadyUsers++;
+            }
+
+            if(numberOfReadyUsers != 3)
+            {
                 string text = $"not enough players";
-                MessageModel message = new MessageModel($"{users[id].Name} tried to start, but {text}", true);
-                await SendMessage(message);
+                MessageModel message = new MessageModel($"not enough players", true);
+                foreach (var user in rooms[roomId].Users)
+                {
+                    await Clients.Client(user.ConnectionId).ReceiveMessage(message);
+                }
+
                 return;
+            }
+
+
+            foreach (var user in rooms[roomId].Users)
+            {
+                await Clients.Client(user.ConnectionId).ReceiveUsers(rooms[roomId].Users);
+                await Clients.Client(user.ConnectionId).ReceiveGameStarted();
             }
 
             await StartGame();
@@ -88,53 +83,112 @@ namespace ThousandFinal.Server.Hubs
 
         public async Task StartGame()
         {
-            for (int i = 0; i < 3; i++)
-            {
-                var leftIndex = (i + 1) % 3;
-                var rightIndex = (i + 2) % 3;
-
-                var leftPlayer = users.ElementAt(leftIndex).Value;
-                var rightPlayer = users.ElementAt(rightIndex).Value;
-                await Clients.Client(users.ElementAt(i).Key).ReceiveGameStarted(leftPlayer.Name, rightPlayer.Name);
-            }
-            await gameService.StartGame(users, users.Values.ToList());
+            int userId = users.FindIndex(x => x.ConnectionId == Context.ConnectionId);
+            int roomId = rooms.FindIndex(x => x.Name == users[userId].RoomName);
+            await rooms[roomId].gameService.StartGame(rooms[roomId].Users);
         }
 
         //Users Actions
         public async Task Bet(int points)
         {
-            UserModel player = users[Context.ConnectionId];
-            await gameService.Bet(player, points);
+            int userId = users.FindIndex(x => x.ConnectionId == Context.ConnectionId);
+            int roomId = rooms.FindIndex(x => x.Name == users[userId].RoomName);
+            await rooms[roomId].gameService.Bet(users[userId], points);
         }
 
         public async Task GiveUpAuction()
         {
-            UserModel player = users[Context.ConnectionId];
-            await gameService.GiveUpAuction(player);
+            int userId = users.FindIndex(x => x.ConnectionId == Context.ConnectionId);
+            int roomId = rooms.FindIndex(x => x.Name == users[userId].RoomName);
+            Console.WriteLine(rooms[roomId].Name);
+            await rooms[roomId].gameService.GiveUpAuction(users[userId]);
         }
 
         public async Task GiveCardToPlayer(CardModel card, string playerWhoGetName)
         {
-            UserModel player = users[Context.ConnectionId];
-            await gameService.GiveCardToPlayer(card, player, playerWhoGetName);
+            int userId = users.FindIndex(x => x.ConnectionId == Context.ConnectionId);
+            int roomId = rooms.FindIndex(x => x.Name == users[userId].RoomName);
+            await rooms[roomId].gameService.GiveCardToPlayer(card, users[userId], playerWhoGetName);
         }
 
         public async Task RaisePointsToAchieve(int points)
         {
-            UserModel player = users[Context.ConnectionId];
-            await gameService.RaisePointsToAchieve(player, points);
+            int userId = users.FindIndex(x => x.ConnectionId == Context.ConnectionId);
+            int roomId = rooms.FindIndex(x => x.Name == users[userId].RoomName);
+            await rooms[roomId].gameService.RaisePointsToAchieve(users[userId], points);
         }
 
         public async Task DontRaisePointsToAchieve()
         {
-            UserModel player = users[Context.ConnectionId];
-            await gameService.DontRaisePointsToAchieve(player);
+            int userId = users.FindIndex(x => x.ConnectionId == Context.ConnectionId);
+            int roomId = rooms.FindIndex(x => x.Name == users[userId].RoomName);
+            await rooms[roomId].gameService.DontRaisePointsToAchieve(users[userId]);
         }
 
         public async Task PlayCard(CardModel card, CardModel newBestCard)
         {
-            UserModel player = users[Context.ConnectionId];
-            await gameService.PlayCard(card, newBestCard, player);
+            int userId = users.FindIndex(x => x.ConnectionId == Context.ConnectionId);
+            int roomId = rooms.FindIndex(x => x.Name == users[userId].RoomName);
+            await rooms[roomId].gameService.PlayCard(card, newBestCard, users[userId]);
+        }
+
+        public async Task CreateRoom(string roomName)
+        {
+            if(rooms.Where(x => x.Name == roomName).Count() == 0)
+            {
+                var iHubContext = provider.GetRequiredService<IHubContext<AppHub>>(); 
+                IGameService gameService = new GameService(iHubContext); 
+                rooms.Add(new Room(roomName, gameService));
+
+                await GetRooms();
+            }
+            else
+            {
+                //CANT ADD
+            }
+        }
+
+        public async Task JoinRoom(string userName, string roomName)
+        {
+            if(users.Where(x => x.Name == roomName).Count() != 0)
+            {
+                //there is user with this name
+                return;
+            }
+
+            UserModel newUser = new UserModel(Context.ConnectionId, userName, roomName);
+            users.Add(newUser);
+            rooms.SingleOrDefault(x => x.Name == roomName).Users.Add(newUser);
+
+            await GetRooms();
+            await Clients.Caller.ReceiveJoinRoom(newUser);
+        }
+
+        public async Task GetRooms()
+        {
+            List<RoomDTO> roomDTOs = new List<RoomDTO>();
+            foreach (var room in rooms)
+            {
+                roomDTOs.Add(new RoomDTO(room.Name, room.Users.Count()));
+            }
+
+            await Clients.All.ReceiveGetRooms(roomDTOs);
+        }
+
+        private async Task RemoveUserByName(string userName)
+        {
+            UserModel user = users.SingleOrDefault(x => x.Name == userName);
+
+            rooms.SingleOrDefault(x => x.Name == user.RoomName).Users.Remove(user);
+            users.Remove(user);
+        }
+
+        private async Task RemoveUserByConnectionId(string connectionId)
+        {
+            UserModel user = users.SingleOrDefault(x => x.ConnectionId == connectionId);
+
+            rooms.SingleOrDefault(x => x.Name == user.RoomName).Users.Remove(user);
+            users.Remove(user);
         }
     }
 }

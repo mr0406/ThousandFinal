@@ -9,10 +9,6 @@ namespace ThousandFinal.Shared.Communication
     public interface IHubServer
     {
         //Administration
-        Task TryJoinServer(UserModel user);
-
-        Task GetUsers();
-        Task SendMessage(MessageModel message);
         Task LeaveServer(UserModel user);
 
         Task UserReadyChange();
@@ -26,5 +22,10 @@ namespace ThousandFinal.Shared.Communication
         Task RaisePointsToAchieve(int points);
         Task DontRaisePointsToAchieve();
         Task PlayCard(CardModel card, CardModel bestCardOnTable);
+
+        //Rooms
+        Task CreateRoom(string roomName);
+        Task JoinRoom(string userName, string roomName);
+        Task GetRooms();
     }
 }

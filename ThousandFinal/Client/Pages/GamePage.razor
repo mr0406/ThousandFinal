@@ -42,12 +42,12 @@
             StateHasChanged();
         });
 
-        hubConnection.On(ServerToClient.RECEIVE_JOIN, (UserModel user) =>
+        hubConnection.On(ServerToClient.RECEIVE_JOIN_ROOM, (UserModel user) =>
         {
             joined = true;
             User = user;
             StateHasChanged();
-            hubConnection.SendAsync(ClientToServer.GET_USERS);
+            //hubConnection.SendAsync(ClientToServer.GET_USERS);
         });
 
         hubConnection.On(ServerToClient.RECEIVE_OTHER_USER_JOIN, (UserModel user) =>

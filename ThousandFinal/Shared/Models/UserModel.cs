@@ -6,20 +6,23 @@ namespace ThousandFinal.Shared.Models
 {
     public class UserModel
     {
+        public string ConnectionId { get; set; }
         public string Name { get; set; }
+        public string RoomName { get; set; }
+
         public bool IsReady { get; set; } = false;
-
         public bool GiveUpAuction { get; set; } = false;
-
         public int Points { get; set; } = 0;
         public int PointsInCurrentRound { get; set; } = 0;
         public int PointsToAchieve { get; set; } = 0;
 
         public UserModel() { }
 
-        public UserModel(string name)
+        public UserModel(string ConnectionId, string Name, string RoomName)
         {
-            Name = name;
+            this.ConnectionId = ConnectionId;
+            this.Name = Name;
+            this.RoomName = RoomName;
         }
     }
 }

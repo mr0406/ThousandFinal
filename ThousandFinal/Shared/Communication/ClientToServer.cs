@@ -23,5 +23,10 @@ namespace ThousandFinal.Shared.Communication
         public const string RAISE_POINTS_TO_ACHIEVE = "RaisePointsToAchieve";
         public const string DONT_RAISE_POINTS_TO_ACHIEVE = "DontRaisePointsToAchieve";
         public const string PLAY_CARD = "PlayCard";
+
+        //Rooms
+        public const string CREATE_ROOM = "CreateRoom";
+        public const string JOIN_ROOM = "JoinRoom";
+        public const string GET_ROOMS = "GetRooms";
     }
 }

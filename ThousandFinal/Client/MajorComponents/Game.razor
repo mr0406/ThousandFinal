@@ -42,9 +42,12 @@
 
                 <div id="tableContainer">
 
-                    <div class="otherPlayer" id="leftPlayer">
-                        <OtherPlayerHand UserName="@leftUserName" numberOfCards="leftUserNumberOfCards"></OtherPlayerHand>
-                    </div>
+                    @if (leftUserName != null)
+                    {
+                        <div class="otherPlayer" id="leftPlayer">
+                            <OtherPlayerHand UserName="@leftUserName" numberOfCards="leftUserNumberOfCards"></OtherPlayerHand>
+                        </div>
+                    }
 
                     @if (phase == Phase.Auction)
                     {
@@ -84,10 +87,13 @@
                         </div>
                     }
 
-                    <div class="otherPlayer" id="rightPlayer">
-                        <OtherPlayerHand UserName="@rightUserName" numberOfCards="rightUserNumberOfCards"></OtherPlayerHand>
+                    @if (rightUserName != null)
+                    {
+                        <div class="otherPlayer" id="rightPlayer">
+                            <OtherPlayerHand UserName="@rightUserName" numberOfCards="rightUserNumberOfCards"></OtherPlayerHand>
+                        </div>
+                    }
                     </div>
-                </div>
             //</div>
 
             //<div class="row" id="row3">
@@ -133,11 +139,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        hubConnection.On<string, string>(ServerToClient.RECEIVE_GAME_STARTED, (LeftUserName, RigtUserName) =>
+        hubConnection.On(ServerToClient.RECEIVE_GAME_STARTED, () =>
         {
-            leftUserName = LeftUserName;
-            rightUserName = RigtUserName;
-
             GameStarted = true;
             StateHasChanged();
         });

@@ -16,10 +16,8 @@ namespace ThousandFinal.Server.Services
         private IHubContext<AppHub> hubContext;
         private readonly ICardService _cardService;
 
-        private static Dictionary<string, string> usersDict = new Dictionary<string, string>();
-
-        private static List<CardModel> cards = new List<CardModel>();                                                         
-        private static List<UserModel> players;                                                         
+        private List<CardModel> cards = new List<CardModel>();                                                         
+        private List<UserModel> players;                                                         
 
         private int obligatedPlayer = -1; //On Start it will be 0
         private int activePlayer = 0;
@@ -54,11 +52,8 @@ namespace ThousandFinal.Server.Services
             _cardService = new CardService(this);
         }
 
-        public async Task StartGame(Dictionary<string, UserModel> Users, List<UserModel> Players)
+        public async Task StartGame(List<UserModel> Players)
         {
-            foreach(var element in Users)
-                usersDict.Add(element.Value.Name, element.Key);
-
             players = Players;
             await StartRound();
         }
@@ -66,13 +61,6 @@ namespace ThousandFinal.Server.Services
         public async Task StartRound()
         {
             cardsToTakeExists = true;
-
-            //WIN TEST
-            ////
-            ///players[0].Points += 990;
-            ///
-            ///////////////
-
             _cardService.DistributeCards(players);
             obligatedPlayer = TurnSystem.ChooseNextObligatedPlayerIndex(obligatedPlayer);
             await StartAuctionPhase();
@@ -128,7 +116,7 @@ namespace ThousandFinal.Server.Services
         public async Task StartPlayingPhase()
         {
             SetPlayingPhase();
-            StartFight();
+            await StartFight();
             await Refresh(); 
         }
 
@@ -401,15 +389,6 @@ namespace ThousandFinal.Server.Services
         {
             List<CardModel> cardsOnTable = cards.Where(x => x.Status == Status.OnTable).OrderBy(x => x.positionOnTable).ToList();
 
-            ////////////////
-            Console.WriteLine("----------------------------");
-            foreach(var card in cardsOnTable)
-            {
-                Console.WriteLine($"{card.Rank}, {card.Suit} - {card.positionOnTable}");
-            }
-            Console.WriteLine("----------------------------");
-            ////////////////
-
             List<CardModel> cardsToTake = cards.Where(x => x.Status == Status.ToTake).ToList();
             if (cardsToTake.Count() == 0)
                 cardsToTakeExists = false;
@@ -446,10 +425,10 @@ namespace ThousandFinal.Server.Services
 
         public async Task SendRefreshPackages(List<RefreshPackage> refreshPackages)
         {
-            foreach (var element in usersDict)
+            foreach (var player in players)
             {
-                var playerRefreshPackage = refreshPackages.SingleOrDefault(x => x.playerSpecificInfo.playerName == element.Key);
-                await hubContext.Clients.Client(element.Value).SendAsync(ServerToClient.RECEIVE_REFRESH, playerRefreshPackage);
+                var playerRefreshPackage = refreshPackages.SingleOrDefault(x => x.playerSpecificInfo.playerName == player.Name);
+                await hubContext.Clients.Client(player.ConnectionId).SendAsync(ServerToClient.RECEIVE_REFRESH, playerRefreshPackage);
             }
         }
 
