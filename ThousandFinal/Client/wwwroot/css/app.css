@@ -1,7 +1,11 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
---g
 
 html, body {
+    --green: #00A878;
+    --lightgreen: #D8F1A0;
+    --white: #FDF7EC;
+    --red: #FE5E41;
+    --black: #0B0500;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -190,10 +194,6 @@ app {
 
 /* Styl ogólny */
 
-#testcostam {
-    font-size: 100px;
-}
-
 .error {
     color: red;
 }
@@ -212,7 +212,7 @@ app {
 }
 
 .can-drop {
-    background-color: var(--green);
+    background-color: var(--lightgreen);
     width: 100%;
     height: 100%;
 }
@@ -348,12 +348,28 @@ app {
 #playerCards {
     height: 19em;
     position: absolute;
-    right: 1px;
-    left: 2%;
-    bottom: 10px;
+    right: 2em;
+    left: 2em;
+    bottom: -1em;
     display: flex;
-    overflow-x: scroll;
-    background-color: white;
+    flex-direction: row;
+    justify-content: center;
+    overflow-x: auto;
+}
+
+#playerCards > #cardContainer {
+    box-shadow: -0.5em 0 1em var(--black);
+    transition: .2s;
+    padding: 1em;
+    margin: 3em 0 0 2em;
+}
+
+#playerCards > #cardContainer:hover {
+    transform: translateY(-1em);
+}
+
+#playerCards > #cardContainer:not(:first-child) {
+    margin-left: -4.5em;
 }
 
 #gameContainer {
