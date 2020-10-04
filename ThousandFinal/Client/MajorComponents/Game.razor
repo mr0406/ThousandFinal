@@ -3,10 +3,10 @@
 
         @if (!GameStarted)
         {
-            <p>Are you ready? </p>
-            <input type="checkbox" @value="@User.IsReady" @onchange="() => CheckBoxClick()" disabled="@checkBoxDisabled" />
+            <h2 style="position: absolute; top: 5em">Are you ready? </h2>
+            <input type="checkbox" style="position: relative; display:block; background-color:white; width: 3em; height: 3em; margin: 2em" @value="@User.IsReady" @onchange="() => CheckBoxClick()" disabled="@checkBoxDisabled" />
 
-            <button @onclick="TryStartGame">Start</button>
+            <button style="position: relative; display:block; background-color: white; width: 5em; height: 3em; border-radius: 2px; border-color: black;" @onclick="TryStartGame">Start</button>
         }
         else
         {
