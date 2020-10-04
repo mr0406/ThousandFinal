@@ -224,10 +224,10 @@ app {
 }
 
 #cardContainer {
-    height: 15em;
-    width: 10em;
+    height:10em;
+    width: 6em;
     min-width: 80px;
-    border-radius: 15px;
+    border-radius: 10px;
     background: var(--white);
     display: flex;
     flex-direction: column;
@@ -249,7 +249,7 @@ app {
 .cardColorText{
     text-align: center;
     font-weight: bolder;
-    font-size: 1em;
+    font-size: .8em;
 }
 
 .smallCardColorImage {
@@ -257,13 +257,13 @@ app {
     top: 0;
     display: block;
     margin: auto;
-    width: 2em;
+    width: 1em;
 }
 
 .bigCardColorImage {
     display: block;
     margin: auto;
-    width: 5em;
+    width: 3em;
 }
 
 
@@ -285,7 +285,7 @@ app {
 }
 
 #cardsToTake{
-    top: 1%;
+    top: -1em;
     margin-left: auto;
     margin-right: auto;
     position: absolute;
@@ -293,8 +293,6 @@ app {
 }
 
 #cardsToTake > #cardContainer{
-    height: 7em;
-    width: 5em;
     margin: .1em;
 }
 
@@ -354,11 +352,11 @@ app {
 }
 
 #playerCards {
-    height: 19em;
+    height: 15em;
     position: absolute;
     right: 2em;
     left: 2em;
-    bottom: -1em;
+    bottom: -3em;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -377,7 +375,7 @@ app {
 }
 
 #playerCards > #cardContainer:not(:first-child) {
-    margin-left: -4.5em;
+    margin-left: -3em;
 }
 
 #gameContainer {
