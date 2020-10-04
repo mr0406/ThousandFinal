@@ -289,7 +289,15 @@ app {
     margin-left: auto;
     margin-right: auto;
     position: absolute;
+    display: flex;
 }
+
+#cardsToTake > #cardContainer{
+    height: 7em;
+    width: 5em;
+    margin: .1em;
+}
+
 /* Poniżej jest styl Game.razor */
 #mandatory {
     width: 20%;
