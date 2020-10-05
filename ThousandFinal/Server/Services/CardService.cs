@@ -8,17 +8,14 @@ namespace ThousandFinal.Server.Services
 {
     public class CardService : ICardService
     {
-        private IGameService gameService; 
-
         private List<CardModel> _cardsInOrder;
 
-        public CardService(GameService GameService)
+        public CardService()
         {
-            gameService = GameService;
             CreateCards();
         }
 
-        public void CreateCards()
+        private void CreateCards()
         {
             _cardsInOrder = new List<CardModel>();
 
@@ -34,13 +31,13 @@ namespace ThousandFinal.Server.Services
             }
         }
 
-        public List<CardModel> ShuffleCards()
+        private List<CardModel> ShuffleCards()
         {
             List<CardModel> shuffledCards = _cardsInOrder.OrderBy(x => Guid.NewGuid()).ToList();
             return shuffledCards;
         }
 
-        public void DistributeCards(List<UserModel> players)
+        public List<CardModel> DistributeCards(List<UserModel> players)
         {
             List<CardModel> shuffledCards = ShuffleCards();
 
@@ -66,15 +63,15 @@ namespace ThousandFinal.Server.Services
                 }
             }
 
-            gameService.RefreshCards(shuffledCards);
+            return shuffledCards;
         }
 
-        public void GiveCardsToAuctionWinner(List<CardModel> cards, List<UserModel> players, int auctionWinnerIndex)
+        public List<CardModel> GiveCardsToAuctionWinner(List<CardModel> cards, List<UserModel> players, int auctionWinnerIndex)
         {
             cards.Where(x => x.Status == Status.ToTake).ToList()
                  .ForEach(x => { x.Status = Status.InHand; x.OwnerName = players[auctionWinnerIndex].Name; });
 
-            gameService.RefreshCards(cards);
+            return cards;
         }
     }
 }

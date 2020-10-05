@@ -9,13 +9,11 @@ namespace ThousandFinal.Server.Models
 {
     public class Room
     {
-        public string Name { get; set; }
-        public List<UserModel> Users { get; set; } = new List<UserModel>();
+        public Dictionary<string, UserModel> Users { get; set; } = new Dictionary<string, UserModel>();
         public IGameService gameService { get; set; }
 
-        public Room(string Name, IGameService gameService)
+        public Room(IGameService gameService)
         {
-            this.Name = Name;
             this.gameService = gameService;
         }
     }

@@ -6,7 +6,7 @@ namespace ThousandFinal.Shared.Models
 {
     public class UserModel
     {
-        public string ConnectionId { get; set; }
+        public string ConnectionId { get; set; } 
         public string Name { get; set; }
         public string RoomName { get; set; }
 

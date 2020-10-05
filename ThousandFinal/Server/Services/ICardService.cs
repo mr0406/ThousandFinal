@@ -8,10 +8,8 @@ namespace ThousandFinal.Server.Services
 {
     public interface ICardService
     {
-        void CreateCards();
-        List<CardModel> ShuffleCards();
-        void DistributeCards(List<UserModel> players);
-        void GiveCardsToAuctionWinner(List<CardModel> cards, 
+        List<CardModel> DistributeCards(List<UserModel> players);
+        List<CardModel> GiveCardsToAuctionWinner(List<CardModel> cards, 
                 List<UserModel> players, int auctionWinnerIndex);
     }
 }
