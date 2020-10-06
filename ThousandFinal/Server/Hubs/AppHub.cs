@@ -25,6 +25,8 @@ namespace ThousandFinal.Server.Hubs
 
         public async Task SendMessage(MessageModel message)
         {
+            RefreshActivity(Context.ConnectionId);
+
             string roomName = user_room[Context.ConnectionId];
             foreach (var user in rooms[roomName].Users)
             {
@@ -56,6 +58,8 @@ namespace ThousandFinal.Server.Hubs
 
         public async Task UserReadyChange()
         {
+            RefreshActivity(Context.ConnectionId);
+
             string roomName = user_room[Context.ConnectionId];
             rooms[roomName].Users[Context.ConnectionId].IsReady = !rooms[roomName].Users[Context.ConnectionId].IsReady;
 
@@ -73,6 +77,8 @@ namespace ThousandFinal.Server.Hubs
 
         public async Task TryStartGame()
         {
+            RefreshActivity(Context.ConnectionId);
+
             string roomName = user_room[Context.ConnectionId];
 
             int numberOfReadyUsers = 0;
@@ -108,7 +114,7 @@ namespace ThousandFinal.Server.Hubs
             await StartGame();
         }
 
-        public async Task StartGame()
+        private async Task StartGame()
         {
             string roomName = user_room[Context.ConnectionId];
             await rooms[roomName].gameService.StartGame(rooms[roomName].Users.Values.ToList());
@@ -117,36 +123,48 @@ namespace ThousandFinal.Server.Hubs
         //Users Actions
         public async Task Bet(int points)
         {
+            RefreshActivity(Context.ConnectionId);
+
             string roomName = user_room[Context.ConnectionId];
             await rooms[roomName].gameService.Bet(Context.ConnectionId, points);
         }
 
         public async Task GiveUpAuction()
         {
+            RefreshActivity(Context.ConnectionId);
+
             string roomName = user_room[Context.ConnectionId];
             await rooms[roomName].gameService.GiveUpAuction(Context.ConnectionId);
         }
 
         public async Task GiveCardToPlayer(CardModel card, string playerWhoGetName)
         {
+            RefreshActivity(Context.ConnectionId);
+
             string roomName = user_room[Context.ConnectionId];
             await rooms[roomName].gameService.GiveCardToPlayer(Context.ConnectionId, card, playerWhoGetName);
         }
 
         public async Task RaisePointsToAchieve(int points)
         {
+            RefreshActivity(Context.ConnectionId);
+
             string roomName = user_room[Context.ConnectionId];
             await rooms[roomName].gameService.RaisePointsToAchieve(Context.ConnectionId, points);
         }
 
         public async Task DontRaisePointsToAchieve()
         {
+            RefreshActivity(Context.ConnectionId);
+
             string roomName = user_room[Context.ConnectionId];
             await rooms[roomName].gameService.DontRaisePointsToAchieve(Context.ConnectionId);
         }
 
         public async Task PlayCard(CardModel card, CardModel newBestCard)
         {
+            RefreshActivity(Context.ConnectionId);
+
             string roomName = user_room[Context.ConnectionId];
             await rooms[roomName].gameService.PlayCard(Context.ConnectionId, card, newBestCard);
         }
@@ -187,6 +205,8 @@ namespace ThousandFinal.Server.Hubs
             user_room.Add(Context.ConnectionId, roomName);
             rooms[roomName].Users.Add(Context.ConnectionId, newUser);
 
+            RefreshActivity(Context.ConnectionId);
+
             await GetRooms();
             await Clients.Caller.ReceiveJoinRoom(newUser);
             await Clients.Caller.ReceiveUsers(rooms[roomName].Users.Values.ToList());
@@ -210,6 +230,14 @@ namespace ThousandFinal.Server.Hubs
             }
 
             await Clients.All.ReceiveGetRooms(roomDTOs);
+        }
+
+        private void RefreshActivity(string connectionId)
+        {
+            string roomName = user_room[Context.ConnectionId];
+            rooms[roomName].lastActivityTime = DateTime.Now;
+            rooms[roomName].Users[connectionId].lastActivityTime = DateTime.Now;
+            Console.WriteLine(DateTime.Now);
         }
     }
 }

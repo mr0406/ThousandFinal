@@ -16,6 +16,8 @@ namespace ThousandFinal.Shared.Models
         public int PointsInCurrentRound { get; set; } = 0;
         public int PointsToAchieve { get; set; } = 0;
 
+        public DateTime lastActivityTime { get; set; }
+
         public UserModel() { }
 
         public UserModel(string ConnectionId, string Name, string RoomName)
@@ -23,6 +25,7 @@ namespace ThousandFinal.Shared.Models
             this.ConnectionId = ConnectionId;
             this.Name = Name;
             this.RoomName = RoomName;
+            lastActivityTime = DateTime.Now;
         }
     }
 }
