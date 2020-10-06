@@ -45,15 +45,15 @@ namespace ThousandFinal.Server.Services
             while (i < 24)
             {
                 shuffledCards[i].Status = Status.InHand;
-                shuffledCards[i].OwnerName = players[0].Name;
+                shuffledCards[i].OwnerConnectionId = players[0].ConnectionId;
                 i++;
 
                 shuffledCards[i].Status = Status.InHand;
-                shuffledCards[i].OwnerName = players[1].Name;
+                shuffledCards[i].OwnerConnectionId = players[1].ConnectionId;
                 i++;
 
                 shuffledCards[i].Status = Status.InHand;
-                shuffledCards[i].OwnerName = players[2].Name;
+                shuffledCards[i].OwnerConnectionId = players[2].ConnectionId;
                 i++;
 
                 if (i == 6 || i == 13 || i == 20)
@@ -69,7 +69,7 @@ namespace ThousandFinal.Server.Services
         public List<CardModel> GiveCardsToAuctionWinner(List<CardModel> cards, List<UserModel> players, int auctionWinnerIndex)
         {
             cards.Where(x => x.Status == Status.ToTake).ToList()
-                 .ForEach(x => { x.Status = Status.InHand; x.OwnerName = players[auctionWinnerIndex].Name; });
+                 .ForEach(x => { x.Status = Status.InHand; x.OwnerConnectionId = players[auctionWinnerIndex].ConnectionId; });
 
             return cards;
         }

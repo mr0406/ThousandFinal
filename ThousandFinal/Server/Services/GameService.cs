@@ -152,9 +152,9 @@ namespace ThousandFinal.Server.Services
             return false;
         }
 
-        public async Task Bet(string playerName, int pointsBet)
+        public async Task Bet(string playerConnectionId, int pointsBet)
         {
-            int playerIndex = Helper.GetPlayerIndex(players, playerName);
+            int playerIndex = Helper.GetPlayerIndex(players, playerConnectionId);
 
             highestBet = pointsBet;
             highestBetOwner = playerIndex;
@@ -172,9 +172,9 @@ namespace ThousandFinal.Server.Services
                 await Refresh();
         }
 
-        public async Task GiveUpAuction(string playerName)
+        public async Task GiveUpAuction(string playerConnectionId)
         {
-            int playerIndex = Helper.GetPlayerIndex(players, playerName);
+            int playerIndex = Helper.GetPlayerIndex(players, playerConnectionId);
             players[playerIndex].GiveUpAuction = true; 
 
             numberOfGiveUps++;
@@ -189,11 +189,13 @@ namespace ThousandFinal.Server.Services
             }
         }
 
-        public async Task GiveCardToPlayer(string playerName, CardModel card, string PlayerWhoGetName)
+        public async Task GiveCardToPlayer(string playerConnectionId, CardModel card, string PlayerWhoGetName)
         {
+            string PlayerConnectionId = players.SingleOrDefault(x => x.Name == PlayerWhoGetName).ConnectionId;
+
             numberOfCardsGiven++;
             int cardIndex = Helper.GetCardIndex(cards, card);
-            cards[cardIndex].OwnerName = PlayerWhoGetName;
+            cards[cardIndex].OwnerConnectionId = PlayerConnectionId;
 
             if (numberOfCardsGiven > 1)
                 await EndGivingCardsPhase();
@@ -201,9 +203,9 @@ namespace ThousandFinal.Server.Services
                 await Refresh();
         }
 
-        public async Task RaisePointsToAchieve(string playerName, int points)
+        public async Task RaisePointsToAchieve(string playerConnectionId, int points)
         {
-            int playerIndex = Helper.GetPlayerIndex(players, playerName);
+            int playerIndex = Helper.GetPlayerIndex(players, playerConnectionId);
 
             pointsToAchieve = points;
             players[playerIndex].PointsToAchieve = pointsToAchieve;
@@ -211,9 +213,9 @@ namespace ThousandFinal.Server.Services
             await EndRaisingPointsToAchievePhasePhase();
         }
 
-        public async Task DontRaisePointsToAchieve(string playerName)
+        public async Task DontRaisePointsToAchieve(string playerConnectionId)
         {
-            int playerIndex = Helper.GetPlayerIndex(players, playerName);
+            int playerIndex = Helper.GetPlayerIndex(players, playerConnectionId);
 
             pointsToAchieve = highestBet;
             players[playerIndex].PointsToAchieve = pointsToAchieve;
@@ -246,20 +248,20 @@ namespace ThousandFinal.Server.Services
 
         private async Task GiveCardsToWinnerPlayer()
         {
-            int fightWinner = Helper.GetPlayerIndex(players, bestCard.OwnerName);
+            int fightWinner = Helper.GetPlayerIndex(players, bestCard.OwnerConnectionId);
             activePlayer = fightWinner;
 
             List<CardModel> wonCards = cards.Where(x => x.Status == Status.OnTable).ToList();
 
             cards.Where(x => x.Status == Status.OnTable).ToList()
-                 .ForEach(x => { x.Status = Status.Won; x.OwnerName = players[fightWinner].Name; });
+                 .ForEach(x => { x.Status = Status.Won; x.OwnerConnectionId = players[fightWinner].ConnectionId; });
 
             cards.ForEach(x => x.positionOnTable = -1);
         }
 
-        public async Task PlayCard(string playerName, CardModel card, CardModel newBestCard)
+        public async Task PlayCard(string playerConnectionId, CardModel card, CardModel newBestCard)
         {
-            int playerIndex = Helper.GetPlayerIndex(players, playerName);
+            int playerIndex = Helper.GetPlayerIndex(players, playerConnectionId);
 
             TryMandatoryChange(card);
             PutCardOnTable(card);
@@ -296,7 +298,7 @@ namespace ThousandFinal.Server.Services
         private bool PlayerHasQueenAndKing(CardModel card)
         {
             int QueenAndKing = cards.Where(x => x.Status == Status.InHand)
-                                        .Where(x => x.OwnerName == card.OwnerName)
+                                        .Where(x => x.OwnerConnectionId == card.OwnerConnectionId)
                                         .Where(x => x.Suit == card.Suit)
                                         .Where(x => (x.Rank == Rank.Queen || x.Rank == Rank.King)).Count();
 
@@ -306,7 +308,7 @@ namespace ThousandFinal.Server.Services
         public void ChangeMandatory(CardModel card)
         {
             mandatorySuit = card.Suit;
-            int playerIndex = Helper.GetPlayerIndex(players, card.OwnerName);
+            int playerIndex = Helper.GetPlayerIndex(players, card.OwnerConnectionId);
             players[playerIndex].PointsInCurrentRound += Helper.GetMandatoryValue(card.Suit);
         }
 
@@ -318,7 +320,7 @@ namespace ThousandFinal.Server.Services
                 {
                     Console.WriteLine("ERROR card should be won");
                 }
-                int playerId = Helper.GetPlayerIndex(players, card.OwnerName);
+                int playerId = Helper.GetPlayerIndex(players, card.OwnerConnectionId);
                 players[playerId].PointsInCurrentRound += Helper.GetCardPointValue(card);
             }
 
@@ -395,16 +397,18 @@ namespace ThousandFinal.Server.Services
         private PlayerSpecificInfo CreatePlayerSpecificInfo(List<PlayerPosition> playersPositions, int playerIndex)
         {
             List<CardModel> playerCards = cards.Where(x => x.Status == Status.InHand)
-                                                   .Where(x => x.OwnerName == players[playerIndex].Name)
+                                                   .Where(x => x.OwnerConnectionId == players[playerIndex].ConnectionId)
                                                    .OrderBy(x => x.Suit)
                                                    .ThenByDescending(x => x.Rank)
                                                    .ToList();
 
+            string leftUserConnectionId = players.SingleOrDefault(x => x.Name == playersPositions[playerIndex].leftUserName).ConnectionId;
             int leftPlayerCardsNumber = cards.Where(x => x.Status == Status.InHand)
-                                             .Where(x => x.OwnerName == playersPositions[playerIndex].leftUserName).Count();
+                                             .Where(x => x.OwnerConnectionId == leftUserConnectionId).Count();
 
+            string rightUserConnectionId = players.SingleOrDefault(x => x.Name == playersPositions[playerIndex].rightUserName).ConnectionId;
             int rightPlayerCardsNumber = cards.Where(x => x.Status == Status.InHand)
-                                              .Where(x => x.OwnerName == playersPositions[playerIndex].rightUserName).Count();
+                                              .Where(x => x.OwnerConnectionId == rightUserConnectionId).Count();
 
             var playerSpecificInfo = new PlayerSpecificInfo(players[playerIndex].Name, playerCards,
                                     playersPositions[playerIndex].leftUserName, leftPlayerCardsNumber,

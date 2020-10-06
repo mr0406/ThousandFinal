@@ -9,7 +9,7 @@ namespace ThousandFinal.Shared.Models
         public Rank Rank { get; set; }
         public Suit Suit { get; set; }
         public Status Status { get; set; }
-        public string OwnerName { get; set; }
+        public string OwnerConnectionId { get; set; }
         public int positionOnTable { get; set; }
 
         public CardModel() { }
@@ -19,7 +19,7 @@ namespace ThousandFinal.Shared.Models
             Rank = rank;
             Suit = suit;
             Status = status;
-            OwnerName = "";
+            OwnerConnectionId = "";
             positionOnTable = -1;
         }
     }
