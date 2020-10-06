@@ -1,19 +1,17 @@
 ﻿<div id="chatContainer">
-    <hr />
-    <span class="playerList" id="usersHeader">Users: </span>
+    <div id="players">
+        <h1>Users: </h1>
 
-    <ul class="playerList">
-        @foreach (var user in Users)
-        {
-            <li class="playerList">@user.Name</li>
-        }
-    </ul>
-
-    <hr />
-
-    <div id="messagesHeader">Messages: </div>
+        <ul class="playerList">
+            @foreach (var user in Users)
+            {
+                <li class="playerList">@user.Name</li>
+            }
+        </ul>
+    </div>
 
     <div  id="messages"> <! –– class="overflow-auto" ––>
+        <h1>Messages: </h1>
         @foreach (var message in messages)
         {
             if (message.GeneratedFromServer)
@@ -31,15 +29,13 @@
         }
     </div>
 
-    <hr />
-
-    <div> <! ––class="form-group" ––>
+    <div id="form"> <!-- class="form-group" -->
         <label>
             Message:
             <input @bind="messageInput" id="messageForm" @onkeyup="@KeyPress"/>
         </label>
+        <button @onclick="Send">Send</button>
     </div>
-    <button @onclick="Send">Send</button>
 
 </div>
 
