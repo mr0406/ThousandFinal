@@ -15,8 +15,8 @@ namespace ThousandFinal.Server.Hubs
     {
         private readonly IServiceProvider provider;
 
-        private static Dictionary<string, Room> rooms = new Dictionary<string, Room>(); //roomName - room
-        private static Dictionary<string, string> user_room = new Dictionary<string, string>(); //userId - roomName
+        public static Dictionary<string, Room> rooms = new Dictionary<string, Room>(); //roomName - room
+        public static Dictionary<string, string> user_room = new Dictionary<string, string>(); //userId - roomName
 
         public AppHub(IServiceProvider provider) 
         {
@@ -237,7 +237,39 @@ namespace ThousandFinal.Server.Hubs
             string roomName = user_room[Context.ConnectionId];
             rooms[roomName].lastActivityTime = DateTime.Now;
             rooms[roomName].Users[connectionId].lastActivityTime = DateTime.Now;
+        }
+
+        public void WriteRooms()
+        {
             Console.WriteLine(DateTime.Now);
+            foreach(var room in rooms)
+            {
+                TimeSpan lastActivityInRoom = DateTime.Now - room.Value.lastActivityTime;
+
+                if(lastActivityInRoom > TimeSpan.FromMinutes(1))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+
+                Console.WriteLine($"\t{room.Key} : {room.Value.Users.Count()} users");
+                Console.WriteLine($"\tlast activity in room : {lastActivityInRoom}");
+
+                Console.ForegroundColor = ConsoleColor.Gray;
+
+                foreach (var user in room.Value.Users)
+                {
+                    TimeSpan lastUserActivity = DateTime.Now - user.Value.lastActivityTime;
+
+                    if (lastUserActivity > TimeSpan.FromMinutes(1))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                    }
+
+                    Console.WriteLine($"\t\t{user.Value.Name} last activity: {lastUserActivity}");
+
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
+            }
         }
     }
 }
