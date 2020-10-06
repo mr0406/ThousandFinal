@@ -13,7 +13,7 @@
 /* Login.razor style */
 
 html, body {
-    --green: #00A878;
+    --green: hsl(163, 100%, 33%);
     --lightgreen: #D8F1A0;
     --white: #FDF7EC;
     --red: #FE5E41;
@@ -314,18 +314,23 @@ html, body {
     background-color: var(--white);
 }
 
-#players {
-    grid-row: 1;
-}
-
 #chatContainer h1{
     font-size: 1.5rem;
     font-weight: normal;
     margin-left: .1rem;
+    vertical-align: middle;
+    text-align: center;
 }
 
-#usersHeader {
-    margin: 1rem .5rem;
+#players {
+    padding-bottom: 1rem;
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+#players h1{
+    grid-column: 1;
 }
 
 ul.playerList{
@@ -333,11 +338,13 @@ ul.playerList{
     padding: 0;
     list-style-type: none;
     text-align: center;
+    grid-column: 2;
 }
 
 #messages {
-    width: 99%;
-    border: .1rem solid rgba(11, 5, 0, 0.4);
+    width: 100%;
+    border-top: .1rem solid rgba(11, 5, 0, 0.4);
+    border-bottom: .1rem solid rgba(11, 5, 0, 0.4);
     display: block;
     margin: 0 auto;
     overflow-y: auto;
@@ -346,9 +353,9 @@ ul.playerList{
 
 .message {
     min-width: 51%;
-    max-width: 90%;
+    max-width: 100%;
     overflow: auto;
-    margin: .1rem .3rem;
+    margin: .1rem .3rem 0 .3rem;
     overflow-wrap: anywhere;
     padding: .5rem;
     display: block;
@@ -370,12 +377,15 @@ ul.playerList{
 #myMessage {
     text-align: right;
     float: right;
+    border-radius: .2rem .2rem 0 .2rem;
+    background-color: rgba(0, 168, 120, 0.4);
 }
 
 #othersMessage {
     text-align: left;
     float: left;
     background-color: rgba(11, 5, 0, 0.4);
+    border-radius: .2rem .2rem .2rem 0;
 }
 
 #chatContainer > #form{
@@ -384,7 +394,7 @@ ul.playerList{
 
 #chatContainer > #form label {
     display: block;
-    max-width: 80%;
+    max-width: 90%;
     margin: .5rem auto;
     text-align: center;
 }
@@ -396,8 +406,9 @@ ul.playerList{
     height: 2.5rem;
     padding: .4rem;
     margin: .5rem;
-    width: 60%;
-    border-radius: .05rem;
+    width: 100%;
+    height: 2em;
+    border-radius: .1rem;
     transition: .2s;
 }
 
@@ -414,7 +425,7 @@ ul.playerList{
     text-transform: uppercase;
     cursor: pointer;
     padding: .5rem 2rem;
-    width: 80%;
+    width: 90%;
     transition: .2s;
     display: block;
     margin: 0 auto;
