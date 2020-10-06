@@ -2,104 +2,105 @@
     <div id="gameContainer">
 
         @if (!GameStarted)
-        {
-            <h2 style="position: absolute; top: 5em">Are you ready? </h2>
-            <input type="checkbox" style="position: relative; display:block; background-color:white; width: 3em; height: 3em; margin: 2em" @value="@User.IsReady" @onchange="() => CheckBoxClick()" disabled="@checkBoxDisabled" />
+            {<div id="readyScreen">
+                <h2 >Are you ready? </h2>
+                <input type="checkbox" @value="@User.IsReady" @onchange="() => CheckBoxClick()" disabled="@checkBoxDisabled" />
 
-            <button style="position: relative; display:block; background-color: white; width: 5em; height: 3em; border-radius: 2px; border-color: black;" @onclick="TryStartGame">Start</button>
+                <button @onclick="TryStartGame">Start</button>
+            </div>
         }
         else
         {
             //<div class="row" id="row1">
-                <div id="mandatory">
+            <div id="mandatory">
 
-                    <div>Name:@User.Name</div>
-                    <MandatoryTable currentMandatory="@mandatorySuit"></MandatoryTable>
+                <div>Name:@User.Name</div>
+                <MandatoryTable currentMandatory="@mandatorySuit"></MandatoryTable>
 
-                </div>
+            </div>
 
-                <div id="cardsToTake">
-                    @if (cardsToTakeExists)
-                    {
-                        <CardsToTake Cards="@cardsToTake"></CardsToTake>
-                    }
-                </div>
+            <div id="cardsToTake">
+                @if (cardsToTakeExists)
+                {
+                    <CardsToTake Cards="@cardsToTake"></CardsToTake>
+                }
+            </div>
 
-                <div id="resultTable">
+            <div id="resultTable">
 
-                    <ResultsTable Players="@Users"></ResultsTable>
-                </div>
+                <ResultsTable Players="@Users"></ResultsTable>
+            </div>
             //</div>
 
             //<div class="row" id="row2">
-                <div style="color: green">
-                    @if (AmIActive())
-                    {
-                        <p>I AM ACTIVE</p>
-                    }
-                </div>
+            <div style="color: green">
+                @if (AmIActive())
+                {
+                    <p>I AM ACTIVE</p>
+                }
+            </div>
 
 
-                <div id="tableContainer">
+            <div id="tableContainer">
 
-                    @if (leftUserName != null)
-                    {
-                        <div class="otherPlayer" id="leftPlayer">
-                            <OtherPlayerHand UserName="@leftUserName" numberOfCards="leftUserNumberOfCards"></OtherPlayerHand>
-                        </div>
-                    }
-
-                    @if (phase == Phase.Auction)
-                    {
-                        if (AmIActive())
-                        {
-                            <div id="raisingPoints">
-                                <AuctionBoard lastHighest="highestBet"></AuctionBoard>
-                            </div>
-                        }
-                    }
-
-                    @if (phase == Phase.PlayerWon)
-                    {
-                        <h1 style="color: green">Winner: @getWinnerName()</h1>
-                    }
-
-                    @if (phase == Phase.GivingAdditionalCards)
-                    {
-
-                    }
-
-                    @if (phase == Phase.RaisingPointsToAchieve)
-                    {
-                        if (AmIActive())
-                        {
-                            <div id="raisingPoints">
-                                <RaisingPointsBoard playerBet="highestBet"></RaisingPointsBoard>
-                            </div>
-                        }
-                    }
-
-
-                    @if (phase == Phase.Playing)
-                    {
-                        <div id="table">
-                            <CardsOnTable Cards="cardsOnTable"></CardsOnTable>
-                        </div>
-                    }
-
-                    @if (rightUserName != null)
-                    {
-                        <div class="otherPlayer" id="rightPlayer">
-                            <OtherPlayerHand UserName="@rightUserName" numberOfCards="rightUserNumberOfCards"></OtherPlayerHand>
-                        </div>
-                    }
+                @if (leftUserName != null)
+                {
+                    <div class="otherPlayer" id="leftPlayer">
+                        <OtherPlayerHand UserName="@leftUserName" numberOfCards="leftUserNumberOfCards"></OtherPlayerHand>
                     </div>
+                }
+
+                @if (phase == Phase.Auction)
+                {
+                    if (AmIActive())
+                    {
+                        <div id="raisingPoints">
+                            <AuctionBoard lastHighest="highestBet"></AuctionBoard>
+                        </div>
+                    }
+                }
+
+                @if (phase == Phase.PlayerWon)
+                {
+                    <h1 style="color: green">Winner: @getWinnerName()</h1>
+                }
+
+                @if (phase == Phase.GivingAdditionalCards)
+                {
+
+                }
+
+                @if (phase == Phase.RaisingPointsToAchieve)
+                {
+                    if (AmIActive())
+                    {
+                        <div id="raisingPoints">
+                            <RaisingPointsBoard playerBet="highestBet"></RaisingPointsBoard>
+                        </div>
+                    }
+                }
+
+
+                @if (phase == Phase.Playing)
+                {
+                    <div id="table">
+                        <CardsOnTable Cards="cardsOnTable"></CardsOnTable>
+                    </div>
+                }
+
+                @if (rightUserName != null)
+                {
+                    <div class="otherPlayer" id="rightPlayer">
+                        <OtherPlayerHand UserName="@rightUserName" numberOfCards="rightUserNumberOfCards"></OtherPlayerHand>
+                    </div>
+                }
+            </div>
             //</div>
 
             //<div class="row" id="row3">
-                <div id="playerCards">
-                    <PlayersHand Cards="playerCards"></PlayersHand>
-                </div>
+            <div id="playerCards">
+                <PlayersHand Cards="playerCards"></PlayersHand>
+            </div>
             //</div>
         }
     </div>

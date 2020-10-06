@@ -1,4 +1,16 @@
-﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+﻿* {
+    box-sizing: border-box; /* Make padding and margin included in total width of an element*/
+}
+
+/* Div class "main", is the whole website, besides errors. Don't use any styles on it.
+ * Div class "content px-4" is the container for actual content. Don't put any style on it either.
+ * 
+ * added classes:
+ * form, 
+ * added IDs:
+ * loginContainer, roomBrowser, singleRoomContainer, roomCreator
+*/
+/* Login.razor style */
 
 html, body {
     --green: #00A878;
@@ -12,187 +24,85 @@ html, body {
     color: var(--black)
 }
 
-a, .btn-link {
-    color: #0366d6;
+#gameFrame{
+    width: 100vw;
+    height: 100vh;
+    max-height: 100%;
+    max-width: 100%;
+    background-color: var(--black);
+    display: grid;
+    grid-template-rows: 10% 90%;
+    grid-template-columns: 75% 25%;
+}
+#loginContainer {
+    color: black;
+    display: grid;
+    grid-template-columns: 25% 75%;
+    grid-column-gap: 10px;
+    height: 40%;
+    background-color: var(--white);
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    color: white;
 }
 
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+#roomCreator {
+    background-color: var(--black);
+    display: grid;
+    grid-template-columns: 100%;
+    justify-content: space-between;
 }
 
-app {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    max-width: 100vw;
+#roomBrowser {
+    background-color: var(--black);
+    overflow-y: auto;
+    color: black;
 }
 
-.top-row {
-    height: 3.5rem;
-    display: flex;
-    align-items: center;
+.singleRoomContainer {
+    background-color: var(--white);
+    height: 5%;
+    width:51%;
+    float: left;
+    display: block;
+    margin-bottom: 3px;
 }
-
-.main {
-    flex: 1;
-}
-
-    .main .top-row {
-        background-color: #f7f7f7;
-        border-bottom: 1px solid #d6d5d5;
-        justify-content: flex-end;
-    }
-
-        .main .top-row > a, .main .top-row .btn-link {
-            white-space: nowrap;
-            margin-left: 1.5rem;
-        }
-
-.main .top-row a:first-child {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
-}
-
-    .sidebar .top-row {
-        background-color: rgba(0,0,0,0.4);
-    }
-
-    .sidebar .navbar-brand {
-        font-size: 1.1rem;
-    }
-
-    .sidebar .oi {
-        width: 2rem;
-        font-size: 1.1rem;
-        vertical-align: text-top;
-        top: -2px;
-    }
-
-    .sidebar .nav-item {
-        font-size: 0.9rem;
-        padding-bottom: 0.5rem;
-    }
-
-        .sidebar .nav-item:first-of-type {
-            padding-top: 1rem;
-        }
-
-        .sidebar .nav-item:last-of-type {
-            padding-bottom: 1rem;
-        }
-
-        .sidebar .nav-item a {
-            color: #d7d7d7;
-            border-radius: 4px;
-            height: 3rem;
-            display: flex;
-            align-items: center;
-            line-height: 3rem;
-        }
-
-            .sidebar .nav-item a.active {
-                background-color: rgba(255,255,255,0.25);
-                color: white;
-            }
-
-            .sidebar .nav-item a:hover {
-                background-color: rgba(255,255,255,0.1);
-                color: white;
-            }
-
-.content {
-    padding-top: 1.1rem;
-}
-
-.navbar-toggler {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
-}
-
-.invalid {
-    outline: 1px solid red;
-}
-
-.validation-message {
-    color: red;
-}
-
-#blazor-error-ui {
-    background: lightyellow;
-    bottom: 0;
-    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
-    display: none;
-    left: 0;
-    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
-}
-
-#blazor-error-ui .dismiss {
-    cursor: pointer;
-    position: absolute;
-    right: 0.75rem;
-    top: 0.5rem;
-}
-
-@media (max-width: 767.98px) {
-    .main .top-row:not(.auth) {
-        display: none;
-    }
-
-    .main .top-row.auth {
-        justify-content: space-between;
-    }
-
-    .main .top-row a, .main .top-row .btn-link {
-        margin-left: 0;
-    }
-}
-
-@media (min-width: 768px) {
-    app {
-        flex-direction: row;
-    }
-
-    .sidebar {
-        width: 250px;
-        height: 100vh;
-        position: sticky;
-        top: 0;
-    }
-
-    .main .top-row {
-        position: sticky;
-        top: 0;
-    }
-
-    .main > div {
-        padding-left: 2rem !important;
-        padding-right: 1.5rem !important;
-    }
-
-    .navbar-toggler {
-        display: none;
-    }
-
-    .sidebar .collapse {
-        /* Never collapse the sidebar for wide screens */
-        display: block;
-    }
-}
-
-
 /* Styl ogólny */
+#readyScreen {
+    grid-row: 9 / span 3;
+    grid-column: 9 / span 5;
+    color: white;
+    display: grid;
+    grid-template-rows: 20% 80%;
+    grid-template-columns: 33% 33% 33%;
+}
+
+    #readyScreen > h2 {
+        margin: 0;
+        grid-column: 1 / span 3;
+        grid-row: 1 / span 1;
+    }
+
+    #readyScreen > input {
+        background-color: white;
+        display: inline-block;
+        width: 100%;
+        height: 60%;
+        margin-bottom: 100%;
+    }
+
+    #readyScreen > button {
+        display: inline-block;
+        background-color: white;
+        width: 80%;
+        height: 30%;
+        border-radius: 2px;
+        border-color: black;
+        margin-right: 100%;
+        margin-top: 25%;
+    }
 
 .error {
     color: red;
@@ -284,37 +194,37 @@ app {
     margin-top: 3px;
 }
 
-#cardsToTake{
-    top: -1em;
-    margin-left: auto;
-    margin-right: auto;
-    position: absolute;
-    display: flex;
+#cardsToTake {
+    grid-row-start: 5;
+    grid-row-end: 9;
+    grid-column-start: 9;
+    grid-column-end: 15;
+    align-content: end;
+    margin-top: auto;
 }
 
-#cardsToTake > #cardContainer{
-    margin: .1em;
-}
+    #cardsToTake > #cardContainer {
+        margin: .1em;
+        display: inline-block;
+    }
 
 /* Poniżej jest styl Game.razor */
 #mandatory {
-    width: 20%;
-    height: 100px;
-    display: block;
-    position: absolute;
-    left: 2vw;
-    top: 1vw;
-    background-color:var(--lightgreen);
+    width: 100%;
+    height: 100%;
+    background-color: var(--lightgreen);
+    grid-row: 1 / span 2;
+    grid-column: 1 / span 4;
 }
 
 #resultTable {
     border: dotted;
-    width: 30%;
-    height: 100px;
-    display: block;
-    position: absolute;
-    top: 1%;
-    right: 3%;
+    width: 100%;
+    max-height: 70%;
+    min-height: 70%;
+    color: white;
+    grid-row: 1 / span 2;
+    grid-column: 17 / span 4;
 }
 
 #tableContainer {
@@ -322,6 +232,8 @@ app {
     width: 90%;
     height: 20em;
     background-color: var(--green);
+    grid-row: 9 / span 7;
+    grid-column: 3 / span 18;
 }
 
 .otherPlayer {
@@ -349,25 +261,25 @@ app {
     display: inline-block;
     position: relative;
     margin: 0 auto;
+
 }
 
 #playerCards {
-    height: 15em;
-    position: absolute;
-    right: 2em;
-    left: 2em;
-    bottom: -3em;
     display: flex;
+    justify-content: space-between;
     flex-direction: row;
-    justify-content: center;
+    overflow-y: hidden;
+    padding-top: 20px;
     overflow-x: auto;
+    grid-row: 17 / span 4;
+    grid-column: 7 / span 8;
 }
 
 #playerCards > #cardContainer {
     box-shadow: -0.5em 0 1em var(--black);
     transition: .2s;
     padding: 1em;
-    margin: 3em 0 0 2em;
+    margin: 0 0 2em;
 }
 
 #playerCards > #cardContainer:hover {
@@ -380,11 +292,11 @@ app {
 
 #gameContainer {
     border: dotted;
-    min-height: 90vh;
-    width: inherit;
-    justify-content: center;
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-row-start: 2;
+    grid-column-end: 2;
+    grid-template-rows: 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5%;
+    grid-template-columns: 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5%;
 }
 
 
@@ -395,6 +307,9 @@ app {
 #chatContainer {
     border: dotted;
     height: 100%;
+    grid-row-start: 2;
+    grid-column-start: 2;
+    background-color: var(--white);
 }
 
 #messages {

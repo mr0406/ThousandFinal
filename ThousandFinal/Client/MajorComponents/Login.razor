@@ -1,31 +1,38 @@
-﻿<div class="form-group">
-    <label>
-        Room:
-        <input @bind="newRoomName" @onkeyup="@AddRoomPressKey" />
-        <button @onclick="@AddRoom">Add</button>
-    </label>
-</div>
-
-<div>
-    @for (int i = 0; i < roomDTOs.Count(); i++)
-    {
-        int temp = i;
-        <span>@(temp + 1). @roomDTOs[i].Name : @roomDTOs[i].NumOfUsers/3</span>
-        <button @onclick="@(() => (ChooseRoom(temp)))">Choose</button>
-    }
-</div>
-
-@if (choosenRoom != null)
-{
-    <div>Join to @choosenRoom.Name:</div>
-    <div class="form-group">
+﻿<div id="loginContainer">
+    
+    <div id="roomCreator">
         <label>
-            User:
-            <input @bind="userName" @onkeyup="@JoinPressKey" />
-            <button @onclick="TryJoin">Join</button>
+            Room:
+            <input @bind="newRoomName" @onkeyup="@AddRoomPressKey" />
+            <button @onclick="@AddRoom">Add</button>
         </label>
+
+        @if (choosenRoom != null)
+        {   
+            <div class="form">
+            <div>Join to @choosenRoom.Name:</div>
+                <label>
+                    User:
+                    <input @bind="userName" @onkeyup="@JoinPressKey" />
+                    <button @onclick="TryJoin">Join</button>
+                </label>
+            </div>
+        }
     </div>
-}
+
+    <div id="roomBrowser">
+        @for (int i = 0; i < roomDTOs.Count(); i++)
+        {
+            int temp = i;
+            <div class="singleRoomContainer">
+                <span>@(temp + 1). @roomDTOs[i].Name : @roomDTOs[i].NumOfUsers/3</span>
+                <button @onclick="@(() => (ChooseRoom(temp)))">Choose</button>
+            </div>
+        }
+    </div>
+
+    
+</div>
 
 @code {
     [CascadingParameter] HubConnection hubConnection { get; set; }
