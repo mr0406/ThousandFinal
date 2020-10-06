@@ -15,8 +15,8 @@ namespace ThousandFinal.Server.Hubs
     {
         private readonly IServiceProvider provider;
 
-        private static Dictionary<string, Room> rooms = new Dictionary<string, Room>();
-        private static Dictionary<string, UserModel> users = new Dictionary<string, UserModel>();
+        private static Dictionary<string, Room> rooms = new Dictionary<string, Room>(); //roomName - room
+        private static Dictionary<string, string> user_room = new Dictionary<string, string>(); //userId - roomName
 
         public AppHub(IServiceProvider provider) 
         {
@@ -25,7 +25,7 @@ namespace ThousandFinal.Server.Hubs
 
         public async Task SendMessage(MessageModel message)
         {
-            string roomName = users[Context.ConnectionId].RoomName;
+            string roomName = user_room[Context.ConnectionId];
             foreach (var user in rooms[roomName].Users)
             {
                 await Clients.Client(user.Key).ReceiveMessage(message);
@@ -56,14 +56,24 @@ namespace ThousandFinal.Server.Hubs
 
         public async Task UserReadyChange()
         {
-            users[Context.ConnectionId].IsReady = !users[Context.ConnectionId].IsReady;
-            string roomName = users[Context.ConnectionId].RoomName;
-            rooms[roomName].Users[Context.ConnectionId].IsReady = users[Context.ConnectionId].IsReady;
+            string roomName = user_room[Context.ConnectionId];
+            rooms[roomName].Users[Context.ConnectionId].IsReady = !rooms[roomName].Users[Context.ConnectionId].IsReady;
+
+            string userName = rooms[roomName].Users[Context.ConnectionId].Name;
+
+            foreach (var user in rooms[roomName].Users)
+            {
+                if (user.Key != Context.ConnectionId)
+                {
+                    await Clients.Client(user.Key).ReceiveMessage(new MessageModel($"{userName} is now ready.", true));
+                    await Clients.Client(user.Key).ReceiveUsers(rooms[roomName].Users.Values.ToList());
+                }
+            }
         }
 
         public async Task TryStartGame()
         {
-            string roomName = users[Context.ConnectionId].RoomName;
+            string roomName = user_room[Context.ConnectionId];
 
             int numberOfReadyUsers = 0;
             foreach(var user in rooms[roomName].Users)
@@ -100,51 +110,45 @@ namespace ThousandFinal.Server.Hubs
 
         public async Task StartGame()
         {
-            string roomName = users[Context.ConnectionId].RoomName;
+            string roomName = user_room[Context.ConnectionId];
             await rooms[roomName].gameService.StartGame(rooms[roomName].Users.Values.ToList());
         }
 
         //Users Actions
         public async Task Bet(int points)
         {
-            string userName = users[Context.ConnectionId].Name;
-            string roomName = users[Context.ConnectionId].RoomName;
-            await rooms[roomName].gameService.Bet(userName, points);
+            string roomName = user_room[Context.ConnectionId];
+            await rooms[roomName].gameService.Bet(Context.ConnectionId, points);
         }
 
         public async Task GiveUpAuction()
         {
-            string userName = users[Context.ConnectionId].Name;
-            string roomName = users[Context.ConnectionId].RoomName;
-            await rooms[roomName].gameService.GiveUpAuction(userName);
+            string roomName = user_room[Context.ConnectionId];
+            await rooms[roomName].gameService.GiveUpAuction(Context.ConnectionId);
         }
 
         public async Task GiveCardToPlayer(CardModel card, string playerWhoGetName)
         {
-            string userName = users[Context.ConnectionId].Name;
-            string roomName = users[Context.ConnectionId].RoomName;
-            await rooms[roomName].gameService.GiveCardToPlayer(userName, card, playerWhoGetName);
+            string roomName = user_room[Context.ConnectionId];
+            await rooms[roomName].gameService.GiveCardToPlayer(Context.ConnectionId, card, playerWhoGetName);
         }
 
         public async Task RaisePointsToAchieve(int points)
         {
-            string userName = users[Context.ConnectionId].Name;
-            string roomName = users[Context.ConnectionId].RoomName;
-            await rooms[roomName].gameService.RaisePointsToAchieve(userName, points);
+            string roomName = user_room[Context.ConnectionId];
+            await rooms[roomName].gameService.RaisePointsToAchieve(Context.ConnectionId, points);
         }
 
         public async Task DontRaisePointsToAchieve()
         {
-            string userName = users[Context.ConnectionId].Name;
-            string roomName = users[Context.ConnectionId].RoomName;
-            await rooms[roomName].gameService.DontRaisePointsToAchieve(userName);
+            string roomName = user_room[Context.ConnectionId];
+            await rooms[roomName].gameService.DontRaisePointsToAchieve(Context.ConnectionId);
         }
 
         public async Task PlayCard(CardModel card, CardModel newBestCard)
         {
-            string userName = users[Context.ConnectionId].Name;
-            string roomName = users[Context.ConnectionId].RoomName;
-            await rooms[roomName].gameService.PlayCard(userName, card, newBestCard);
+            string roomName = user_room[Context.ConnectionId];
+            await rooms[roomName].gameService.PlayCard(Context.ConnectionId, card, newBestCard);
         }
 
         public async Task CreateRoom(string roomName)
@@ -164,7 +168,13 @@ namespace ThousandFinal.Server.Hubs
 
         public async Task JoinRoom(string userName, string roomName)
         {
-            foreach(var user in users)
+            if (!rooms.ContainsKey(roomName))
+            {
+                //There is no room with this name
+                return;
+            }
+
+            foreach (var user in rooms[roomName].Users)
             {
                 if(user.Value.Name == userName)
                 {
@@ -173,14 +183,8 @@ namespace ThousandFinal.Server.Hubs
                 }
             }
 
-            if(!rooms.ContainsKey(roomName))
-            {
-                //There is no room with this name
-                return;
-            }
-
             UserModel newUser = new UserModel(Context.ConnectionId, userName, roomName);
-            users.Add(Context.ConnectionId, newUser);
+            user_room.Add(Context.ConnectionId, roomName);
             rooms[roomName].Users.Add(Context.ConnectionId, newUser);
 
             await GetRooms();

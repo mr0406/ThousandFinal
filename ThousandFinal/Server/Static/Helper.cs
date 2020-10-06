@@ -29,23 +29,18 @@ namespace ThousandFinal.Server.StaticClasses
             return -1;
         }
 
-        public static int GetPlayerIndex(List<UserModel> players, UserModel searchedPlayer)
-        {
-            return GetPlayerIndex(players, searchedPlayer.Name);
-        }
-
-        public static int GetPlayerIndex(List<UserModel> players, string searchedPlayerName)
+        public static int GetPlayerIndex(List<UserModel> players, string playerConnectionId)
         {
             for (int i = 0; i < NUMBER_OF_PLAYERS; i++)
-                if (players[i].Name == searchedPlayerName)
+                if (players[i].ConnectionId == playerConnectionId)
                     return i;
 
             return -1;
         }
 
-        public static int GetNumberOfPlayerCards(List<CardModel> cards, string playerName)
+        public static int GetNumberOfPlayerCards(List<CardModel> cards, string playerConnectionId)
         {
-            return cards.Where(x => x.Status == Status.InHand && x.OwnerName == playerName).Count();
+            return cards.Where(x => x.Status == Status.InHand && x.OwnerConnectionId == playerConnectionId).Count();
         }
 
         public static int GetCardPointValue(CardModel card)
