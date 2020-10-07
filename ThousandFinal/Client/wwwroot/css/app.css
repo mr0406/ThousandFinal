@@ -331,15 +331,17 @@ html, body {
 
 #players h1{
     grid-column: 1;
+    grid-row: 1;
 }
 
 ul.playerList{
     margin: 0;
     padding: 1em 0 0 0;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     list-style-type: none;
     text-align: center;
     grid-column: 2;
+    grid-row: 1/3;
 }
 
 #chatContainer button {
@@ -357,6 +359,8 @@ ul.playerList{
 
 #players button {
     background-color: var(--red);
+    grid-column: 1;
+    grid-row: 2;
 }
 
 #messages {
