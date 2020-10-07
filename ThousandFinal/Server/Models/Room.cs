@@ -17,6 +17,7 @@ namespace ThousandFinal.Server.Models
         public Room()
         {
             lastActivityTime = DateTime.Now;
+            Users = new Dictionary<string, UserModel>();
         }
 
         public void StartGame(IGameService gameService)
@@ -27,7 +28,10 @@ namespace ThousandFinal.Server.Models
 
         public void DeleteGame()
         {
-            this.gameService = null;
+            if(gameService != null)
+            {
+                gameService = null;
+            }
         }
     }
 }
