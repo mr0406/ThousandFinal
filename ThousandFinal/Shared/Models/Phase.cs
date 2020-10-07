@@ -11,5 +11,6 @@ namespace ThousandFinal.Shared.Models
         RaisingPointsToAchieve,
         Playing,
         PlayerWon
+        //WaitingPhase //consider this
     }
 }

@@ -10,14 +10,24 @@ namespace ThousandFinal.Server.Models
     public class Room
     {
         public Dictionary<string, UserModel> Users { get; set; } = new Dictionary<string, UserModel>();
-        public IGameService gameService { get; set; }
+        public IGameService gameService { get; set; } = null; 
 
         public DateTime lastActivityTime { get; set; }
 
-        public Room(IGameService gameService)
+        public Room()
+        {
+            lastActivityTime = DateTime.Now;
+        }
+
+        public void StartGame(IGameService gameService)
         {
             this.gameService = gameService;
             lastActivityTime = DateTime.Now;
+        }
+
+        public void DeleteGame()
+        {
+            this.gameService = null;
         }
     }
 }

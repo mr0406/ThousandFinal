@@ -25,5 +25,8 @@ namespace ThousandFinal.Shared.Communication
         //Rooms
         public const string RECEIVE_JOIN_ROOM = "ReceiveJoinRoom";
         public const string RECEIVE_GET_ROOMS = "ReceiveGetRooms";
+        public const string RECEIVE_LEAVE_ROOM = "ReceiveLeaveRoom";
+
+        public const string RECEIVE_GAME_DELETE = "ReceiveGameDelete";
     }
 }

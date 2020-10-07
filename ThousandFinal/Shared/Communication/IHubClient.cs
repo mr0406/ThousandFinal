@@ -10,20 +10,14 @@ namespace ThousandFinal.Shared.Communication
     {
         Task ReceiveUsers(List<UserModel> users);
         Task ReceiveMessage(MessageModel message);
-        Task ReceiveLeaveServer(UserModel user);
+        Task ReceiveLeaveRoom();
 
-        //OnGameStart
+        Task ReceiveGameDelete();
+
         Task ReceiveGameStarted();
 
-        //GameService
-        Task ReceiveRefreshPlayers(List<UserModel> players);
-        Task ReceiveRefreshBoard(List<CardModel> playerCards, List<CardModel> cardsOnTable);
-        Task ReceiveRefreshCardsToTake(bool cardsToTakeExists, List<CardModel> cardsToTake);
-        Task ReceiveRefreshPlayersCardsNumber(Dictionary<string, int> userNames_CardNumber); 
-        Task ReceiveRefreshMandatory(Suit mandatorySuit);
-
         //Rooms
-        Task ReceiveJoinRoom(UserModel user);
+        Task ReceiveJoinRoom(string userName);
         Task ReceiveGetRooms(List<RoomDTO> roomDTOs);
     }
 }

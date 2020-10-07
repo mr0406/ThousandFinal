@@ -18,7 +18,7 @@
             {
                 <div  class="message" id="serverMessage">@message.Text</div>
             }
-            else if (message.AuthorName == User.Name)
+            else if (message.AuthorName == UserName)
             {
                 <div class="message" id="myMessage" >@message.Text</div>
             }
@@ -36,14 +36,15 @@
         </label>
         <button @onclick="Send">Send</button>
     </div>
+    <button @onclick="LeaveRoom">Leave</button>
 
 </div>
 
 @code {
     [CascadingParameter] public HubConnection hubConnection { get; set; }
 
-    [Parameter] public UserModel User { get; set; }
     [Parameter] public List<UserModel> Users { get; set; }
+    [Parameter] public string UserName { get; set; }
 
     public List<MessageModel> messages = new List<MessageModel>();
     public string messageInput;
@@ -61,7 +62,7 @@
     {
         if(!String.IsNullOrWhiteSpace(messageInput))
         {
-            await hubConnection.SendAsync(ClientToServer.SEND_MESSAGE, new MessageModel(messageInput, User));
+            await hubConnection.SendAsync(ClientToServer.SEND_MESSAGE, new MessageModel(messageInput, UserName));
             messageInput = "";
         }
     }
@@ -70,6 +71,11 @@
     {
         if (e.Key == "Enter")
             await Send();
+    }
+
+    async Task LeaveRoom()
+    {
+        await hubConnection.SendAsync(ClientToServer.LEAVE_ROOM);
     }
 
 }

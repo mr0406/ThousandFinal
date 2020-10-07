@@ -15,8 +15,8 @@ namespace ThousandFinal.Server.Hubs
     {
         private readonly IServiceProvider provider;
 
-        public static Dictionary<string, Room> rooms = new Dictionary<string, Room>(); //roomName - room
-        public static Dictionary<string, string> user_room = new Dictionary<string, string>(); //userId - roomName
+        private static Dictionary<string, Room> rooms = new Dictionary<string, Room>(); //roomName - room
+        private static Dictionary<string, string> user_room = new Dictionary<string, string>(); //userConnectionId - roomName
 
         public AppHub(IServiceProvider provider) 
         {
@@ -34,26 +34,58 @@ namespace ThousandFinal.Server.Hubs
             }
         }
 
-        /* 
-         Przy usunieciu pokoju najpierw wziać id wszystkich jego userów, 
-         następnie usunąć ich z listy users po id,
-         a potem usunąć pokój
-             */
-
-        public async Task LeaveServer(UserModel user)
+        public async Task LeaveRoom()
         {
-            //await RemoveUserByName(user.Name);
-            //await Clients.Others.ReceiveLeaveServer(user);
+            string roomName = user_room[Context.ConnectionId];
+            string userName = rooms[roomName].Users[Context.ConnectionId].Name;
+
+            rooms[roomName].DeleteGame();
+
+            rooms[roomName].Users.Remove(Context.ConnectionId); // usuniecie użytkownika
+            user_room.Remove(Context.ConnectionId); //usunięcie użytkownika
+
+            foreach(var user in rooms[roomName].Users)
+            {
+                user.Value.IsReady = false;
+            }
+
+            foreach (var user in rooms[roomName].Users)
+            {
+                await Clients.Client(user.Key).ReceiveMessage(new MessageModel($"{userName} left room", true));
+                await Clients.Client(user.Key).ReceiveUsers(rooms[roomName].Users.Values.ToList());
+                await Clients.Client(user.Key).ReceiveGameDelete();
+            }
+
+            await Clients.Caller.ReceiveLeaveRoom();
+
+            await GetRooms();
+        }
+
+        public async Task DeleteRoom(string roomName)
+        {
+            rooms[roomName].DeleteGame();
+
+            foreach (var user in rooms[roomName].Users)
+            {
+                rooms[roomName].Users.Remove(Context.ConnectionId); 
+                user_room.Remove(Context.ConnectionId); 
+                await Clients.Client(Context.ConnectionId).ReceiveLeaveRoom();
+            }
+
+            rooms.Remove(roomName);
+
+            await GetRooms();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            //await RemoveUserByConnectionId(Context.ConnectionId);
-
-            //await LeaveServer(user);
-            //await base.OnDisconnectedAsync(exception);
-            //Console.WriteLine(exception);
-            //Stop a game
+            if(user_room.ContainsKey(Context.ConnectionId))
+            {
+                await LeaveRoom();
+            }
+   
+            await base.OnDisconnectedAsync(exception);
+            Console.WriteLine(exception);
         }
 
         public async Task UserReadyChange()
@@ -117,10 +149,133 @@ namespace ThousandFinal.Server.Hubs
         private async Task StartGame()
         {
             string roomName = user_room[Context.ConnectionId];
+
+            var iHubContext = provider.GetRequiredService<IHubContext<AppHub>>();
+            IGameService gameService = new GameService(iHubContext);
+            rooms[roomName].StartGame(gameService);
+
             await rooms[roomName].gameService.StartGame(rooms[roomName].Users.Values.ToList());
         }
 
-        //Users Actions
+        private void RefreshActivity(string connectionId)
+        {
+            string roomName = user_room[Context.ConnectionId];
+            rooms[roomName].lastActivityTime = DateTime.Now;
+            rooms[roomName].Users[connectionId].lastActivityTime = DateTime.Now;
+        }
+
+        public void WriteRooms()
+        {
+            /* Jedyna akcja użytkownika resetująca jego czas aktwności poza grą to wysłanie wiadomości na czacie
+             * 
+             * jeżeli ktoś jest nieaktywny ponad 10 minut to dostaje wiadomość, że ma coś zrobić
+             * jak jest graczem aktywnym to może zrobić cokolwiek w grze lub wysłać wiadomość na czacie
+             * jeżeli nie jest graczem aktywnym to niech coś napisze na czacie
+             * jeżeli ktoś jest nieaktywny 20 minut to wyrzucamy go
+             * 
+             * serwis uruchamiamy co 10 minut
+             * 
+             * a pokoj usuwamy jeżeli jest pusty i niektywny 20 minut
+             */
+
+            Console.WriteLine(DateTime.Now);
+            foreach(var room in rooms)
+            {
+                TimeSpan lastActivityInRoom = DateTime.Now - room.Value.lastActivityTime;
+
+                if(lastActivityInRoom > TimeSpan.FromMinutes(1))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+
+                Console.WriteLine($"\t {room.Key} : {room.Value.Users.Count()} users");
+                Console.WriteLine($"\t last activity in room : {lastActivityInRoom}");
+
+                Console.ForegroundColor = ConsoleColor.Gray;
+
+                foreach (var user in room.Value.Users)
+                {
+                    TimeSpan lastUserActivity = DateTime.Now - user.Value.lastActivityTime;
+
+                    if (lastUserActivity > TimeSpan.FromMinutes(1))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                    }
+
+                    Console.WriteLine($"\t\t {user.Value.Name} last activity: {lastUserActivity}");
+
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
+            }
+        }
+
+
+
+
+        #region Waiting room actions 
+        public async Task CreateRoom(string roomName)
+        {
+            if (rooms.ContainsKey(roomName))
+            {
+                //There is already room with this name
+                return;
+            }
+
+            rooms.Add(roomName, new Room()); //tworzymy pokoj bez gry w środku
+
+            await GetRooms();
+        }
+
+        public async Task JoinRoom(string userName, string roomName)
+        {
+            if (!rooms.ContainsKey(roomName))
+            {
+                //There is no room with this name
+                return;
+            }
+
+            foreach (var user in rooms[roomName].Users)
+            {
+                if (user.Value.Name == userName)
+                {
+                    //There is already user with this name
+                    return;
+                }
+            }
+
+            UserModel newUser = new UserModel(Context.ConnectionId, userName, roomName);
+            user_room.Add(Context.ConnectionId, roomName);
+            rooms[roomName].Users.Add(Context.ConnectionId, newUser);
+
+            RefreshActivity(Context.ConnectionId);
+
+            await GetRooms();
+            await Clients.Caller.ReceiveJoinRoom(userName);
+            await Clients.Caller.ReceiveUsers(rooms[roomName].Users.Values.ToList());
+
+            foreach (var user in rooms[roomName].Users)
+            {
+                if (user.Key != Context.ConnectionId)
+                {
+                    await Clients.Client(user.Key).ReceiveMessage(new MessageModel($"{userName} joined room.", true));
+                    await Clients.Client(user.Key).ReceiveUsers(rooms[roomName].Users.Values.ToList());
+                }
+            }
+        }
+
+        public async Task GetRooms()
+        {
+            List<RoomDTO> roomDTOs = new List<RoomDTO>();
+            foreach (var room in rooms)
+            {
+                roomDTOs.Add(new RoomDTO(room.Key, room.Value.Users.Count()));
+            }
+
+            await Clients.All.ReceiveGetRooms(roomDTOs);
+        } 
+        #endregion
+
+        #region Game actions
         public async Task Bet(int points)
         {
             RefreshActivity(Context.ConnectionId);
@@ -167,109 +322,7 @@ namespace ThousandFinal.Server.Hubs
 
             string roomName = user_room[Context.ConnectionId];
             await rooms[roomName].gameService.PlayCard(Context.ConnectionId, card, newBestCard);
-        }
-
-        public async Task CreateRoom(string roomName)
-        {
-            if(rooms.ContainsKey(roomName))
-            {
-                //There is already room with this name
-                return;
-            }
-
-            var iHubContext = provider.GetRequiredService<IHubContext<AppHub>>(); 
-            IGameService gameService = new GameService(iHubContext); 
-            rooms.Add(roomName, new Room(gameService));
-
-            await GetRooms();
-        }
-
-        public async Task JoinRoom(string userName, string roomName)
-        {
-            if (!rooms.ContainsKey(roomName))
-            {
-                //There is no room with this name
-                return;
-            }
-
-            foreach (var user in rooms[roomName].Users)
-            {
-                if(user.Value.Name == userName)
-                {
-                    //There is already user with this name
-                    return;
-                }
-            }
-
-            UserModel newUser = new UserModel(Context.ConnectionId, userName, roomName);
-            user_room.Add(Context.ConnectionId, roomName);
-            rooms[roomName].Users.Add(Context.ConnectionId, newUser);
-
-            RefreshActivity(Context.ConnectionId);
-
-            await GetRooms();
-            await Clients.Caller.ReceiveJoinRoom(newUser);
-            await Clients.Caller.ReceiveUsers(rooms[roomName].Users.Values.ToList());
-
-            foreach (var user in rooms[roomName].Users)
-            {
-                if(user.Key != Context.ConnectionId)
-                {
-                    await Clients.Client(user.Key).ReceiveMessage(new MessageModel($"{userName} joined room.", true));
-                    await Clients.Client(user.Key).ReceiveUsers(rooms[roomName].Users.Values.ToList());
-                }
-            }
-        }
-
-        public async Task GetRooms()
-        {
-            List<RoomDTO> roomDTOs = new List<RoomDTO>();
-            foreach (var room in rooms)
-            {
-                roomDTOs.Add(new RoomDTO(room.Key, room.Value.Users.Count()));
-            }
-
-            await Clients.All.ReceiveGetRooms(roomDTOs);
-        }
-
-        private void RefreshActivity(string connectionId)
-        {
-            string roomName = user_room[Context.ConnectionId];
-            rooms[roomName].lastActivityTime = DateTime.Now;
-            rooms[roomName].Users[connectionId].lastActivityTime = DateTime.Now;
-        }
-
-        public void WriteRooms()
-        {
-            Console.WriteLine(DateTime.Now);
-            foreach(var room in rooms)
-            {
-                TimeSpan lastActivityInRoom = DateTime.Now - room.Value.lastActivityTime;
-
-                if(lastActivityInRoom > TimeSpan.FromMinutes(1))
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                }
-
-                Console.WriteLine($"\t{room.Key} : {room.Value.Users.Count()} users");
-                Console.WriteLine($"\tlast activity in room : {lastActivityInRoom}");
-
-                Console.ForegroundColor = ConsoleColor.Gray;
-
-                foreach (var user in room.Value.Users)
-                {
-                    TimeSpan lastUserActivity = DateTime.Now - user.Value.lastActivityTime;
-
-                    if (lastUserActivity > TimeSpan.FromMinutes(1))
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                    }
-
-                    Console.WriteLine($"\t\t{user.Value.Name} last activity: {lastUserActivity}");
-
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                }
-            }
-        }
+        } 
+        #endregion
     }
 }

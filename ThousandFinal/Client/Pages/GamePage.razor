@@ -8,12 +8,9 @@
             <Login></Login>
         }
         else
-        {
-            
-                    <Game User="User" Users="Users"></Game>
-
-                    <Chat User="User" Users="Users"></Chat>
-           
+        {         
+            <Game UserName="@UserName" Users="Users"></Game>
+            <Chat UserName="@UserName" Users="Users"></Chat>
         }
     </div>
 </CascadingValue>
@@ -25,7 +22,7 @@
     public bool joined = false;
 
     public List<UserModel> Users = new List<UserModel>();
-    public UserModel User;
+    public string? UserName = null; //nullable consider this
 
     protected override async Task OnInitializedAsync()
     {
@@ -33,31 +30,27 @@
             .WithUrl(NavigationManager.ToAbsoluteUri("/apphub"))
             .Build();
 
+
+        hubConnection.On(ServerToClient.RECEIVE_LEAVE_ROOM, () =>
+        {
+            joined = false;
+            UserName = null;
+
+            Users = new List<UserModel>();
+            StateHasChanged();
+        });
+
         hubConnection.On<List<UserModel>>(ServerToClient.RECEIVE_USERS, (List<UserModel> users) =>
         {
             this.Users = users;
             StateHasChanged();
         });
 
-        hubConnection.On(ServerToClient.RECEIVE_JOIN_ROOM, (UserModel user) =>
+        hubConnection.On<string>(ServerToClient.RECEIVE_JOIN_ROOM, (string UserName) =>
         {
             joined = true;
-            User = user;
-            StateHasChanged();
-            //hubConnection.SendAsync(ClientToServer.GET_USERS);
-        });
+            this.UserName = UserName;
 
-        hubConnection.On(ServerToClient.RECEIVE_OTHER_USER_JOIN, (UserModel user) =>
-        {
-            Users.Add(user);
-            StateHasChanged();
-        });
-
-        hubConnection.On<UserModel>(ServerToClient.RECEIVE_OTHER_USER_LEAVE, (user) =>
-        {
-            hubConnection.SendAsync(ClientToServer.GET_USERS);
-            //var encodedMsg = $"{user.Name} left server.";
-            //messages.Add(encodedMsg);
             StateHasChanged();
         });
 

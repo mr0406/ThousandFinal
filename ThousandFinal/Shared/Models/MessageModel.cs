@@ -12,10 +12,10 @@ namespace ThousandFinal.Shared.Models
 
         public MessageModel() { }
 
-        public MessageModel(string text, UserModel author)
+        public MessageModel(string text, string authorName)
         {
             Text = text;
-            AuthorName = author.Name;
+            AuthorName = authorName;
         }
 
         public MessageModel(string text, bool generatedFromServer)

@@ -4,7 +4,7 @@
         @if (!GameStarted)
             {<div id="readyScreen">
                 <h2 >Are you ready? </h2>
-                <input type="checkbox" @value="@User.IsReady" @onchange="() => CheckBoxClick()" disabled="@checkBoxDisabled" />
+                <input type="checkbox" @value="@IsReady" @onchange="() => CheckBoxClick()" disabled="@checkBoxDisabled" />
 
                 <button @onclick="TryStartGame">Start</button>
             </div>
@@ -14,7 +14,7 @@
             //<div class="row" id="row1">
             <div id="mandatory">
 
-                <div>Name:@User.Name</div>
+                <div>Name:@UserName</div>
                 <MandatoryTable currentMandatory="@mandatorySuit"></MandatoryTable>
 
             </div>
@@ -109,8 +109,10 @@
 @code {
     [CascadingParameter] public HubConnection hubConnection { get; set; }
 
-    [Parameter] public UserModel User { get; set; }
     [Parameter] public List<UserModel> Users { get; set; }
+    [Parameter] public string UserName { get; set; }
+
+    public bool IsReady { get; set; } //i wysylać to tutaj jak sie to zmieni
 
     public string leftUserName;
     public int leftUserNumberOfCards;
@@ -140,6 +142,14 @@
 
     protected override async Task OnInitializedAsync()
     {
+        hubConnection.On(ServerToClient.RECEIVE_GAME_DELETE, () =>
+        {
+            IsReady = false;
+
+            GameStarted = false;
+            StateHasChanged();
+        });
+
         hubConnection.On(ServerToClient.RECEIVE_GAME_STARTED, () =>
         {
             GameStarted = true;
@@ -236,7 +246,7 @@
 
     public bool AmIActive()
     {
-        if (Users[activePlayerIndex].Name == User.Name)
+        if (Users[activePlayerIndex].Name == UserName)
             return true;
 
         return false;
