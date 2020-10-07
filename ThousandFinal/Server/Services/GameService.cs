@@ -17,12 +17,8 @@ namespace ThousandFinal.Server.Services
         private readonly ICardService _cardService;
 
         private List<CardModel> cards = new List<CardModel>();                                                         
-        private List<UserModel> players;
+        private List<UserModel> players = new List<UserModel>();
 
-        /* 
-         Players order = {player1Id, plyaer2Id, player3Id}
-         Lista w ktorej ostatni element wskazuje na pierwszy itd
-             */
         private int obligatedPlayer = -1; //On Start it will be 0
         private int activePlayer = 0;
         private int auctionWinner = -1;

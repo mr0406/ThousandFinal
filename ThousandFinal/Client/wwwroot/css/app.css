@@ -320,7 +320,6 @@ html, body {
     margin-left: .1rem;
     vertical-align: middle;
     text-align: center;
-    padding-top: 1em;
 }
 
 #players {
@@ -341,6 +340,23 @@ ul.playerList{
     list-style-type: none;
     text-align: center;
     grid-column: 2;
+}
+
+#chatContainer button:hover {
+    background-color: rgba(11, 5, 0, 0.1);
+    border: none;
+    font-weight: 900;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: .5rem 2rem;
+    width: 90%;
+    transition: .2s;
+    display: block;
+    margin: 0 auto;
+}
+
+#players button {
+    background-color: var(--red);
 }
 
 #messages {
@@ -418,19 +434,6 @@ ul.playerList{
     box-sizing: border-box;
     border-bottom: .5rem solid var(--green);
     background-color: rgba(11, 5, 0, 0.01);
-}
-
-#chatContainer > #form button {
-    background-color: rgba(11, 5, 0, 0.1);
-    border: none;
-    font-weight: 900;
-    text-transform: uppercase;
-    cursor: pointer;
-    padding: .5rem 2rem;
-    width: 90%;
-    transition: .2s;
-    display: block;
-    margin: 0 auto;
 }
 
 #chatContainer > #form button:hover {
