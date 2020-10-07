@@ -342,7 +342,7 @@ ul.playerList{
     grid-column: 2;
 }
 
-#chatContainer button:hover {
+#chatContainer button {
     background-color: rgba(11, 5, 0, 0.1);
     border: none;
     font-weight: 900;
