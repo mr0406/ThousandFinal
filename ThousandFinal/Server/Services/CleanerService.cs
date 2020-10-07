@@ -27,9 +27,9 @@ namespace ThousandFinal.Server.Services
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            _timer = new Timer(WriteFromHub, null, 0, 10000);
-        }
-
+            _timer = new Timer(WriteFromHub, null, 0, 600000); //10000 - 10 s
+        }                                                      //60000 - 1 min
+                                                               //600000 - 10 min
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             _timer?.Change(Timeout.Infinite, 0);
@@ -58,7 +58,7 @@ namespace ThousandFinal.Server.Services
             {
                 TimeSpan lastActivityInRoom = DateTime.Now - room.Value.lastActivityTime;
 
-                if (lastActivityInRoom > TimeSpan.FromMinutes(1))
+                if (lastActivityInRoom > TimeSpan.FromMinutes(20))
                 {
                     await DeleteRoom(room.Key);
                     continue;
@@ -68,7 +68,7 @@ namespace ThousandFinal.Server.Services
                 {
                    TimeSpan lastUserActivity = DateTime.Now - user.Value.lastActivityTime;
                 
-                    if (lastUserActivity > TimeSpan.FromMinutes(1))
+                    if (lastUserActivity > TimeSpan.FromMinutes(20))
                     {
                         Console.WriteLine(user.Value.Name);
                         await KickUserFromRoom(user.Key);
