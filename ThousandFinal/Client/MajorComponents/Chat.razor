@@ -12,21 +12,23 @@
 
     <div  id="messages"> <! –– class="overflow-auto" ––>
         <h1>Messages: </h1>
-        @foreach (var message in messages)
-        {
-            if (message.GeneratedFromServer)
+        <div id="chatHistory">
+            @foreach (var message in messages)
             {
-                <div  class="message" id="serverMessage">@message.Text</div>
+                if (message.GeneratedFromServer)
+                {
+                    <div  class="message" id="serverMessage">@message.Text</div>
+                }
+                else if (message.AuthorName == User.Name)
+                {
+                    <div class="message" id="myMessage" >@message.Text</div>
+                }
+                else
+                {
+                    <div class="message" id="othersMessage" >@message.AuthorName: @message.Text</div>
+                }
             }
-            else if (message.AuthorName == User.Name)
-            {
-                <div class="message" id="myMessage" >@message.Text</div>
-            }
-            else
-            {
-                <div class="message" id="othersMessage" >@message.AuthorName: @message.Text</div>
-            }
-        }
+        </div>
     </div>
 
     <div id="form"> <!-- class="form-group" -->
