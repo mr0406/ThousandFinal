@@ -5,12 +5,12 @@
     <div id="gameFrame">
         @if (!joined)
         {
-            <Login></Login>
+            <WaitingRoom></WaitingRoom>
         }
         else
         {         
             <Game UserName="@UserName" Users="Users"></Game>
-            <Chat UserName="@UserName" Users="Users"></Chat>
+            <ResultsAndChat UserName="@UserName" Users="Users"></ResultsAndChat>
         }
     </div>
 </CascadingValue>

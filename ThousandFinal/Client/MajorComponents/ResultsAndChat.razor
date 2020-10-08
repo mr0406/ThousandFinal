@@ -11,30 +11,32 @@
         <button @onclick="LeaveRoom">Leave</button>
     </div>
 
-    <div  id="messages"> <! –– class="overflow-auto" ––>
+    <div id="messages">
+        <! –– class="overflow-auto" ––>
         <h1>Messages: </h1>
         @foreach (var message in messages)
         {
             if (message.GeneratedFromServer)
             {
-                <div  class="message" id="serverMessage">@message.Text</div>
+                <div class="message" id="serverMessage">@message.Text</div>
             }
             else if (message.AuthorName == UserName)
             {
 
-                <div class="message" id="myMessage" >@message.Text</div>
+                <div class="message" id="myMessage">@message.Text</div>
             }
             else
             {
-                <div class="message" id="othersMessage" >@message.AuthorName: @message.Text</div>
+                <div class="message" id="othersMessage">@message.AuthorName: @message.Text</div>
             }
         }
     </div>
 
-    <div id="form"> <!-- class="form-group" -->
+    <div id="form">
+        <!-- class="form-group" -->
         <label>
             Message:
-            <input @bind="messageInput" id="messageForm" @onkeyup="@KeyPress"/>
+            <input @bind="messageInput" id="messageForm" @onkeyup="@KeyPress" />
         </label>
         <button @onclick="Send">Send</button>
     </div>
@@ -62,7 +64,7 @@
 
     async Task Send()
     {
-        if(!String.IsNullOrWhiteSpace(messageInput))
+        if (!String.IsNullOrWhiteSpace(messageInput))
         {
             await hubConnection.SendAsync(ClientToServer.SEND_MESSAGE, new MessageModel(messageInput, UserName));
             messageInput = "";

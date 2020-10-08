@@ -1,5 +1,5 @@
 ﻿<div id="loginContainer">
-    
+
     <div id="roomCreator">
         <label>
             Room:
@@ -8,9 +8,9 @@
         </label>
 
         @if (choosenRoom != null)
-        {   
+        {
             <div class="form">
-            <div>Join to @choosenRoom.Name:</div>
+                <div>Join to @choosenRoom.Name:</div>
                 <label>
                     User:
                     <input @bind="userName" @onkeyup="@JoinPressKey" />
@@ -31,7 +31,7 @@
         }
     </div>
 
-    
+
 </div>
 
 @code {
