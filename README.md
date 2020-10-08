@@ -104,21 +104,32 @@ Guziki - polewej stronie ikonka, po prawej tekst.
 ## Poczekalnia
 
 Poczekalnia dzieli się na 3 kolumny
+
 Po lewej stronie na górze miejsce na dodanie pokoju
+
 Po lewej poniżej jest opis o nas
+
 Jeszcze niżej są zasady gry i tym podobne pierdoły
 
-Po prawej są pokoje, 4 pokoje w rzędzie, 4 rzędy.
+Po prawej są pokoje, 4 pokoje w rzędzie, 4 rzędy
+
 Pokoje to karty. W kartach jest nazwa pokoju, liczba graczy, guzik dołącz, (ZAOKRĄGLONY JAK WSZYSTKO MARCIN GRATULUJE)
-Po kliknięciu guzika odpala się okno na środku, tył się przyciemnia (50%?) i pojawia sie okienko na wpisanie nicku.
+
+Po kliknięciu guzika odpala się okno na środku, tył się przyciemnia (50%?) i pojawia sie okienko na wpisanie nicku
 
 ![okno loginu](https://i.imgur.com/Len9kD0.png)
 
 ## Rozgrywka
 
 Po lewej na górze jest przycisk do wyjścia, w miejscu obecnego meldunku.
+
 W miejscu tablicy wyników będzie meldunek.
+
 Dodajemy rewersy do kart.
+
 Tworzymy karty innych graczy.
+
 W miescu listy graczy będą panele troche jak z kurnika, z wynikiem, nickiem i co tam sie wymysli.
+
 Usuwamy napis "messages".
+
