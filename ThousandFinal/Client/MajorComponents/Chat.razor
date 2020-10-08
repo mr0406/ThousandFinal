@@ -5,7 +5,7 @@
         <ul class="playerList">
             @foreach (var user in Users)
             {
-                <li class="playerList">@user.Name</li>
+                <li class="playerList">@user.Name - @user.Points</li>
             }
         </ul>
         <button @onclick="LeaveRoom">Leave</button>
@@ -21,18 +21,12 @@
             }
             else if (message.AuthorName == UserName)
             {
-                if (message.GeneratedFromServer)
-                {
-                    <div  class="message" id="serverMessage">@message.Text</div>
-                }
-                else if (message.AuthorName == UserName)
-                {
-                    <div class="message" id="myMessage" >@message.Text</div>
-                }
-                else
-                {
-                    <div class="message" id="othersMessage" >@message.AuthorName: @message.Text</div>
-                }
+
+                <div class="message" id="myMessage" >@message.Text</div>
+            }
+            else
+            {
+                <div class="message" id="othersMessage" >@message.AuthorName: @message.Text</div>
             }
         }
     </div>
@@ -60,6 +54,7 @@
     {
         hubConnection.On<MessageModel>(ServerToClient.RECEIVE_MESSAGE, (MessageModel message) =>
         {
+            Console.WriteLine(message.Text);
             messages.Add(message);
             StateHasChanged();
         });

@@ -419,6 +419,7 @@ namespace ThousandFinal.Server.Services
             {
                 var playerRefreshPackage = refreshPackages.SingleOrDefault(x => x.playerSpecificInfo.playerName == player.Name);
                 await hubContext.Clients.Client(player.ConnectionId).SendAsync(ServerToClient.RECEIVE_REFRESH, playerRefreshPackage);
+                await hubContext.Clients.Client(player.ConnectionId).SendAsync(ServerToClient.RECEIVE_USERS, players); //for chat and result area
             }
         }
 

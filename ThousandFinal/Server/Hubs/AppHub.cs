@@ -30,6 +30,7 @@ namespace ThousandFinal.Server.Hubs
             string roomName = user_room[Context.ConnectionId];
             foreach (var user in rooms[roomName].Users)
             {
+                Console.WriteLine($"wyslana wiadomosc do {user.Value.Name}");
                 await Clients.Client(user.Key).ReceiveMessage(message);
             }
         }

@@ -1,8 +1,0 @@
-﻿@foreach(var player in Players)
-{
-    <div class="playerPoints">@player.Name, @player.Points p, @player.PointsInCurrentRound cP,  @player.PointsToAchieve tA</div>
-}
-
-@code {
-    [Parameter] public List<UserModel> Players { get; set; }
-}
