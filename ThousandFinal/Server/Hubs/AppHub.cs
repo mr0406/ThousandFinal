@@ -18,6 +18,8 @@ namespace ThousandFinal.Server.Hubs
         public static Dictionary<string, Room> rooms = new Dictionary<string, Room>(); //roomName - room
         public static Dictionary<string, string> user_room = new Dictionary<string, string>(); //userConnectionId - roomName
 
+        private const int MAX_NUM_OF_ROOMS = 20;
+
         public AppHub(IServiceProvider provider) 
         {
             this.provider = provider;
@@ -152,6 +154,12 @@ namespace ThousandFinal.Server.Hubs
         #region Waiting room actions 
         public async Task CreateRoom(string roomName)
         {
+            if(rooms.Count() >= MAX_NUM_OF_ROOMS)
+            {
+                //too many rooms
+                return;
+            }
+
             if (rooms.ContainsKey(roomName))
             {
                 //There is already room with this name

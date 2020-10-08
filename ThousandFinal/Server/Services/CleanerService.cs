@@ -17,6 +17,8 @@ namespace ThousandFinal.Server.Services
         private readonly IServiceProvider provider;
         private IHubContext<AppHub> hubContext;
 
+        private const int SERVICE_TURN_ON_FREQUENCY_IN_MILISECONDS = 60000; //600000 - 10 min
+        private const int MAX_INACTIVE_MINUTES = 2; //20
 
         private Timer _timer;
 
@@ -27,38 +29,23 @@ namespace ThousandFinal.Server.Services
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            _timer = new Timer(WriteFromHub, null, 0, 600000); //10000 - 10 s
-        }                                                      //60000 - 1 min
-                                                               //600000 - 10 min
+            _timer = new Timer(RemoveInActiveRoomsAndUsers, null, 0, SERVICE_TURN_ON_FREQUENCY_IN_MILISECONDS);
+        }
+
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             _timer?.Change(Timeout.Infinite, 0);
         }
 
-        public async void WriteFromHub(object state)
-        {
-            await WriteRooms();
-        }
 
-        public async Task WriteRooms()
+        public async void RemoveInActiveRoomsAndUsers(object state)
         {
-            /* Jedyna akcja użytkownika resetująca jego czas aktwności poza grą to wysłanie wiadomości na czacie
-             * 
-             * jeżeli ktoś jest nieaktywny ponad 10 minut to dostaje wiadomość, że ma coś zrobić
-             * jak jest graczem aktywnym to może zrobić cokolwiek w grze lub wysłać wiadomość na czacie
-             * jeżeli nie jest graczem aktywnym to niech coś napisze na czacie
-             * jeżeli ktoś jest nieaktywny 20 minut to wyrzucamy go
-             * 
-             * serwis uruchamiamy co 10 minut
-             * 
-             * a pokoj usuwamy jeżeli jest pusty i niektywny 20 minut
-             */
 
             foreach(var room in AppHub.rooms)
             {
                 TimeSpan lastActivityInRoom = DateTime.Now - room.Value.lastActivityTime;
 
-                if (lastActivityInRoom > TimeSpan.FromMinutes(20))
+                if (lastActivityInRoom > TimeSpan.FromMinutes(MAX_INACTIVE_MINUTES))
                 {
                     await DeleteRoom(room.Key);
                     continue;
@@ -68,7 +55,7 @@ namespace ThousandFinal.Server.Services
                 {
                    TimeSpan lastUserActivity = DateTime.Now - user.Value.lastActivityTime;
                 
-                    if (lastUserActivity > TimeSpan.FromMinutes(20))
+                    if (lastUserActivity > TimeSpan.FromMinutes(MAX_INACTIVE_MINUTES))
                     {
                         Console.WriteLine(user.Value.Name);
                         await KickUserFromRoom(user.Key);
