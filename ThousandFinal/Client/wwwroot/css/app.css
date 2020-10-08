@@ -347,10 +347,11 @@ ul.playerList{
 #chatContainer button {
     background-color: rgba(11, 5, 0, 0.1);
     border: none;
-    font-weight: 900;
+    border-radius: 1rem;
+    font-weight: bold;
     text-transform: uppercase;
     cursor: pointer;
-    padding: .5rem 2rem;
+    height: 2rem;
     width: 90%;
     transition: .2s;
     display: block;
@@ -358,9 +359,14 @@ ul.playerList{
 }
 
 #players button {
-    background-color: var(--red);
     grid-column: 1;
     grid-row: 2;
+}
+
+#chatContainer button:hover{
+    background-color: var(--white);
+    color: var(--red);
+    border: .2rem var(--red) solid;
 }
 
 #messages {
@@ -440,8 +446,11 @@ ul.playerList{
     background-color: rgba(11, 5, 0, 0.01);
 }
 
-#chatContainer > #form button:hover {
-    background-color: var(--green);
-}
+/* #chatContainer > #form button:hover {
+    background-color: var(--white);
+    color: var(--green);
+    border: .2rem var(--green) solid;
+    padding: .1rem 2rem;
+} */
 
 /* Koniec stylu Chat.razor */
