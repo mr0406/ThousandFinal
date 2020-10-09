@@ -3,20 +3,41 @@
     <div id="roomCreator">
         <label>
             Room:
-            <input @bind="newRoomName" @onkeyup="@AddRoomPressKey" />
+            <input @bind="newRoomName" @onkeyup="@AddRoomPressKey" placeholder="Room Name"/>
             <button @onclick="@AddRoom">Add</button>
         </label>
     </div>
 
         @if (choosenRoom != null)
         {
-            <div class="form">
-                <div>Join to @choosenRoom.Name:</div>
-                <label>
-                    User:
-                    <input @bind="userName" @onkeyup="@JoinPressKey" />
-                    <button @onclick="TryJoin">Join</button>
-                </label>
+            <div class="chooseNickname">
+                <header class="nicknameHeader">
+
+                    <div class="left">
+                        <span>thousand</span>final
+                    </div>
+
+                    <div class="right">
+
+                        <a href="" id="" class="">
+                            x
+                        </a>
+
+                    </div>
+                </header>
+
+                <div class="nicknameForm">
+                    <div class="subtitle">Enter your nickname</div>
+                    <input @bind="userName" @onkeyup="@JoinPressKey" placeholder="Username" />
+                </div>
+
+                <footer class="nicknameFooter">
+
+                    <div class="right">
+                        <a href="" class="joinButton" @onclick="TryJoin">Join</a>
+                    </div>
+
+                </footer>
             </div>
         }
         <div class="aboutUs">

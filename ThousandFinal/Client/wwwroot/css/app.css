@@ -252,6 +252,11 @@ html, body {
 .numOfUsers {
     width: 100%;
 }
+
+.chooseNickname{
+
+}
+
 /* Poniżej jest styl Game.razor */
 #mandatory {
     width: 100%;
@@ -498,3 +503,59 @@ ul.playerList {
     }
 
 /* Koniec stylu Chat.razor */
+
+
+/* testing new button */
+
+.left{
+    float:left;
+}
+
+.right{
+    float:right;
+}
+
+.chooseNickname {
+    margin: 0 auto;
+    margin-top: 120px;
+    width: 360px;
+    height: auto;
+    background-color: black;
+    color: white;
+    border: 1px solid #161616;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    margin-top: -130px;
+    margin-left: -181px;
+    top: 50%;
+    left: 50%;
+}
+
+.nicknameHeader {
+    height: 46px;
+    border-bottom: 1px solid #161616;
+    line-height: 46px;
+    padding: 0 28px;
+    font-size: 0.65em;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+}
+
+.nicknameHeader > .left > span {
+    color: var(--green);
+}
+
+.nicknameForm {
+    padding: 18px 28px 0 28px;
+    font-size: 1.05em;
+    font-weight: 300;
+    margin-top: 18px;
+    padding: 10px 8px;
+    width: 288px;
+}
+
+.nicknameFooter {
+    padding: 26px 28px 22px 28px;
+    font-size: 0.82em;
+}
