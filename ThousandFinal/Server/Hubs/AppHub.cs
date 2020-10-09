@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using ThousandFinal.Server.Models;
 using ThousandFinal.Server.Services;
-using ThousandFinal.Shared.Communication;
 using ThousandFinal.Shared.Models;
 
 namespace ThousandFinal.Server.Hubs
@@ -17,8 +16,6 @@ namespace ThousandFinal.Server.Hubs
 
         public static Dictionary<string, Room> rooms = new Dictionary<string, Room>(); //roomName - room
         public static Dictionary<string, string> user_room = new Dictionary<string, string>(); //userConnectionId - roomName
-
-        private const int MAX_NUM_OF_ROOMS = 20;
 
         public AppHub(IServiceProvider provider) 
         {
@@ -32,7 +29,6 @@ namespace ThousandFinal.Server.Hubs
             string roomName = user_room[Context.ConnectionId];
             foreach (var user in rooms[roomName].Users)
             {
-                Console.WriteLine($"wyslana wiadomosc do {user.Value.Name}");
                 await Clients.Client(user.Key).ReceiveMessage(message);
             }
         }
@@ -109,7 +105,6 @@ namespace ThousandFinal.Server.Hubs
 
             if(numberOfReadyUsers != 3)
             {
-                string text = $"not enough players";
                 MessageModel message = new MessageModel($"not enough players", true);
                 foreach (var user in rooms[roomName].Users)
                 {
@@ -118,11 +113,6 @@ namespace ThousandFinal.Server.Hubs
 
                 return;
             }
-
-            /* 
-             Przy wejsciu kogoś do gry otrzymujemy nicki do czatu
-             dopiero przy wystartowaniu calej gry dostajemy użytkowników
-             */
 
             foreach (var user in rooms[roomName].Users)
             {
@@ -154,18 +144,6 @@ namespace ThousandFinal.Server.Hubs
         #region Waiting room actions 
         public async Task CreateRoom(string roomName)
         {
-            if(rooms.Count() >= MAX_NUM_OF_ROOMS)
-            {
-                //too many rooms
-                return;
-            }
-
-            if (rooms.ContainsKey(roomName))
-            {
-                //There is already room with this name
-                return;
-            }
-
             rooms.Add(roomName, new Room()); //tworzymy pokoj bez gry w środku
 
             await GetRooms();
@@ -173,12 +151,6 @@ namespace ThousandFinal.Server.Hubs
 
         public async Task JoinRoom(string userName, string roomName)
         {
-            if (!rooms.ContainsKey(roomName))
-            {
-                //There is no room with this name
-                return;
-            }
-
             foreach (var user in rooms[roomName].Users)
             {
                 if (user.Value.Name == userName)

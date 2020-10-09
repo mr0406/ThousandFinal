@@ -14,13 +14,11 @@
 
     private async Task HandleDrop()
     {
-        //Client side validation
         if(numberOfCards > 7)
             return;
 
         dropClass = "";
 
-        Console.WriteLine($"Drop to: {UserName}");
         await Game.GiveCard(UserName);
     }
 

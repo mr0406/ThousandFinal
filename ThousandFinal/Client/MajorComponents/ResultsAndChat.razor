@@ -5,10 +5,9 @@
         <ul class="playerList">
             @foreach (var user in Users)
             {
-                <li class="playerList">@user.Name - @user.Points</li>
+                <li class="playerList">@user.Name: @user.Points</li>
             }
         </ul>
-        <button @onclick="LeaveRoom">Leave</button>
     </div>
 
     <div id="messages">
@@ -76,10 +75,4 @@
         if (e.Key == "Enter")
             await Send();
     }
-
-    async Task LeaveRoom()
-    {
-        await hubConnection.SendAsync(ClientToServer.LEAVE_ROOM);
-    }
-
 }

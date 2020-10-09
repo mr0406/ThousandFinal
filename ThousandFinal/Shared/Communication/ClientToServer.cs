@@ -1,25 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ThousandFinal.Shared.Communication
+﻿namespace ThousandFinal.Shared.Communication
 {
     public class ClientToServer
     {
-        //Administration
+        //Room actions
         public const string SEND_MESSAGE = "SendMessage";
-        public const string GET_USERS = "GetUsers";
-        public const string TRY_START_GAME = "TryStartGame";
-
-        //Ready action
         public const string USER_READY_CHANGE = "UserReadyChange";
-
-        //Rooms
+        public const string TRY_START_GAME = "TryStartGame";
         public const string LEAVE_ROOM = "LeaveRoom";
-        public const string GAME_DELETE = "GameDelete";
-
-
-
 
         //Waiting room actions
         public const string CREATE_ROOM = "CreateRoom";

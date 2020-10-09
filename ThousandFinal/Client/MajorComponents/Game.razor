@@ -1,9 +1,9 @@
 ﻿<CascadingValue Value="this">
     <div id="gameContainer">
-
+        <button @onclick="LeaveRoom">Leave</button>
         @if (!GameStarted)
-            {<div id="readyScreen">
-                <h2 >Are you ready? </h2>
+        {<div id="readyScreen">
+                <h2>Are you ready? </h2>
                 <input type="checkbox" @value="@IsReady" @onchange="() => CheckBoxClick()" disabled="@checkBoxDisabled" />
 
                 <button @onclick="TryStartGame">Start</button>
@@ -120,19 +120,12 @@
     public List<CardModel> cardsToTake = new List<CardModel>(); //FIX
 
     public int activePlayerIndex;
-
     public Suit mandatorySuit;
-
     public bool GameStarted = false;
-
     public CardModel PayloadCard { get; set; }
-
     public bool checkBoxDisabled { get; set; } = false;
-
     public Phase phase { get; set; }
-
     public int highestBet { get; set; } = 100;
-
     public CardModel bestCardOnTable { get; set; } = null;
 
     protected override async Task OnInitializedAsync()
@@ -140,7 +133,6 @@
         hubConnection.On(ServerToClient.RECEIVE_GAME_DELETE, () =>
         {
             IsReady = false;
-
             GameStarted = false;
             StateHasChanged();
         });
@@ -151,9 +143,9 @@
             StateHasChanged();
         });
 
-        hubConnection.On<List<UserModel>>(ServerToClient.RECEIVE_REFRESH_PLAYERS, (players) =>
+        hubConnection.On<List<UserModel>>(ServerToClient.RECEIVE_USERS, (users) =>
         {
-            Users = players;
+            Users = users;
             StateHasChanged();
         });
 
@@ -184,7 +176,6 @@
 
     public async Task PlayCard()
     {
-        //Client side validation
         if (PayloadCard.Status != Status.InHand)
         {
             Console.WriteLine("The card must be in hand");
@@ -206,7 +197,6 @@
 
     public async Task GiveCard(string playerWhoGetName)
     {
-        //Client side validation
         if (phase != Phase.GivingAdditionalCards)
         {
             Console.WriteLine("Wrong phase");
@@ -251,49 +241,35 @@
     {
         if (PayloadCard.Status != Status.InHand)
         {
-            Console.WriteLine("Not in hand");
             return false;
         }
 
-        Console.WriteLine("******************");
-        if(bestCardOnTable != null)
-        {
-            Console.WriteLine($"Best card on the table {bestCardOnTable.Rank}, {bestCardOnTable.Suit}");
-        }
-        Console.WriteLine("******************");
-
         if(NoCardOnBoard())
         {
-            Console.WriteLine("no best card on board");
             return true;
         }
 
         if (IsBetterAsSameSuit(PayloadCard))
         {
-            Console.WriteLine("new best as same suit");
             return true;
         }
 
         if (!CanPlayBetterAsSameSuit() && IsSameSuit(PayloadCard))
         {
-            Console.WriteLine("same suit");
             return true;
         }
 
         if (!CanPlaySameSuit() && IsBetterBecouseOfMandatory(PayloadCard))
         {
-            Console.WriteLine("new best becouse of mandatory");
             return true;
         }
         if (!CanPlayBetterAsSameSuit() && !CanPlayBetterBecouseOfMandatory() && IsMandatorySuit(PayloadCard))
         {
-            Console.WriteLine("same suit as mandatory");
             return true;
         }
 
         if(!CanPlaySameSuit() && !CanPlayMandatorySuit())
         {
-            Console.WriteLine("any card played");
             return true;
         }
 
@@ -342,7 +318,6 @@
     {
         if (bestCardOnTable.Suit == newCard.Suit && bestCardOnTable.Rank < newCard.Rank)
         {
-            Console.WriteLine($"{newCard.Rank}, {newCard.Suit} is better than {bestCardOnTable.Rank}, {bestCardOnTable.Suit}");
             return true;
         }
         return false;
@@ -363,7 +338,6 @@
         {
             if (IsBetterAsSameSuit(card))
             {
-                Console.WriteLine($"CAN PLAY FUCKING BETTER CARD");
                 return true;
             }
         }
@@ -374,7 +348,6 @@
     {
         if (bestCardOnTable.Suit != mandatorySuit && newCard.Suit == mandatorySuit)
         {
-            Console.WriteLine($"{newCard.Rank}, {newCard.Suit} is better than {bestCardOnTable.Rank}, {bestCardOnTable.Suit}");
             return true;
         }
         return false;
@@ -384,7 +357,6 @@
     {
         if (mandatorySuit == newCard.Suit)
         {
-            Console.WriteLine($"{newCard.Rank}, {newCard.Suit} is mandatorySuit: {mandatorySuit}");
             return true;
         }
         return false;
@@ -403,4 +375,9 @@
     }
 
     public string getWinnerName() => Users.SingleOrDefault(x => x.Points >= 1000).Name;
+
+    async Task LeaveRoom()
+    {
+        await hubConnection.SendAsync(ClientToServer.LEAVE_ROOM);
+    }
 }

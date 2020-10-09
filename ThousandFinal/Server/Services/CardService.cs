@@ -41,29 +41,12 @@ namespace ThousandFinal.Server.Services
         {
             List<CardModel> shuffledCards = ShuffleCards();
 
-            int i = 0;
-            while (i < 24)
-            {
-                shuffledCards[i].Status = Status.InHand;
-                shuffledCards[i].OwnerConnectionId = players[0].ConnectionId;
-                i++;
+            shuffledCards.GetRange(0, 7).ForEach(x => { x.Status = Status.InHand; x.OwnerConnectionId = players[0].ConnectionId; });
+            shuffledCards.GetRange(7, 7).ForEach(x => { x.Status = Status.InHand; x.OwnerConnectionId = players[1].ConnectionId; });
+            shuffledCards.GetRange(14, 7).ForEach(x => { x.Status = Status.InHand; x.OwnerConnectionId = players[2].ConnectionId; });
+            shuffledCards.GetRange(21, 3).ForEach(x => x.Status = Status.ToTake);
 
-                shuffledCards[i].Status = Status.InHand;
-                shuffledCards[i].OwnerConnectionId = players[1].ConnectionId;
-                i++;
-
-                shuffledCards[i].Status = Status.InHand;
-                shuffledCards[i].OwnerConnectionId = players[2].ConnectionId;
-                i++;
-
-                if (i == 6 || i == 13 || i == 20)
-                {
-                    shuffledCards[i].Status = Status.ToTake;
-                    i++;
-                }
-            }
-
-            return shuffledCards;
+            return shuffledCards; 
         }
 
         public List<CardModel> GiveCardsToAuctionWinner(List<CardModel> cards, List<UserModel> players, int auctionWinnerIndex)

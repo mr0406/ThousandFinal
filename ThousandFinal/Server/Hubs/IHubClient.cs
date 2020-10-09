@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ThousandFinal.Shared.Models;
 
-namespace ThousandFinal.Shared.Communication
+namespace ThousandFinal.Server.Hubs
 {
     public interface IHubClient
     {

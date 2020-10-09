@@ -294,9 +294,9 @@ namespace ThousandFinal.Server.Services
         private bool PlayerHasQueenAndKing(CardModel card)
         {
             int QueenAndKing = cards.Where(x => x.Status == Status.InHand)
-                                        .Where(x => x.OwnerConnectionId == card.OwnerConnectionId)
-                                        .Where(x => x.Suit == card.Suit)
-                                        .Where(x => (x.Rank == Rank.Queen || x.Rank == Rank.King)).Count();
+                                    .Where(x => x.OwnerConnectionId == card.OwnerConnectionId)
+                                    .Where(x => x.Suit == card.Suit)
+                                    .Where(x => (x.Rank == Rank.Queen || x.Rank == Rank.King)).Count();
 
             return (QueenAndKing == 2);
         }
@@ -393,10 +393,10 @@ namespace ThousandFinal.Server.Services
         private PlayerSpecificInfo CreatePlayerSpecificInfo(List<PlayerPosition> playersPositions, int playerIndex)
         {
             List<CardModel> playerCards = cards.Where(x => x.Status == Status.InHand)
-                                                   .Where(x => x.OwnerConnectionId == players[playerIndex].ConnectionId)
-                                                   .OrderBy(x => x.Suit)
-                                                   .ThenByDescending(x => x.Rank)
-                                                   .ToList();
+                                                .Where(x => x.OwnerConnectionId == players[playerIndex].ConnectionId)
+                                                .OrderBy(x => x.Suit)
+                                                .ThenByDescending(x => x.Rank)
+                                                .ToList();
 
             string leftUserConnectionId = players.SingleOrDefault(x => x.Name == playersPositions[playerIndex].leftUserName).ConnectionId;
             int leftPlayerCardsNumber = cards.Where(x => x.Status == Status.InHand)
@@ -418,7 +418,7 @@ namespace ThousandFinal.Server.Services
             foreach (var player in players)
             {
                 var playerRefreshPackage = refreshPackages.SingleOrDefault(x => x.playerSpecificInfo.playerName == player.Name);
-                await hubContext.Clients.Client(player.ConnectionId).SendAsync(ServerToClient.RECEIVE_REFRESH, playerRefreshPackage);
+                await hubContext.Clients.Client(player.ConnectionId).SendAsync(ServerToClient.RECEIVE_REFRESH, playerRefreshPackage); //for game
                 await hubContext.Clients.Client(player.ConnectionId).SendAsync(ServerToClient.RECEIVE_USERS, players); //for chat and result area
             }
         }

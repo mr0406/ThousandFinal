@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ThousandFinal.Shared.Models
+﻿namespace ThousandFinal.Shared.Models
 {
     public class RoomDTO
     {

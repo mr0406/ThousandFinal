@@ -14,11 +14,10 @@ namespace ThousandFinal.Server.Services
 {
     public class CleanerService : IHostedService
     {
-        private readonly IServiceProvider provider;
         private IHubContext<AppHub> hubContext;
 
-        private const int SERVICE_TURN_ON_FREQUENCY_IN_MILISECONDS = 60000; //600000 - 10 min
-        private const int MAX_INACTIVE_MINUTES = 2; //20
+        private const int SERVICE_TURN_ON_FREQUENCY_IN_MILISECONDS = 600000; //600000 - 10 min
+        private const int MAX_INACTIVE_MINUTES = 20; //20
 
         private Timer _timer;
 
@@ -40,7 +39,6 @@ namespace ThousandFinal.Server.Services
 
         public async void RemoveInActiveRoomsAndUsers(object state)
         {
-
             foreach(var room in AppHub.rooms)
             {
                 TimeSpan lastActivityInRoom = DateTime.Now - room.Value.lastActivityTime;
@@ -57,7 +55,6 @@ namespace ThousandFinal.Server.Services
                 
                     if (lastUserActivity > TimeSpan.FromMinutes(MAX_INACTIVE_MINUTES))
                     {
-                        Console.WriteLine(user.Value.Name);
                         await KickUserFromRoom(user.Key);
                     }
                 }
@@ -88,8 +85,8 @@ namespace ThousandFinal.Server.Services
 
             AppHub.rooms[roomName].DeleteGame();
 
-            AppHub.rooms[roomName].Users.Remove(userConnectionId); // usuniecie użytkownika
-            AppHub.user_room.Remove(userConnectionId); //usunięcie użytkownika
+            AppHub.rooms[roomName].Users.Remove(userConnectionId); 
+            AppHub.user_room.Remove(userConnectionId); 
 
             foreach (var user in AppHub.rooms[roomName].Users)
             {

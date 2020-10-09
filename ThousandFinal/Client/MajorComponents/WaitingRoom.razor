@@ -30,8 +30,6 @@
             </div>
         }
     </div>
-
-
 </div>
 
 @code {
@@ -44,6 +42,9 @@
 
     public string newRoomName { get; set; }
     public RoomDTO choosenRoom { get; set; }
+
+    private const int MAX_NUM_OF_ROOMS = 20;
+    private const int MAX_NUM_OF_USERS_IN_ROOM = 3;
 
     protected override async Task OnInitializedAsync()
     {
@@ -58,13 +59,29 @@
 
     async Task TryJoin()
     {
-        if (!String.IsNullOrWhiteSpace(userName) && choosenRoom.NumOfUsers < 3)
+        if (!String.IsNullOrWhiteSpace(userName) && choosenRoom.NumOfUsers < MAX_NUM_OF_USERS_IN_ROOM)
         {
             await hubConnection.SendAsync(ClientToServer.JOIN_ROOM, userName, choosenRoom.Name);
         }
     }
 
-    async Task AddRoom() => await hubConnection.SendAsync(ClientToServer.CREATE_ROOM, newRoomName);
+    async Task AddRoom()
+    {
+        if(roomDTOs.Count() >= MAX_NUM_OF_ROOMS)
+        {
+            //too many rooms
+            return;
+        }
+
+        if (roomDTOs.Any(x => x.Name == newRoomName))
+        {
+            //There is already room with this name
+            return;
+        }
+
+        await hubConnection.SendAsync(ClientToServer.CREATE_ROOM, newRoomName);
+        newRoomName = "";
+    }
 
     async Task JoinPressKey(KeyboardEventArgs e)
     {
