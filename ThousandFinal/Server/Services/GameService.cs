@@ -19,7 +19,7 @@ namespace ThousandFinal.Server.Services
         private List<CardModel> cards = new List<CardModel>();                                                         
         private List<UserModel> players = new List<UserModel>();
 
-        private int obligatedPlayer = -1; //On Start it will be 0
+        private int obligatedPlayer = -1; 
         private int activePlayer = 0;
         private int auctionWinner = -1;
 
@@ -45,13 +45,13 @@ namespace ThousandFinal.Server.Services
         private CardModel bestCard;
         private int numberOfCardsOnTable = 0;
 
-
         public GameService(IHubContext<AppHub> HubContext)
         {
             hubContext = HubContext;
             _cardService = new CardService();
         }
 
+        #region Game menagement
         public async Task StartGame(List<UserModel> Players)
         {
             players = Players;
@@ -68,7 +68,7 @@ namespace ThousandFinal.Server.Services
 
         private async Task StartAuctionPhase()
         {
-            SetStartAuctionPhase();           
+            SetStartAuctionPhase();
             await Refresh();
         }
 
@@ -76,18 +76,19 @@ namespace ThousandFinal.Server.Services
         {
             SetAuctionWinner(highestBetOwner);
 
-            roundPhase = Phase.Playing; //RefactorThis
-            await Refresh();
-
-            if(highestBet != 100)
+            if (highestBet != 100)
             {
                 await ShowCardsToTakeForAWhile();
             }
+            roundPhase = Phase.Playing;
+            await Refresh();
 
             cards = _cardService.GiveCardsToAuctionWinner(cards, players, auctionWinner);
             activePlayer = highestBetOwner;
-            await StartGivingCardsPhase(); 
+            await StartGivingCardsPhase();
         }
+
+        private void SetAuctionWinner(int AuctionWinner) => auctionWinner = AuctionWinner;
 
         private async Task ShowCardsToTakeForAWhile()
         {
@@ -118,7 +119,46 @@ namespace ThousandFinal.Server.Services
         {
             SetPlayingPhase();
             await StartFight();
-            await Refresh(); 
+            await Refresh();
+        }
+
+        private async Task StartFight()
+        {
+            SetFight();
+            await Refresh();
+        }
+
+        private async Task EndFight()
+        {
+            await ShowCardsAfterFightForAWhile();
+            await GiveCardsToWinnerPlayer();
+
+            roundPhase = Phase.Playing;
+
+            if (fightNumber < 7)
+                await StartFight();
+            else
+                await EndPlayingPhase();
+        }
+
+        private async Task ShowCardsAfterFightForAWhile()
+        {
+            roundPhase = Phase.WaitingPhase;
+            await Refresh();
+            System.Threading.Thread.Sleep(2000);
+        }
+
+        private async Task GiveCardsToWinnerPlayer()
+        {
+            int fightWinner = Helper.GetPlayerIndex(players, bestCard.OwnerConnectionId);
+            activePlayer = fightWinner;
+
+            List<CardModel> wonCards = cards.Where(x => x.Status == Status.OnTable).ToList();
+
+            cards.Where(x => x.Status == Status.OnTable).ToList()
+                 .ForEach(x => { x.Status = Status.Won; x.OwnerConnectionId = players[fightWinner].ConnectionId; });
+
+            cards.ForEach(x => x.positionOnTable = -1);
         }
 
         private async Task EndPlayingPhase() => await EndRound();
@@ -128,7 +168,7 @@ namespace ThousandFinal.Server.Services
             AddPointsAfterRound();
 
             bool isWinner = CheckIsWinner();
-            if(isWinner)
+            if (isWinner)
             {
                 roundPhase = Phase.PlayerWon;
                 await Refresh();
@@ -139,16 +179,57 @@ namespace ThousandFinal.Server.Services
             }
         }
 
-        private bool CheckIsWinner()
+        private void AddPointsAfterRound()
         {
-            foreach(var player in players)
+            foreach (var card in cards)
+            {
+                if (card.Status != Status.Won)
+                {
+                    Console.WriteLine("ERROR card should be won");
+                }
+                int playerId = Helper.GetPlayerIndex(players, card.OwnerConnectionId);
+                players[playerId].PointsInCurrentRound += Helper.GetCardPointValue(card);
+            }
+
+            for (int i = 0; i < 3; i++)
+            {
+                AddPointsToPlayer(i);
+            }
+        }
+
+        private void AddPointsToPlayer(int playerIndex)
+        {
+            if (players[playerIndex].PointsToAchieve > 0)
+            {
+                if (players[playerIndex].PointsToAchieve <= players[playerIndex].PointsInCurrentRound)
+                    players[playerIndex].Points += players[playerIndex].PointsToAchieve;
+                else
+                    players[playerIndex].Points -= players[playerIndex].PointsToAchieve;
+            }
+            else
+            {
+                if (players[playerIndex].Points < 800)
+                {
+                    int roundedPoints = Helper.RoundToTens(players[playerIndex].PointsInCurrentRound);
+                    players[playerIndex].Points += roundedPoints;
+                }
+            }
+            players[playerIndex].PointsInCurrentRound = 0;
+            players[playerIndex].PointsToAchieve = 0;
+        }
+
+            private bool CheckIsWinner()
+        {
+            foreach (var player in players)
             {
                 if (player.Points >= 1000)
                     return true;
             }
             return false;
-        }
+        } 
+        #endregion
 
+        #region Player actions
         public async Task Bet(string playerConnectionId, int pointsBet)
         {
             int playerIndex = Helper.GetPlayerIndex(players, playerConnectionId);
@@ -164,7 +245,7 @@ namespace ThousandFinal.Server.Services
             if (highestBet == 300)
             {
                 await EndAuctionPhase();
-            } 
+            }
             else
                 await Refresh();
         }
@@ -172,7 +253,7 @@ namespace ThousandFinal.Server.Services
         public async Task GiveUpAuction(string playerConnectionId)
         {
             int playerIndex = Helper.GetPlayerIndex(players, playerConnectionId);
-            players[playerIndex].GiveUpAuction = true; 
+            players[playerIndex].GiveUpAuction = true;
 
             numberOfGiveUps++;
             if (numberOfGiveUps > 1)
@@ -220,45 +301,6 @@ namespace ThousandFinal.Server.Services
             await EndRaisingPointsToAchievePhasePhase();
         }
 
-        private async Task StartFight()
-        {
-            SetFight();
-            await Refresh();
-        }
-
-        private async Task EndFight()
-        {
-            await ShowCardsAfterFightForAWhile();
-            await GiveCardsToWinnerPlayer();
-
-            roundPhase = Phase.Playing;
-
-            if (fightNumber < 7) 
-                await StartFight();
-            else
-                await EndPlayingPhase();
-        }
-
-        private async Task ShowCardsAfterFightForAWhile()
-        {
-            roundPhase = Phase.WaitingPhase;
-            await Refresh();
-            System.Threading.Thread.Sleep(2000);
-        }
-
-        private async Task GiveCardsToWinnerPlayer()
-        {
-            int fightWinner = Helper.GetPlayerIndex(players, bestCard.OwnerConnectionId);
-            activePlayer = fightWinner;
-
-            List<CardModel> wonCards = cards.Where(x => x.Status == Status.OnTable).ToList();
-
-            cards.Where(x => x.Status == Status.OnTable).ToList()
-                 .ForEach(x => { x.Status = Status.Won; x.OwnerConnectionId = players[fightWinner].ConnectionId; });
-
-            cards.ForEach(x => x.positionOnTable = -1);
-        }
-
         public async Task PlayCard(string playerConnectionId, CardModel card, CardModel newBestCard)
         {
             TryMandatoryChange(card);
@@ -275,6 +317,17 @@ namespace ThousandFinal.Server.Services
                 activePlayer = TurnSystem.GetNextPlayerNumber(Phase.Playing, players, activePlayer);
                 await Refresh();
             }
+        }
+        #endregion
+
+        #region Play Card help methods
+
+        private void PutCardOnTable(CardModel card)
+        {
+            int cardIndex = Helper.GetCardIndex(cards, card);
+            numberOfCardsOnTable++;
+            cards[cardIndex].Status = Status.OnTable;
+            cards[cardIndex].positionOnTable = numberOfCardsOnTable;
         }
 
         private void TryMandatoryChange(CardModel playedCard)
@@ -308,49 +361,10 @@ namespace ThousandFinal.Server.Services
             mandatorySuit = card.Suit;
             int playerIndex = Helper.GetPlayerIndex(players, card.OwnerConnectionId);
             players[playerIndex].PointsInCurrentRound += Helper.GetMandatoryValue(card.Suit);
-        }
+        } 
+        #endregion
 
-        private void AddPointsAfterRound()
-        {
-            foreach (var card in cards)
-            {
-                if (card.Status != Status.Won)
-                {
-                    Console.WriteLine("ERROR card should be won");
-                }
-                int playerId = Helper.GetPlayerIndex(players, card.OwnerConnectionId);
-                players[playerId].PointsInCurrentRound += Helper.GetCardPointValue(card);
-            }
-
-            for (int i = 0; i < 3; i++)
-            {
-                AddPointsToPlayer(i);
-            }
-        }
-
-        private void AddPointsToPlayer(int playerIndex)
-        {
-            if (players[playerIndex].PointsToAchieve > 0)
-            {
-                if (players[playerIndex].PointsToAchieve <= players[playerIndex].PointsInCurrentRound)
-                    players[playerIndex].Points += players[playerIndex].PointsToAchieve;
-                else
-                    players[playerIndex].Points -= players[playerIndex].PointsToAchieve;
-            }
-            else
-            {
-                if (players[playerIndex].Points < 800)
-                {
-                    int roundedPoints = Helper.RoundToTens(players[playerIndex].PointsInCurrentRound);
-                    players[playerIndex].Points += roundedPoints;
-                }
-            }
-            players[playerIndex].PointsInCurrentRound = 0;
-            players[playerIndex].PointsToAchieve = 0;
-        }
-
-        private void SetAuctionWinner(int AuctionWinner) => auctionWinner = AuctionWinner;
-
+        #region Refresh methods
         private async Task Refresh()
         {
             var gameInfo = new GameInfo(players, activePlayer,
@@ -395,10 +409,10 @@ namespace ThousandFinal.Server.Services
         private PlayerSpecificInfo CreatePlayerSpecificInfo(List<PlayerPosition> playersPositions, int playerIndex)
         {
             List<CardModel> playerCards = cards.Where(x => x.Status == Status.InHand)
-                                                .Where(x => x.OwnerConnectionId == players[playerIndex].ConnectionId)
-                                                .OrderBy(x => x.Suit)
-                                                .ThenByDescending(x => x.Rank)
-                                                .ToList();
+                                               .Where(x => x.OwnerConnectionId == players[playerIndex].ConnectionId)
+                                               .OrderBy(x => x.Suit)
+                                               .ThenByDescending(x => x.Rank)
+                                               .ToList();
 
             string leftUserConnectionId = players.SingleOrDefault(x => x.Name == playersPositions[playerIndex].leftUserName).ConnectionId;
             int leftPlayerCardsNumber = cards.Where(x => x.Status == Status.InHand)
@@ -420,19 +434,13 @@ namespace ThousandFinal.Server.Services
             foreach (var player in players)
             {
                 var playerRefreshPackage = refreshPackages.SingleOrDefault(x => x.playerSpecificInfo.playerName == player.Name);
-                await hubContext.Clients.Client(player.ConnectionId).SendAsync(ServerToClient.RECEIVE_REFRESH, playerRefreshPackage); //for game
-                await hubContext.Clients.Client(player.ConnectionId).SendAsync(ServerToClient.RECEIVE_USERS, players); //for chat and result area
+                await hubContext.Clients.Client(player.ConnectionId).SendAsync(ServerToClient.RECEIVE_REFRESH, playerRefreshPackage); //Game refresh
+                await hubContext.Clients.Client(player.ConnectionId).SendAsync(ServerToClient.RECEIVE_USERS, players);                //ChatAndResult refresh
             }
         }
+        #endregion
 
-        private void PutCardOnTable(CardModel card)
-        {
-            int cardIndex = Helper.GetCardIndex(cards, card);
-            numberOfCardsOnTable++;
-            cards[cardIndex].Status = Status.OnTable;
-            cards[cardIndex].positionOnTable = numberOfCardsOnTable;
-        }
-
+        #region Phases set methods
         private void SetStartAuctionPhase()
         {
             roundPhase = Phase.Auction;
@@ -469,6 +477,7 @@ namespace ThousandFinal.Server.Services
             bestCard = null;
             numberOfCardsOnTable = 0;
             fightNumber++;
-        }
+        } 
+        #endregion
     }
 }

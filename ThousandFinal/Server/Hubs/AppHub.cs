@@ -84,7 +84,6 @@ namespace ThousandFinal.Server.Hubs
             {
                 roomDTOs.Add(new RoomDTO(room.Key, room.Value.Users.Count()));
             }
-            Console.WriteLine("Send rooms");
 
             await Clients.All.ReceiveRooms(roomDTOs);
         }

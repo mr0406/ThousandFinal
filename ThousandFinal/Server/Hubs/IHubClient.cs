@@ -10,9 +10,8 @@ namespace ThousandFinal.Server.Hubs
         Task ReceiveMessage(MessageModel message);
         Task ReceiveLeaveRoom();
 
-        Task ReceiveGameDelete();
-
         Task ReceiveGameStarted();
+        Task ReceiveGameDelete();
 
         //Rooms
         Task ReceiveJoinRoom(string userName);
