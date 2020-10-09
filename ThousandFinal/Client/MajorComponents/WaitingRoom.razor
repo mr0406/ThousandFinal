@@ -6,6 +6,7 @@
             <input @bind="newRoomName" @onkeyup="@AddRoomPressKey" />
             <button @onclick="@AddRoom">Add</button>
         </label>
+    </div>
 
         @if (choosenRoom != null)
         {
@@ -18,18 +19,32 @@
                 </label>
             </div>
         }
-    </div>
+        <div class="aboutUs">
 
-    <div id="roomBrowser">
-        @for (int i = 0; i < roomDTOs.Count(); i++)
-        {
-            int temp = i;
-            <div class="singleRoomContainer">
-                <span>@(temp + 1). @roomDTOs[i].Name : @roomDTOs[i].NumOfUsers/3</span>
-                <button @onclick="@(() => (ChooseRoom(temp)))">Choose</button>
-            </div>
-        }
-    </div>
+            <span> Tu będzie info o nas </span>
+
+        </div>
+
+        <div class="gameInfo">
+
+            <span> Tu będzie info o grze </span>
+
+        </div>
+
+        <div id="roomBrowser">
+            @for (int i = 0; i < roomDTOs.Count(); i++)
+            {
+                int temp = i;
+                <div class="singleRoomContainer">
+
+                    <div class="roomName"> @roomDTOs[i].Name </div>
+                    <div class="numOfUsers"> @roomDTOs[i].NumOfUsers/3 </div>
+                    <button @onclick="@(() => (ChooseRoom(temp)))">Choose</button>
+
+                </div>
+            }
+        </div>
+   
 </div>
 
 @code {

@@ -1,5 +1,6 @@
 ﻿* {
     box-sizing: border-box; /* Make padding and margin included in total width of an element*/
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 /* Div class "main", is the whole website, besides errors. Don't use any styles on it.
@@ -18,13 +19,12 @@ html, body {
     --white: #FDF7EC;
     --red: #FE5E41;
     --black: #0B0500;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
     color: var(--black);
 }
 
-#gameFrame{
+#gameFrame {
     width: 100vw;
     height: 100vh;
     max-height: 100%;
@@ -34,42 +34,70 @@ html, body {
     grid-template-rows: 10% 90%;
     grid-template-columns: 75% 25%;
 }
+
 #loginContainer {
-    color: black;
     display: grid;
-    grid-template-columns: 25% 75%;
-    grid-column-gap: 10px;
+    grid-template-columns: 35% 65%;
+    grid-template-rows: 25% 25% 50%;
+    grid-column-gap: 4px;
+    grid-row-gap: 4px;
     height: 40%;
+    width: 60%;
     background-color: var(--white);
-    grid-column-start: 1;
-    grid-column-end: 3;
-    grid-row-start: 1;
-    grid-row-end: 3;
     color: white;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
 }
 
 #roomCreator {
     background-color: var(--black);
     display: grid;
     grid-template-columns: 100%;
-    justify-content: space-between;
+    grid-column: 1 / span 1;
 }
 
 #roomBrowser {
     background-color: var(--black);
     overflow-y: auto;
-    color: black;
+    overflow-x: hidden;
+    grid-row: 1 / span 3;
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: 30% 30% 30%;
+    justify-content: center;
+    grid-row-gap: 30px;
+    grid-column-gap: 7px;
 }
 
 .singleRoomContainer {
-    background-color: var(--white);
-    height: 5%;
-    width:51%;
+    background-color: var(--red);
+    height: 150px;
+    width: 100%;
     float: left;
     display: block;
-    margin-bottom: 3px;
 }
+
+.gameInfo {
+    width: 100%;
+    height: 100%;
+    grid-row: 3 / span 1;
+    grid-column: 1;
+    background-color: var(--black);
+}
+
+.aboutUs {
+    width: 100%;
+    height: 100%;
+    grid-row: 2;
+    grid-column: 1;
+    background-color: var(--black);
+}
+
+
 /* Styl ogólny */
+
 #readyScreen {
     grid-row: 9 / span 3;
     grid-column: 9 / span 5;
@@ -134,7 +162,7 @@ html, body {
 }
 
 #cardContainer {
-    height:10em;
+    height: 10em;
     width: 6em;
     min-width: 80px;
     border-radius: 10px;
@@ -156,7 +184,7 @@ html, body {
     padding: 0;
 }
 
-.cardColorText{
+.cardColorText {
     text-align: center;
     font-weight: bolder;
     font-size: .8em;
@@ -177,20 +205,20 @@ html, body {
 }
 
 
-#raisingPoints{
+#raisingPoints {
     display: grid;
     margin: auto;
     position: absolute;
 }
 
-#giveupButton{
+#giveupButton {
     margin-left: auto;
     margin-right: auto;
     margin-top: 4px;
     text-align: center;
 }
 
-.raiseButton{
+.raiseButton {
     margin-top: 3px;
 }
 
@@ -208,6 +236,22 @@ html, body {
         display: inline-block;
     }
 
+.waitingRoom {
+    height: 100%;
+    width: 100%;
+    grid-row: 1 / span 10;
+    position: relative;
+    grid-column: 1 / span 10;
+    background-color: #003333;
+}
+
+.roomName {
+    width: 100%;
+}
+
+.numOfUsers {
+    width: 100%;
+}
 /* Poniżej jest styl Game.razor */
 #mandatory {
     width: 100%;
@@ -244,12 +288,12 @@ html, body {
     position: relative;
 }
 
-#rightPlayer{
+#rightPlayer {
     float: right;
     margin-right: 5px;
 }
 
-#leftPlayer{
+#leftPlayer {
     float: left;
     margin-left: 5px;
 }
@@ -261,7 +305,6 @@ html, body {
     display: inline-block;
     position: relative;
     margin: 0 auto;
-
 }
 
 #playerCards {
@@ -275,20 +318,20 @@ html, body {
     grid-column: 7 / span 8;
 }
 
-#playerCards > #cardContainer {
-    box-shadow: -0.5em 0 1em var(--black);
-    transition: .2s;
-    padding: 1em;
-    margin: 0 0 2em;
-}
+    #playerCards > #cardContainer {
+        box-shadow: -0.5em 0 1em var(--black);
+        transition: .2s;
+        padding: 1em;
+        margin: 0 0 2em;
+    }
 
-#playerCards > #cardContainer:hover {
-    transform: translateY(-1em);
-}
+        #playerCards > #cardContainer:hover {
+            transform: translateY(-1em);
+        }
 
-#playerCards > #cardContainer:not(:first-child) {
-    margin-left: -3em;
-}
+        #playerCards > #cardContainer:not(:first-child) {
+            margin-left: -3em;
+        }
 
 #gameContainer {
     border: dotted;
@@ -314,13 +357,13 @@ html, body {
     background-color: var(--white);
 }
 
-#chatContainer h1{
-    font-size: 1.5rem;
-    font-weight: normal;
-    margin-left: .1rem;
-    vertical-align: middle;
-    text-align: center;
-}
+    #chatContainer h1 {
+        font-size: 1.5rem;
+        font-weight: normal;
+        margin-left: .1rem;
+        vertical-align: middle;
+        text-align: center;
+    }
 
 #players {
     padding-bottom: 1rem;
@@ -329,11 +372,11 @@ html, body {
     grid-template-rows: 2rem auto;
 }
 
-#players h1{
-    grid-row: 1;
-}
+    #players h1 {
+        grid-row: 1;
+    }
 
-ul.playerList{
+ul.playerList {
     margin: 0;
     padding: 1em 0 0 0;
     font-size: 1.3rem;
@@ -366,7 +409,7 @@ ul.playerList{
     grid-row: 3;
 }
 
-#chatContainer button:hover{
+#chatContainer button:hover {
     background-color: var(--white);
     color: var(--red);
     border: .2rem var(--red) solid;
@@ -391,7 +434,7 @@ ul.playerList{
     padding: .5rem;
     display: flex;
     flex-direction: column;
-    background-color: rgba(11, 5, 0, 0.1);  /* var(--black);  */
+    background-color: rgba(11, 5, 0, 0.1); /* var(--black);  */
 }
 
 #serverMessage {
@@ -420,38 +463,38 @@ ul.playerList{
     padding-left: 1em;
 }
 
-#chatContainer > #form{
+#chatContainer > #form {
     grid-row: 3;
 }
 
-#chatContainer > #form label {
-    display: block;
-    max-width: 90%;
-    margin: .5rem auto;
-    text-align: center;
-}
+    #chatContainer > #form label {
+        display: block;
+        max-width: 90%;
+        margin: .5rem auto;
+        text-align: center;
+    }
 
-#chatContainer > #form input{
-    border: none;
-    border-bottom: rgba(11, 5, 0, 0.4) solid .2rem;
-    border-radius: .1em;
-    background-color: rgba(11, 5, 0, 0.1);
-    padding: .4em;
-    margin: 0 .1em;
-    width: 100%;
-    height: 2.5em;
-    transition: .2s;
-}
+    #chatContainer > #form input {
+        border: none;
+        border-bottom: rgba(11, 5, 0, 0.4) solid .2rem;
+        border-radius: .1em;
+        background-color: rgba(11, 5, 0, 0.1);
+        padding: .4em;
+        margin: 0 .1em;
+        width: 100%;
+        height: 2.5em;
+        transition: .2s;
+    }
 
-#chatContainer > #form input:focus {
-    box-sizing: border-box;
-    border-bottom: .3rem solid var(--green);
-    background-color: rgba(11, 5, 0, 0.01);
-}
+        #chatContainer > #form input:focus {
+            box-sizing: border-box;
+            border-bottom: .3rem solid var(--green);
+            background-color: rgba(11, 5, 0, 0.01);
+        }
 
-#chatContainer > #form button:hover {
-    color: var(--green);
-    border: .2rem var(--green) solid;
-} 
+    #chatContainer > #form button:hover {
+        color: var(--green);
+        border: .2rem var(--green) solid;
+    }
 
 /* Koniec stylu Chat.razor */
