@@ -19,16 +19,16 @@
 
                     <div class="right">
 
-                        <a href="" id="" class="">
+                        <a href="" class="nicknameCloseButton">
                             x
                         </a>
 
                     </div>
                 </header>
 
-                <div class="nicknameForm">
-                    <div class="subtitle">Enter your nickname</div>
-                    <input @bind="userName" @onkeyup="@JoinPressKey" placeholder="Username" />
+                <div class="nicknameFormContainer">
+                    <div class="nicknamePrompt">Enter your nickname</div>
+                    <input class="nicknameInput" @bind="userName" @onkeyup="@JoinPressKey" placeholder="Nickname" />
                 </div>
 
                 <footer class="nicknameFooter">
