@@ -19,9 +19,9 @@
 
                     <div class="right">
 
-                        <a class="nicknameCloseButton">
+                        <button class="nicknameCloseButton" @onclick="CloseJoinWindow">
                             x
-                        </a>
+                        </button>
 
                     </div>
                 </header>
@@ -84,13 +84,18 @@
 
     protected override async Task OnInitializedAsync()
     {
-        hubConnection.On(ServerToClient.RECEIVE_GET_ROOMS, (List<RoomDTO> roomDTOs) =>
+        hubConnection.On(ServerToClient.RECEIVE_ROOMS, (List<RoomDTO> roomDTOs) =>
         {
             this.roomDTOs = roomDTOs;
             StateHasChanged();
         });
 
         await hubConnection.SendAsync(ClientToServer.GET_ROOMS);
+    }
+
+    async Task CloseJoinWindow()
+    {
+        choosenRoom = null;
     }
 
     async Task TryJoin()

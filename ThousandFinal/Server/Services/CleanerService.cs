@@ -113,7 +113,7 @@ namespace ThousandFinal.Server.Services
                 roomDTOs.Add(new RoomDTO(room.Key, room.Value.Users.Count()));
             }
 
-            await hubContext.Clients.All.SendAsync(ServerToClient.RECEIVE_GET_ROOMS);
+            await hubContext.Clients.All.SendAsync(ServerToClient.RECEIVE_ROOMS);
         }
 
     }

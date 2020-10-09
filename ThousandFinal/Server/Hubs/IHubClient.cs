@@ -16,6 +16,6 @@ namespace ThousandFinal.Server.Hubs
 
         //Rooms
         Task ReceiveJoinRoom(string userName);
-        Task ReceiveGetRooms(List<RoomDTO> roomDTOs);
+        Task ReceiveRooms(List<RoomDTO> roomDTOs);
     }
 }
