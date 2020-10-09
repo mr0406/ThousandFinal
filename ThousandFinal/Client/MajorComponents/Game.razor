@@ -76,7 +76,7 @@
                 }
 
 
-                @if (phase == Phase.Playing)
+                @if (phase == Phase.Playing || phase == Phase.WaitingPhase)
                 {
                     <div id="table">
                         <CardsOnTable Cards="cardsOnTable"></CardsOnTable>

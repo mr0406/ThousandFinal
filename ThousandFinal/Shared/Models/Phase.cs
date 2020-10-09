@@ -6,7 +6,7 @@
         GivingAdditionalCards,
         RaisingPointsToAchieve,
         Playing,
-        PlayerWon
-        //WaitingPhase //consider this
+        PlayerWon,
+        WaitingPhase //consider this
     }
 }

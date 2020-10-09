@@ -91,6 +91,7 @@ namespace ThousandFinal.Server.Services
 
         private async Task ShowCardsToTakeForAWhile()
         {
+            roundPhase = Phase.WaitingPhase;
             showCardsToTake = true;
             await Refresh();
             await Task.Delay(2000);
@@ -230,6 +231,8 @@ namespace ThousandFinal.Server.Services
             await ShowCardsAfterFightForAWhile();
             await GiveCardsToWinnerPlayer();
 
+            roundPhase = Phase.Playing;
+
             if (fightNumber < 7) 
                 await StartFight();
             else
@@ -238,6 +241,7 @@ namespace ThousandFinal.Server.Services
 
         private async Task ShowCardsAfterFightForAWhile()
         {
+            roundPhase = Phase.WaitingPhase;
             await Refresh();
             System.Threading.Thread.Sleep(2000);
         }
@@ -257,8 +261,6 @@ namespace ThousandFinal.Server.Services
 
         public async Task PlayCard(string playerConnectionId, CardModel card, CardModel newBestCard)
         {
-            int playerIndex = Helper.GetPlayerIndex(players, playerConnectionId);
-
             TryMandatoryChange(card);
             PutCardOnTable(card);
 
