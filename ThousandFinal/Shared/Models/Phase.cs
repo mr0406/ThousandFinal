@@ -7,6 +7,6 @@
         RaisingPointsToAchieve,
         Playing,
         PlayerWon,
-        WaitingPhase //consider this
+        WaitingPhase 
     }
 }
