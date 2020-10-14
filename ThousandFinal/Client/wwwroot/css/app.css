@@ -1,5 +1,5 @@
-﻿* {
-    box-sizing: border-box; /* Make padding and margin included in total width of an element*/
+﻿*, *:hover {
+    box-sizing: border-box;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
@@ -14,9 +14,9 @@
 /* Login.razor style */
 
 html, body {
-    --green: hsl(163, 100%, 33%);
+    --green: rgb(0, 168, 121);
     --lightgreen: #D8F1A0;
-    --white: #FDF7EC;
+    --white: rgb(253, 247, 236);
     --red: #FE5E41;
     --black: #0B0500;
     margin: 0;
@@ -38,12 +38,13 @@ html, body {
 #loginContainer {
     display: grid;
     grid-template-columns: 35% 65%;
-    grid-template-rows: 25% 25% 50%;
+    grid-template-rows: 35% 15% 50%;
     grid-column-gap: 4px;
     grid-row-gap: 4px;
     height: 40%;
+    min-height: 300px;
     width: 60%;
-    background-color: var(--white);
+    min-width: 400px;
     color: white;
     top: 50%;
     left: 50%;
@@ -58,8 +59,49 @@ html, body {
     grid-column: 1 / span 1;
 }
 
+#roomCreator input {
+    border: none;
+    border-bottom: var(--white) solid .2rem;
+    border-radius: .1em;
+    background-color: rgba(253, 247, 236, 0.1);
+    padding: .4em;
+    margin: 0 0 .3rem 0;
+    width: 100%;
+    height: 2.5em;
+    transition: .2s;
+}
+
+#roomCreator input:focus {
+    border-bottom: .3rem solid var(--green);
+    background-color: var(--white);
+}
+
+#roomCreator button {
+    background-color: rgba(253, 247, 236, 0.2);
+    padding: .2rem;
+    color: var(--white);
+    border: none;
+    border-radius: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    width: 100%;
+    transition: .2s;
+    display: block;
+    margin: .1rem auto;
+}
+
+#roomCreator button:hover {
+    box-sizing: border-box;
+    background-color: var(--white);
+    color: var(--green);
+    border: .1rem var(--green) solid;
+    margin: 0 auto;
+}
+
 #roomBrowser {
     background-color: var(--black);
+    padding: 1rem 0;
     overflow-y: auto;
     overflow-x: hidden;
     grid-row: 1 / span 3;
@@ -67,16 +109,61 @@ html, body {
     display: grid;
     grid-template-columns: 30% 30% 30%;
     justify-content: center;
-    grid-row-gap: 30px;
     grid-column-gap: 7px;
 }
 
 .singleRoomContainer {
-    background-color: var(--red);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     height: 150px;
     width: 100%;
-    float: left;
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: -.5rem 0 .5rem rgba(253, 247, 236,0.3);
+    transition: .2s;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.singleRoomContainer:hover {
+    transform: translateY(-1rem);
+    transition: 0.4s;
+    box-shadow: -.5rem 1rem .5rem rgba(0, 168, 121,0.3);
+}
+
+.singleRoomContainer > div {
+    text-align: center;
+    margin-top: .5rem;
+    color: var(--black)
+}
+
+.singleRoomContainer:hover > * {
+    margin: 0;
+    font-size: larger;
+    color: var(--green);
+}
+
+.singleRoomContainer button {
+    background-color: rgba(11, 5, 0, 0.1);
+    margin-top: .5rem;
+    border: none;
+    border-radius: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    height: 3rem;
+    width: 100%;
+    transition: .2s;
     display: block;
+    margin: 0 auto;
+}
+
+.singleRoomContainer button:hover {
+    margin-top: .5rem;
+    background-color: var(--white);
+    border: .2rem var(--green) solid;
 }
 
 .gameInfo {
@@ -93,6 +180,102 @@ html, body {
     grid-row: 2;
     grid-column: 1;
     background-color: var(--black);
+}
+
+.chooseNickname {
+    background-color: var(--black);
+    color: var(--white);
+    box-shadow: 0px 0px 2rem rgba(253, 247, 236, 0.3);
+    position: absolute;
+    height: 300px;
+    margin-top: -150px;
+    margin-left: -181px;
+    top: 50%;
+    left: 50%;
+}
+
+.chooseNickname header {
+    height: 1.5rem;
+    padding: .5rem 2rem;
+    font-size: .8rem;
+    font-weight: bold;
+    letter-spacing: .3rem;
+    text-transform: uppercase;
+}
+
+.chooseNickname header > .left > span {
+    color: var(--green);
+}
+
+.chooseNickname header button {
+    float: right;
+    color: var(--red);
+    background-color: rgba(253, 247, 236, 0.9);
+    font-size: 2rem;
+    width: 2rem;
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.nicknameFormContainer {
+    padding: 1rem 2rem;
+    margin-top: 3rem;
+}
+
+.nicknameFormContainer input {
+    margin-top: 0 1rem;
+    padding: .5rem;
+    width: 100%;
+    border: 0;
+}
+
+.chooseNickname > button {
+    background-color: rgba(253, 247, 236, 0.9);
+    color: var(--green);
+    margin-top: .5rem;
+    border: none;
+    border-radius: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    height: 2rem;
+    width: 85%;
+    transition: .2s;
+    display: block;
+    margin: 0 auto;
+    bottom: 0;
+}
+
+.chooseNickname > button:hover {
+    background-color: var(--white);
+    border: .2rem var(--green) solid;
+    font-weight: bold;
+}
+
+/* .nicknameFooter {
+    padding: 26px 28px 22px 28px;
+    font-size: 0.82em;
+}
+
+.joinButton {
+    text-decoration: none;
+    background-color: var(--green);
+    color: black;
+    border-radius: 2px;
+    padding: 4px 8px;
+} */
+
+
+.left{
+    float:left;
+}
+
+.right{
+    float:right;
 }
 
 
@@ -114,7 +297,7 @@ html, body {
     }
 
     #readyScreen > input {
-        background-color: white;
+        background-color: var(--white);
         display: inline-block;
         width: 100%;
         height: 60%;
@@ -123,7 +306,7 @@ html, body {
 
     #readyScreen > button {
         display: inline-block;
-        background-color: white;
+        background-color: var(--white);
         width: 80%;
         height: 30%;
         border-radius: 2px;
@@ -251,10 +434,6 @@ html, body {
 
 .numOfUsers {
     width: 100%;
-}
-
-.chooseNickname{
-
 }
 
 /* Poniżej jest styl Game.razor */
@@ -492,7 +671,6 @@ ul.playerList {
     }
 
         #chatContainer > #form input:focus {
-            box-sizing: border-box;
             border-bottom: .3rem solid var(--green);
             background-color: rgba(11, 5, 0, 0.01);
         }
@@ -503,92 +681,3 @@ ul.playerList {
     }
 
 /* Koniec stylu Chat.razor */
-
-
-/* testing new button */
-
-.left{
-    float:left;
-}
-
-.right{
-    float:right;
-}
-
-.chooseNickname {
-    margin: 0 auto;
-    margin-top: 120px;
-    width: 360px;
-    height: auto;
-    background-color: black;
-    color: white;
-    border: 1px solid #161616;
-    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.3);
-    position: absolute;
-    margin-top: -130px;
-    margin-left: -181px;
-    top: 50%;
-    left: 50%;
-}
-
-.nicknameHeader {
-    height: 46px;
-    border-bottom: 1px solid #161616;
-    line-height: 46px;
-    padding: 0 28px;
-    font-size: 0.65em;
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-}
-
-.nicknameHeader > .left > span {
-    color: var(--green);
-}
-
-.nicknameCloseButton {
-    color: inherit;
-    text-decoration: none;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
-}
-.nicknameFormContainer {
-    padding: 18px 28px 0 28px;
-}
-
-.nicknamePrompt {
-    font-size: 0.92em;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font: inherit;
-    vertical-align: baseline;
-    outline: 0;
-}
-
-.nicknameInput {
-    font-size: 1.05em;
-    font-weight: 300;
-    margin-top: 18px;
-    padding: 10px 8px;
-    width: 288px;
-    outline: 0;
-    border: 0;
-}
-
-.nicknameFooter {
-    padding: 26px 28px 22px 28px;
-    font-size: 0.82em;
-}
-
-.joinButton {
-    text-decoration: none;
-    background-color: var(--green);
-    color: black;
-    border-radius: 2px;
-    padding: 4px 8px;
-}

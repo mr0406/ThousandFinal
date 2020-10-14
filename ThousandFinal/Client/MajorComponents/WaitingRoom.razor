@@ -11,45 +11,38 @@
         @if (choosenRoom != null)
         {
             <div class="chooseNickname">
-                <header class="nicknameHeader">
+                <header>
 
                     <div class="left">
                         <span>thousand</span>final
                     </div>
-
-                    <div class="right">
-
-                        <button class="nicknameCloseButton" @onclick="CloseJoinWindow">
-                            x
-                        </button>
-
-                    </div>
+                    <button @onclick="CloseJoinWindow">
+                        x
+                    </button>
                 </header>
 
                 <div class="nicknameFormContainer">
-                    <div class="nicknamePrompt">Enter your nickname</div>
-                    <input class="nicknameInput" @bind="userName" @onkeyup="@JoinPressKey" placeholder="Nickname" />
+                    Enter your nickname
+                    <input @bind="userName" @onkeyup="@JoinPressKey" placeholder="Nickname" />
                 </div>
 
-                <footer class="nicknameFooter">
+                <button @onclick="TryJoin">Join</button>
+
+                @* <footer class="nicknameFooter">
 
                     <div class="right">
                         <a href="" class="joinButton" @onclick="TryJoin">Join</a>
                     </div>
 
-                </footer>
+                </footer> *@
             </div>
         }
         <div class="aboutUs">
-
             <span> Tu będzie info o nas </span>
-
         </div>
 
         <div class="gameInfo">
-
             <span> Tu będzie info o grze </span>
-
         </div>
 
         <div id="roomBrowser">
