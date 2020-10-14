@@ -12,7 +12,6 @@
         {
             <div class="chooseNickname">
                 <header>
-
                     <div class="left">
                         <span>thousand</span>final
                     </div>
@@ -20,21 +19,11 @@
                         x
                     </button>
                 </header>
-
                 <div class="nicknameFormContainer">
                     Enter your nickname
                     <input @bind="userName" @onkeyup="@JoinPressKey" placeholder="Nickname" />
                 </div>
-
                 <button @onclick="TryJoin">Join</button>
-
-                @* <footer class="nicknameFooter">
-
-                    <div class="right">
-                        <a href="" class="joinButton" @onclick="TryJoin">Join</a>
-                    </div>
-
-                </footer> *@
             </div>
         }
         <div class="aboutUs">
