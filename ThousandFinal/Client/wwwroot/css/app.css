@@ -15,30 +15,76 @@
 /* Login.razor style */
 
 html, body {
-    --green: rgb(0, 168, 121);
-    --lightgreen: rgb(216, 241, 160);
+    --main: rgb(177, 196, 204);
+    --main_t: rgb(177, 196, 204, 0.5);
+    --side: rgb(222, 245, 255);
+    --side_t: rgb(222, 245, 255, 0.5);
+    --border: rgb(48, 104, 130);
     --white: rgb(253, 247, 236);
-    --red: #FE5E41;
+    --white_t: rgb(253, 247, 236, 0.5);
     --black: #0B0500;
+    --black_t: rgba(11, 5, 0, 0.2);
+    --red: #FE5E41;
     margin: 0;
     padding: 0;
 }
 
 ::-webkit-scrollbar {
     width: 1rem;
-    border-radius: 1rem;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--white); 
+    background: var(--white);
+    border-radius: 1rem;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--lightgreen);
+    background: var(--border);
+    border-radius: 1rem;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--green); 
+    background: var(--main); 
+}
+
+button {
+    background-color: var(--black_t);
+    color: var(--white);
+    border: none;
+    border-radius: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    vertical-align: middle;
+    cursor: pointer;
+    height: 2rem;
+    width: 100%;
+    transition: .2s;
+    display: block;
+    margin: 0 auto;
+}
+
+button:hover {
+    background-color: var(--main);
+    color: var(--border);
+    font-weight: 800;
+    border: .2rem var(--border) solid;
+}
+
+input {
+    border: none;
+    border-bottom: var(--white) solid .2rem;
+    border-radius: 1rem;
+    background-color: var(--white_t);
+    padding: 1rem;
+    margin: 0 0 .3rem 0;
+    width: 100%;
+    height: 2.5em;
+    transition: .2s;
+}
+
+input:focus {
+    border-bottom: .2rem solid var(--border);
+    background-color: var(--white);
 }
 
 #gameFrame {
@@ -59,15 +105,17 @@ html, body {
     min-width: 400px;
     padding: 2rem;
     border-radius: 1rem;
+    border: .5rem var(--border) solid;
+    box-shadow: 0 0 1rem var(--border);
     color: var(--white);
     top: 50%;
     left: 50%;
     position: absolute;
     transform: translate(-50%, -50%);
-    background-color: var(--green);
+    background-color: var(--main);
     display: grid;
     grid-template-columns: 35% 65%;
-    grid-template-rows: 35% 15% 50%;
+    grid-template-rows: 40% 20% 40%;
     grid-column-gap: 4px;
     grid-row-gap: 4px;
 }
@@ -76,46 +124,6 @@ html, body {
     display: grid;
     grid-template-columns: 100%;
     grid-column: 1 / span 1;
-}
-
-#roomCreator input {
-    border: none;
-    border-bottom: var(--white) solid .2rem;
-    border-radius: 1rem;
-    background-color: rgba(253, 247, 236, 0.7);
-    padding: 1rem;
-    margin: 0 0 .3rem 0;
-    width: 100%;
-    height: 2.5em;
-    transition: .2s;
-}
-
-#roomCreator input:focus {
-    border-bottom: .3rem solid var(--green);
-    background-color: var(--white);
-}
-
-#roomCreator button {
-    background-color: rgba(253, 247, 236, 0.4);
-    height: 1.5rem;
-    color: var(--white);
-    border: none;
-    border-radius: 1rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    cursor: pointer;
-    width: 100%;
-    transition: .2s;
-    display: block;
-    margin: .0 auto;
-    transition: .2ss;
-}
-
-#roomCreator button:hover {
-    background-color: var(--white);
-    color: var(--green);
-    /* border: .1rem var(--green) solid;
-    margin: 0 auto; */
 }
 
 #roomBrowser {
@@ -137,9 +145,9 @@ html, body {
     align-items: center;
     height: 150px;
     width: 100%;
-    background-color: var(--white);
+    background-color: var(--side);
     border-radius: 10px;
-    box-shadow: -.5rem 0 .5rem rgba(253, 247, 236,0.3);
+    box-shadow: -.5rem 0 .5rem var(--white_t);
     transition: .2s;
     padding: 1rem;
     margin: 1rem 0;
@@ -148,40 +156,20 @@ html, body {
 .singleRoomContainer:hover {
     transform: translateY(-1rem);
     transition: 0.4s;
-    box-shadow: -.5rem 1rem .5rem rgba(216, 241, 160,0.3);
+    box-shadow: -.5rem 1rem .5rem var(--white);
 }
 
 .singleRoomContainer > div {
-    text-align: center;
     margin-top: .5rem;
+    text-align: center;
     color: var(--black)
 }
 
 .singleRoomContainer:hover > * {
     margin: 0;
     font-size: larger;
-    color: var(--green);
-}
-
-.singleRoomContainer button {
-    background-color: rgba(11, 5, 0, 0.1);
-    margin-top: .5rem;
-    border: none;
-    border-radius: 1rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    cursor: pointer;
-    height: 3rem;
-    width: 100%;
-    transition: .2s;
-    display: block;
-    margin: 0 auto;
-}
-
-.singleRoomContainer button:hover {
-    margin-top: .5rem;
-    background-color: var(--white);
-    border: .2rem var(--green) solid;
+    font-weight: bolder;
+    box-shadow: -.5rem 1rem .5rem var(--side_t);
 }
 
 .gameInfo {
@@ -198,10 +186,11 @@ html, body {
 }
 
 .chooseNickname {
-    border-radius: 1rem;
+    border-radius: 0 0 1rem 1rem;
     background-color: var(--black);
+    border: .5rem var(--border) solid;
     color: var(--white);
-    box-shadow: 0px 0px 2rem rgba(253, 247, 236, 0.3);
+    box-shadow: 0 0 .5rem var(--border);
     position: absolute;
     height: 300px;
     margin-top: -150px;
@@ -211,30 +200,34 @@ html, body {
 }
 
 .chooseNickname header {
-    height: 1.5rem;
+    height: 2rem;
     padding: .5rem 2rem;
     font-size: .8rem;
     font-weight: bold;
     letter-spacing: .3rem;
     text-transform: uppercase;
+    background-color: var(--border);
 }
 
 .chooseNickname header > .left > span {
-    color: var(--green);
+    color: var(--side);
 }
 
 .chooseNickname header button {
     float: right;
+    background-color: var(--main);
     color: var(--red);
-    background-color: rgba(253, 247, 236, 0.9);
     font-size: 2rem;
-    width: 2rem;
-    text-decoration: none;
+    width: 2.5rem;
     margin: 0;
     padding: 0;
     border: 0;
-    vertical-align: middle;
-    cursor: pointer;
+    top: 0;
+    border-radius: 0;
+}
+
+.chooseNickname header button:hover {
+    background-color: var(--white);
 }
 
 .nicknameFormContainer {
@@ -243,43 +236,20 @@ html, body {
 }
 
 .nicknameFormContainer input {
-    border: none;
-    border-bottom: var(--white) solid .2rem;
-    border-radius: 1rem;
-    background-color: rgba(253, 247, 236, 0.7);
-    padding: 1rem;
-    margin: 0 0 .3rem 0;
-    width: 100%;
-    height: 2.5em;
-    transition: .2s;
-    /* margin-top: 0 1rem;
-    padding: 1rem;
-    border-radius: 1rem;
-    width: 100%;
-    border: 0; */
+    background-color: var(--main_t);
 }
 
 .chooseNickname > button {
-    background-color: rgba(253, 247, 236, 0.9);
-    color: var(--green);
+    background-color: var(--main_t);
     margin-top: .5rem;
-    border: none;
-    border-radius: 1rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    cursor: pointer;
-    height: 2rem;
     width: 85%;
-    transition: .2s;
-    display: block;
-    margin: 0 auto;
-    bottom: 0;
 }
 
 .chooseNickname > button:hover {
-    background-color: var(--white);
-    border: .2rem var(--green) solid;
-    font-weight: bold;
+    background-color: var(--main);
+    color: var(--border);
+    font-weight: 800;
+    border: .2rem var(--border) solid;
 }
 
 .left{
@@ -294,42 +264,47 @@ html, body {
 /* Styl ogólny */
 
 #readyScreen {
-    grid-row: 9 / span 3;
+    background-color: var(--main);
+    border-radius: 1rem;
+    border: .5rem var(--border) solid;
+    box-shadow: 0 0 1rem var(--border);
+    grid-row: 6 / span 6;
     grid-column: 9 / span 5;
-    color: white;
     display: grid;
-    grid-template-rows: 20% 80%;
-    grid-template-columns: 33% 33% 33%;
+    grid-template-rows: 50% 50%;
 }
 
     #readyScreen > h2 {
-        margin: 0;
-        grid-column: 1 / span 3;
-        grid-row: 1 / span 1;
+        color: var(--white);
+        margin-bottom: .5rem;
+        text-align: center;
+        display: block;
+        grid-row: 1;
+        grid-column: 1;
     }
 
     #readyScreen > input {
         background-color: var(--white);
         border-radius: 1rem;
+        border: .2rem var(--border) solid;
         display: inline-block;
-        width: 100%;
-        height: 60%;
-        margin-bottom: 100%;
+        margin-left: .5rem;
+        height: 2rem;
+        width: 2rem;
+        grid-row: 2;
+        grid-column: 1;
     }
 
     #readyScreen > button {
         display: inline-block;
-        background-color: var(--white);
-        width: 80%;
-        height: 30%;
-        border-radius: 1rem;
-        border-color: black;
-        margin-right: 100%;
-        margin-top: 25%;
+        width: 70%;
+        margin-left: 3.5rem;
+        grid-row: 2;
+        grid-column: 1;
     }
 
 .error {
-    color: red;
+    color: var(--red);
 }
 
 #currentMandatory {
@@ -346,7 +321,7 @@ html, body {
 }
 
 .can-drop {
-    background-color: var(--lightgreen);
+    background-color: var(--side);
     width: 100%;
     height: 100%;
 }
@@ -408,6 +383,9 @@ html, body {
 }
 
 #giveupButton {
+    background-color: var(--black_t);
+    height: 2rem;
+    color: var(--white);
     margin-left: auto;
     margin-right: auto;
     margin-top: 4px;
@@ -427,10 +405,10 @@ html, body {
     margin-top: auto;
 }
 
-    #cardsToTake > #cardContainer {
-        margin: .1em;
-        display: inline-block;
-    }
+#cardsToTake > #cardContainer {
+    margin: .1em;
+    display: inline-block;
+}
 
 .waitingRoom {
     height: 100%;
@@ -438,7 +416,7 @@ html, body {
     grid-row: 1 / span 10;
     position: relative;
     grid-column: 1 / span 10;
-    background-color: #003333;
+    background-color: var(--side);
 }
 
 .roomName {
@@ -453,7 +431,7 @@ html, body {
 #mandatory {
     width: 100%;
     height: 100%;
-    background-color: var(--lightgreen);
+    background-color: var(--side);
     grid-row: 1 / span 2;
     grid-column: 1 / span 4;
 }
@@ -472,7 +450,7 @@ html, body {
     border: solid;
     width: 90%;
     height: 20em;
-    background-color: var(--green);
+    background-color: var(--main);
     grid-row: 9 / span 7;
     grid-column: 3 / span 18;
 }
@@ -539,6 +517,18 @@ html, body {
     grid-template-columns: 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5%;
 }
 
+#gameContainer > button {
+    background-color: var(--main_t);
+    grid-column: 1/3;
+}
+
+#gameContainer > button:hover {
+    background-color: var(--main);
+    color: var(--red);
+    font-weight: 800;
+    border: .2rem var(--red) solid;
+}
+
 
 /* Koniec stylu Game.razor */
 /* Poniżej jest styl Chat.razor */
@@ -554,13 +544,13 @@ html, body {
     background-color: var(--white);
 }
 
-    #chatContainer h1 {
-        font-size: 1.5rem;
-        font-weight: normal;
-        margin-left: .1rem;
-        vertical-align: middle;
-        text-align: center;
-    }
+#chatContainer h1 {
+    font-size: 1.5rem;
+    font-weight: normal;
+    margin-left: .1rem;
+    vertical-align: middle;
+    text-align: center;
+}
 
 #players {
     padding-bottom: 1rem;
@@ -569,9 +559,9 @@ html, body {
     grid-template-rows: 2rem auto;
 }
 
-    #players h1 {
-        grid-row: 1;
-    }
+#players h1 {
+    grid-row: 1;
+}
 
 ul.playerList {
     margin: 0;
@@ -587,35 +577,10 @@ ul.playerList {
     grid-column: 1;
 }
 
-#chatContainer button {
-    background-color: rgba(11, 5, 0, 0.1);
-    border: none;
-    border-radius: 1rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    cursor: pointer;
-    height: 2rem;
-    width: 90%;
-    transition: .2s;
-    display: block;
-    margin: 0 auto;
-}
-
-#players button {
-    grid-column: 1;
-    grid-row: 3;
-}
-
-#chatContainer button:hover {
-    background-color: var(--white);
-    color: var(--red);
-    border: .2rem var(--red) solid;
-}
-
 #messages {
     width: 100%;
-    border-top: .1rem solid rgba(11, 5, 0, 0.4);
-    border-bottom: .1rem solid rgba(11, 5, 0, 0.4);
+    border-top: .1rem solid var(--border);
+    border-bottom: .1rem solid var(--border);
     display: block;
     margin: 0 auto;
     overflow-y: auto;
@@ -631,7 +596,7 @@ ul.playerList {
     padding: .5rem;
     display: flex;
     flex-direction: column;
-    background-color: rgba(11, 5, 0, 0.1); /* var(--black);  */
+    background-color: var(--main_t);
 }
 
 #serverMessage {
@@ -649,13 +614,13 @@ ul.playerList {
     float: right;
     border-radius: 1em 1em 0 1em;
     padding-right: 1em;
-    background-color: rgba(0, 168, 120, 0.4);
+    background-color: var(--main);
 }
 
 #othersMessage {
     text-align: left;
     float: left;
-    background-color: rgba(11, 5, 0, 0.4);
+    background-color: var(--border);
     border-radius: 1em 1em 1em 0;
     padding-left: 1em;
 }
@@ -664,33 +629,24 @@ ul.playerList {
     grid-row: 3;
 }
 
-    #chatContainer > #form label {
-        display: block;
-        max-width: 90%;
-        margin: .5rem auto;
-        text-align: center;
-    }
+#chatContainer > #form label {
+    display: block;
+    max-width: 90%;
+    margin: .5rem auto;
+    text-align: center;
+}
 
-    #chatContainer > #form input {
-        border: none;
-        border-bottom: rgba(11, 5, 0, 0.4) solid .2rem;
-        border-radius: 1rem;
-        background-color: rgba(11, 5, 0, 0.1);
-        padding: .4em;
-        margin: 0 .1em;
-        width: 100%;
-        height: 2.5em;
-        transition: .2s;
-    }
+#chatContainer > #form input {
+    border: .2rem solid var(--border);
+    border-radius: 1em;
+    background-color: var(--white);
+    height: 3em;
+    width: 100%;
+}
 
-        #chatContainer > #form input:focus {
-            border-bottom: .3rem solid var(--green);
-            background-color: rgba(11, 5, 0, 0.01);
-        }
-
-    #chatContainer > #form button:hover {
-        color: var(--green);
-        border: .2rem var(--green) solid;
-    }
+#chatContainer > #form input:focus {
+    border: .2rem solid var(--border);
+    background-color: var(--white_t);
+}
 
 /* Koniec stylu Chat.razor */
