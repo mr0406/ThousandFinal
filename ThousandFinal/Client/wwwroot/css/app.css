@@ -12,7 +12,7 @@
  * added IDs:
  * loginContainer, roomBrowser, singleRoomContainer, roomCreator
 */
-/* Login.razor style test */
+/* Login.razor style */
 
 html, body {
     --main: rgb(51, 173, 255);
