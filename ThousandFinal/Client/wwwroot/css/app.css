@@ -21,7 +21,7 @@ html, body {
     --side_t: rgb(222, 245, 255, 0.5);
     --border: rgb(48, 104, 130);
     --white: rgb(253, 247, 236);
-    --white_t: rgb(253, 247, 236, 0.5);
+    --white_t: rgb(253, 247, 236, 0.8);
     --black: #0B0500;
     --black_t: rgba(11, 5, 0, 0.2);
     --red: #FE5E41;
@@ -63,6 +63,25 @@ button {
     margin: 0 auto;
 }
 
+button span{
+    line-height: 2rem;
+}
+
+button img {
+    height: 1.3rem;
+    margin-right: .5rem;
+    float: right;
+    transition: .2s;
+}
+
+button .not_hover {
+    display: inherit;
+}
+
+button .hover {
+    display: none;
+}
+
 button:hover {
     background-color: var(--main);
     color: var(--border);
@@ -70,6 +89,13 @@ button:hover {
     border: .2rem var(--border) solid;
 }
 
+button:hover .not_hover {
+    display: none;
+}
+
+button:hover .hover {
+    display: inherit;
+}
 input {
     border: none;
     border-bottom: var(--white) solid .2rem;
@@ -228,6 +254,8 @@ input:focus {
 
 .chooseNickname header button:hover {
     background-color: var(--white);
+    font-weight: 600;
+    border: .2rem var(--border) solid;
 }
 
 .nicknameFormContainer {
@@ -235,13 +263,8 @@ input:focus {
     margin-top: 3rem;
 }
 
-.nicknameFormContainer input {
-    background-color: var(--main_t);
-}
-
 .chooseNickname > button {
     background-color: var(--main_t);
-    margin-top: .5rem;
     width: 85%;
 }
 

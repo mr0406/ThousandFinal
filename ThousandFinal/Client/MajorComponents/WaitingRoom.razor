@@ -4,7 +4,7 @@
         <label>
             Room:
             <input @bind="newRoomName" @onkeyup="@AddRoomPressKey" placeholder="Room Name"/>
-            <button @onclick="@AddRoom">Add</button>
+            <button @onclick="@AddRoom"><span>Add</span><img class="not_hover" src="https://img.icons8.com/material-rounded/24/000000/add-column.png"/><img class="hover" src="https://img.icons8.com/material-outlined/24/000000/add-column.png"/></button>
         </label>
     </div>
 
@@ -20,10 +20,10 @@
                     </button>
                 </header>
                 <div class="nicknameFormContainer">
-                    Enter your nickname
+                    <span>Enter your nickname</span>
                     <input @bind="userName" @onkeyup="@JoinPressKey" placeholder="Nickname" />
                 </div>
-                <button @onclick="TryJoin">Join</button>
+                <button @onclick="TryJoin">Join<img class="not_hover" src="https://img.icons8.com/ios-filled/50/000000/enter-2.png"/><img class="hover" src="https://img.icons8.com/ios/50/000000/enter-2.png"/></button>
             </div>
         }
         <div class="aboutUs">
