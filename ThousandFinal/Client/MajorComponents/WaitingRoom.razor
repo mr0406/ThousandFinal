@@ -96,6 +96,11 @@
 
     async Task AddRoom()
     {
+        if(String.IsNullOrWhiteSpace(newRoomName))
+        {
+            //empty room name
+            return;
+        }
         if(roomDTOs.Count() >= MAX_NUM_OF_ROOMS)
         {
             //too many rooms
