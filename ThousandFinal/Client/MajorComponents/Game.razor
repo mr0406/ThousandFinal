@@ -28,10 +28,10 @@
             //</div>
 
             //<div class="row" id="row2">
-            <div style="color: green">
+            <div class="activeBox">
                 @if (AmIActive())
                 {
-                    <p>I AM ACTIVE</p>
+                    <h1>I AM ACTIVE</h1>
                 }
             </div>
 
@@ -107,7 +107,7 @@
     [Parameter] public List<UserModel> Users { get; set; }
     [Parameter] public string UserName { get; set; }
 
-    public bool IsReady { get; set; } //i wysylać to tutaj jak sie to zmieni
+    public bool IsReady { get; set; } 
 
     public string leftUserName;
     public int leftUserNumberOfCards;
@@ -232,8 +232,11 @@
     public bool AmIActive()
     {
         if (Users[activePlayerIndex].Name == UserName)
+        {
+            Console.WriteLine("IAMACTIVE");
             return true;
-
+        }
+        
         return false;
     }
 
