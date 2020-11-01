@@ -26,12 +26,21 @@
                 <button @onclick="TryJoin">Join<img class="not_hover" src="https://img.icons8.com/ios-filled/50/000000/enter-2.png"/><img class="hover" src="https://img.icons8.com/ios/50/000000/enter-2.png"/></button>
             </div>
         }
-        <div class="aboutUs">
-            <span> Tu będzie info o nas </span>
-        </div>
 
         <div class="gameInfo">
-            <span> Tu będzie info o grze </span>
+            <div>
+                This is a game called: Russian Schnapsed or Thousand Schnapsen.
+                You can read more on: <a href="https://en.wikipedia.org/wiki/Russian_Schnapsen" target="_blank">Game Info</a>
+            </div>
+        </div>
+
+        <div class="aboutUs">
+            <div>Created by polish IT students: </div>
+            <div>Marcin Rakowski - founder, backend (<a href="https://github.com/mr0406">github</a>)</div>
+            <div>Agata Wojciechowska - frontend (<a href="https://github.com/AgataWojciech">github</a>)</div>
+            <div>Michał Kelman - frontend </div>
+            <br/>
+            <div>Used technologies: .NET Core, C#, Blazor WebAssembly, SignalR, HTML5, CSS3</div>
         </div>
 
         <div id="roomBrowser">
@@ -39,15 +48,12 @@
             {
                 int temp = i;
                 <div class="singleRoomContainer">
-
                     <div class="roomName"> @roomDTOs[i].Name </div>
                     <div class="numOfUsers"> @roomDTOs[i].NumOfUsers/3 </div>
                     <button @onclick="@(() => (ChooseRoom(temp)))">Choose</button>
-
                 </div>
             }
         </div>
-   
 </div>
 
 @code {
