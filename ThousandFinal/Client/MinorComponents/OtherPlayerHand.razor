@@ -1,9 +1,38 @@
 ﻿<div ondragover="event.preventDefault();"
      ondragstart="event.dataTransfer.setData('', event.target.id);"
      @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass otherPlayerHand">
+
+
+
     <p>@UserName</p>
-    <p>@numberOfCards cards</p>
+
+    @for (int i = 0; i < @numberOfCards; i++)
+    {
+        <div id="cardContainer">
+
+            <div class="cardColorContainer">
+
+                <div class="cardColorText"></div>
+
+                <img class="smallCardColorImage" />
+
+            </div>
+
+            <img class="bigCardColorImage" />
+
+            <div class="cardColorContainer">
+
+                <img class="smallCardColorImage" />
+
+                <div class="cardColorText"></div>
+
+            </div>
+        </div>
+    }
 </div>
+
+
+
 
 @code {
     [CascadingParameter] public Game Game { get; set; }
@@ -14,7 +43,7 @@
 
     private async Task HandleDrop()
     {
-        if(numberOfCards > 7)
+        if (numberOfCards > 7)
             return;
 
         dropClass = "";
@@ -24,7 +53,7 @@
 
     private async Task HandleEnter()
     {
-        if(Game.AmIActive() && Game.phase == Phase.GivingAdditionalCards && numberOfCards < 8)
+        if (Game.AmIActive() && Game.phase == Phase.GivingAdditionalCards && numberOfCards < 8)
             dropClass = "can-drop";
         else
             dropClass = "no-drop";
@@ -34,4 +63,4 @@
     {
         dropClass = "";
     }
- }
+}
