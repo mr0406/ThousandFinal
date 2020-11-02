@@ -51,6 +51,8 @@
     public List<MessageModel> messages = new List<MessageModel>();
     public string messageInput;
 
+    public const int MAX_MESSAGE_LENGTH = 256;
+
     protected override async Task OnInitializedAsync()
     {
         hubConnection.On<MessageModel>(ServerToClient.RECEIVE_MESSAGE, (MessageModel message) =>
@@ -63,11 +65,20 @@
 
     async Task Send()
     {
-        if (!String.IsNullOrWhiteSpace(messageInput))
+        if(String.IsNullOrWhiteSpace(messageInput))
         {
-            await hubConnection.SendAsync(ClientToServer.SEND_MESSAGE, new MessageModel(messageInput, UserName));
-            messageInput = "";
+            //cant send empty message
+            return;
         }
+
+        if(messageInput.Length > MAX_MESSAGE_LENGTH)
+        {
+            //too long message
+            return;
+        }
+
+        await hubConnection.SendAsync(ClientToServer.SEND_MESSAGE, new MessageModel(messageInput, UserName));
+        messageInput = "";
     }
 
     async Task KeyPress(KeyboardEventArgs e)

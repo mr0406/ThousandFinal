@@ -70,6 +70,9 @@
     private const int MAX_NUM_OF_ROOMS = 20;
     private const int MAX_NUM_OF_USERS_IN_ROOM = 3;
 
+    private const int MAX_ROOM_NAME_LENGTH = 16;
+    private const int MAX_NICK_LENGTH = 16;
+
     protected override async Task OnInitializedAsync()
     {
         hubConnection.On(ServerToClient.RECEIVE_ROOMS, (List<RoomDTO> roomDTOs) =>
@@ -88,24 +91,51 @@
 
     async Task TryJoin()
     {
-        if (!String.IsNullOrWhiteSpace(userName) && choosenRoom.NumOfUsers < MAX_NUM_OF_USERS_IN_ROOM)
+        userName = userName.Trim();
+
+        if(String.IsNullOrWhiteSpace(userName))
         {
-            await hubConnection.SendAsync(ClientToServer.JOIN_ROOM, userName, choosenRoom.Name);
+            //empty nick
+            return;
         }
+
+        if(userName.Length > MAX_NICK_LENGTH)
+        {
+            //too long nick
+            return;
+        }
+
+        if (choosenRoom.NumOfUsers >= MAX_NUM_OF_USERS_IN_ROOM)
+        {
+            //no place in room
+            return;
+        }
+
+        await hubConnection.SendAsync(ClientToServer.JOIN_ROOM, userName, choosenRoom.Name);
     }
 
     async Task AddRoom()
     {
-        if(String.IsNullOrWhiteSpace(newRoomName))
-        {
-            //empty room name
-            return;
-        }
         if(roomDTOs.Count() >= MAX_NUM_OF_ROOMS)
         {
             //too many rooms
             return;
         }
+
+        newRoomName = newRoomName.Trim();
+
+        if(String.IsNullOrWhiteSpace(newRoomName))
+        {
+            //empty room name
+            return;
+        }
+
+        if(newRoomName.Length > MAX_ROOM_NAME_LENGTH)
+        {
+            //to long room name
+            return;
+        }
+
 
         if (roomDTOs.Any(x => x.Name == newRoomName))
         {
