@@ -1,4 +1,6 @@
-﻿<div id="loginContainer">
+﻿@inject IToastService toastService
+
+<div id="loginContainer">
 
     <div id="roomCreator">
         <label>
@@ -91,6 +93,8 @@
 
     async Task TryJoin()
     {
+        toastService.ShowSuccess("Success");
+
         userName = userName.Trim();
 
         if(String.IsNullOrWhiteSpace(userName))
@@ -116,6 +120,8 @@
 
     async Task AddRoom()
     {
+        toastService.ShowError("ERROR");
+
         if(roomDTOs.Count() >= MAX_NUM_OF_ROOMS)
         {
             //too many rooms
