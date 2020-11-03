@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Blazored.Toast;
 
 namespace ThousandFinal.Client
 {
@@ -19,7 +18,6 @@ namespace ThousandFinal.Client
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddBlazoredToast();
 
             await builder.Build().RunAsync();
         }
