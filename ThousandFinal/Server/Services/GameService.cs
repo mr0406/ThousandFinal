@@ -80,8 +80,6 @@ namespace ThousandFinal.Server.Services
             {
                 await ShowCardsToTakeForAWhile();
             }
-            roundPhase = Phase.Playing;
-            await Refresh();
 
             cards = _cardService.GiveCardsToAuctionWinner(cards, players, auctionWinner);
             activePlayer = highestBetOwner;
@@ -92,7 +90,7 @@ namespace ThousandFinal.Server.Services
 
         private async Task ShowCardsToTakeForAWhile()
         {
-            roundPhase = Phase.WaitingPhase;
+            roundPhase = Phase.ShowingCardsToTakePhase;
             showCardsToTake = true;
             await Refresh();
             await Task.Delay(5000); //2000

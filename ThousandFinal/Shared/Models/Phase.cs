@@ -7,6 +7,7 @@
         RaisingPointsToAchieve,
         Playing,
         PlayerWon,
-        WaitingPhase 
+        WaitingPhase,
+        ShowingCardsToTakePhase
     }
 }
