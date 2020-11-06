@@ -320,16 +320,26 @@ input:focus {
 
 /* Styl ogólny */
 
+#readyContainer {
+    position: relative;
+    grid-row: 1/span 5;
+    grid-column: 1/span 5;
+}
 #readyScreen {
     background-color: var(--main);
     border-radius: 1rem;
     border: .5rem var(--border) solid;
     box-shadow: 0 0 1rem var(--border);
-    grid-row: 6 / span 6;
-    grid-column: 9 / span 5;
+    margin: 0 auto;
+    width: 21rem;
+    height: 8rem;
     display: grid;
     grid-template-rows: 50% 50%;
     grid-template-columns: 30% 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
     #readyScreen > h2 {
@@ -405,8 +415,8 @@ input:focus {
 
 .activeBox {
     text-align: center;
-    grid-row: 2 / span 2;
-    grid-column: 8 / span 6;
+    grid-row: 2/span 1;
+    grid-column: 2/span 1;
 }
 
 .activeBox > h1{
@@ -486,30 +496,32 @@ input:focus {
 
 
 #raisingPoints {
-    position: absolute;
     height: 15rem;
-    left: 31%;
-    top: 35%;
     z-index: 10;
     display: grid;
-    grid-template-columns: 3rem 3rem 3rem 3rem;
+    grid-template-rows: 3rem 3rem 3rem 3rem 3rem;
     grid-gap: .1rem;
+    margin: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .raisebuttonRow:nth-child(1) {
-    grid-column: 1 / span 1;
+    grid-row: 1 / span 1;
 }
 
 .raisebuttonRow:nth-child(2) {
-    grid-column: 2 / span 1;
+    grid-row: 2 / span 1;
 }
 
 .raisebuttonRow:nth-child(3) {
-    grid-column: 3 / span 1;
+    grid-row: 3 / span 1;
 }
 
 .raisebuttonRow:nth-child(4) {
-    grid-column: 4 / span 1;
+    grid-row: 4 / span 1;
 }
 
 #giveupButton {
@@ -520,21 +532,20 @@ input:focus {
     margin-right: auto;
     margin-top: 4px;
     text-align: center;
-    grid-column: 1/span 4;
 }
 
 .raiseButton {
     margin-top: 3px;
+    width: 3rem;
+    display: inline-block;
 }
 
 #cardsToTake {
-    grid-row-start: 5;
-    grid-row-end: 9;
-    grid-column-start: 9;
-    grid-column-end: 15;
     align-content: end;
     display: flex;
     margin-top: auto;
+    grid-column: 2/span 1;
+}
 }
 
 #cardsToTake > #cardContainer {
@@ -563,12 +574,22 @@ input:focus {
 }
 
 /* Poniżej jest styl Game.razor */
+
+#middleTableSection {
+    position: relative;
+}
+
+#leaveButton {
+    grid-column: 1;
+    grid-row: 1/span 1;
+}
+
 #mandatory {
-    width: 100%;
-    height: 100%;
+    width: 10rem;
+    height: 3rem;
     background-color: var(--side);
-    grid-row: 3 / span 2;
-    grid-column: 1 / span 3;
+    display: block;
+    margin-left: auto;
 }
 
 #resultTable {
@@ -584,18 +605,18 @@ input:focus {
 
 #tableContainer {
     border: solid;
-    width: 90%;
-    height: 35em;
+    width: 95%;
+    height: 100%;
     background-color: var(--main);
-    grid-row: 4 / span 16;
-    grid-column: 3 / span 18;
+    grid-row: 3/span 1;
+    grid-column: 1/span 3;
+    display: grid;
+    grid-template-columns: 20% 60% 20%;
+    margin: 0 auto;
 }
 
 .otherPlayer {
-    width: 10%;
-    height: 100%;
-    height: 200px;
-    display: inline-block;
+    width: 100%;
     position: relative;
 }
 
@@ -619,17 +640,19 @@ input:focus {
         margin-top: -4.5em;
     }
 
+.otherPlayerHand {
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    position: absolute;
+}
+
 #rightPlayer {
-    float: right;
-    margin-right: 1%;
-    top: 5%;
-    transform: scaleX(-1);
+    grid-column: 3/ span 1;
 }
 
 #leftPlayer {
-    float: left;
-    margin-left: 1%;
-    top: 5%;
+    grid-column: 1/ span 1;
 }
 
 #table {
@@ -640,6 +663,7 @@ input:focus {
     display: inline-block;
     position: relative;
     margin: 0 auto;
+    grid-column: 2/ span 1;
 }
 
 #playerCards {
@@ -649,8 +673,8 @@ input:focus {
     overflow-y: hidden;
     padding-top: 20px;
     overflow-x: auto;
-    grid-row: 16 / span 7;
-    grid-column: 7 / span 8;
+    grid-row: 4/ span 1;
+    grid-column: 2/ span 1;
 }
 
     #playerCards > #cardContainer {
@@ -671,10 +695,10 @@ input:focus {
 #gameContainer {
     border: dotted;
     display: grid;
-    grid-row-start: 2;
-    grid-column-end: 2;
-    grid-template-rows: 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5%;
-    grid-template-columns: 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5% 5%;
+    grid-column: 1/span 1;
+    grid-row: 1/ span 2;
+    grid-template-rows: 7% 15% 55% 23%;
+    grid-template-columns: 20% 60% 20%;
 }
 
 #gameContainer > button {

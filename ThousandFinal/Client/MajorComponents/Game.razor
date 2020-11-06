@@ -1,8 +1,9 @@
 ﻿<CascadingValue Value="this">
     <div id="gameContainer">
-        <button @onclick="LeaveRoom">Leave</button>
+        <div id="leaveButton"> <button @onclick="LeaveRoom">Leave</button> </div>
         @if (!GameStarted)
-        {<div id="readyScreen">
+        {<div id="readyContainer">
+            <div id="readyScreen">
                 <h2>Are you ready? </h2>
                 <label id="switch">
                     <input type="checkbox" class="slider" @value="@IsReady" @onchange="() => CheckBoxClick()" disabled="@checkBoxDisabled" />
@@ -10,23 +11,18 @@
                 </label>
                 <button @onclick="TryStartGame">Start</button>
             </div>
+        </div>
         }
         else
         {
             //<div class="row" id="row1">
-            <div id="mandatory">
+            <div id="nickname">
 
                 <div>Name:@UserName</div>
-                <MandatoryTable currentMandatory="@mandatorySuit"></MandatoryTable>
 
             </div>
 
-            <div id="cardsToTake">
-                @if (cardsToTakeExists)
-                {
-                    <CardsToTake Cards="@cardsToTake"></CardsToTake>
-                }
-            </div>
+            
             //</div>
 
             //<div class="row" id="row2">
@@ -46,45 +42,59 @@
                         <OtherPlayerHand UserName="@leftUserName" numberOfCards="leftUserNumberOfCards"></OtherPlayerHand>
                     </div>
                 }
+                <div id="middleTableSection">
 
-                @if (phase == Phase.Auction)
-                {
-                    if (AmIActive())
-                    {
-                        <div id="raisingPoints">
-                            <AuctionBoard lastHighest="highestBet"></AuctionBoard>
-                        </div>
-                    }
-                }
-
-                @if (phase == Phase.PlayerWon)
-                {
-                    <h1 style="color: green">Winner: @getWinnerName()</h1>
-                }
-
-                @if (phase == Phase.GivingAdditionalCards)
-                {
-
-                }
-
-                @if (phase == Phase.RaisingPointsToAchieve)
-                {
-                    if (AmIActive())
-                    {
-                        <div id="raisingPoints">
-                            <RaisingPointsBoard playerBet="highestBet"></RaisingPointsBoard>
-                        </div>
-                    }
-                }
-
-
-                @if (phase == Phase.Playing || phase == Phase.WaitingPhase)
-                {
-                    <div id="table">
-                        <CardsOnTable Cards="cardsOnTable"></CardsOnTable>
+                    <div id="cardsToTake">
+                        @if (cardsToTakeExists)
+                        {
+                            <CardsToTake Cards="@cardsToTake"></CardsToTake>
+                        }
                     </div>
-                }
 
+                    <div id="mandatory">
+
+                        <div>Name:@UserName</div>
+                        <MandatoryTable currentMandatory="@mandatorySuit"></MandatoryTable>
+
+                    </div>
+                    @if (phase == Phase.Auction)
+                    {
+                        if (AmIActive())
+                        {
+                            <div id="raisingPoints">
+                                <AuctionBoard lastHighest="highestBet"></AuctionBoard>
+                            </div>
+                        }
+                    }
+
+                    @if (phase == Phase.PlayerWon)
+                    {
+                        <h1 style="color: green">Winner: @getWinnerName()</h1>
+                    }
+
+                    @if (phase == Phase.GivingAdditionalCards)
+                    {
+
+                    }
+
+                    @if (phase == Phase.RaisingPointsToAchieve)
+                    {
+                        if (AmIActive())
+                        {
+                            <div id="raisingPoints">
+                                <RaisingPointsBoard playerBet="highestBet"></RaisingPointsBoard>
+                            </div>
+                        }
+                    }
+
+
+                    @if (phase == Phase.Playing || phase == Phase.WaitingPhase)
+                    {
+                        <div id="table">
+                            <CardsOnTable Cards="cardsOnTable"></CardsOnTable>
+                        </div>
+                    }
+                </div>
                 @if (rightUserName != null)
                 {
                     <div class="otherPlayer" id="rightPlayer">
