@@ -4,8 +4,10 @@
         @if (!GameStarted)
         {<div id="readyScreen">
                 <h2>Are you ready? </h2>
-                <input type="checkbox" @value="@IsReady" @onchange="() => CheckBoxClick()" disabled="@checkBoxDisabled" />
-
+                <label id="switch">
+                    <input type="checkbox" class="slider" @value="@IsReady" @onchange="() => CheckBoxClick()" disabled="@checkBoxDisabled" />
+                    <span class="slider"></span>
+                </label>
                 <button @onclick="TryStartGame">Start</button>
             </div>
         }
