@@ -93,7 +93,7 @@ namespace ThousandFinal.Server.Services
             roundPhase = Phase.ShowingCardsToTakePhase;
             showCardsToTake = true;
             await Refresh();
-            await Task.Delay(1800000); //2000
+            await Task.Delay(5000); //2000
         }
 
         private async Task StartGivingCardsPhase()
