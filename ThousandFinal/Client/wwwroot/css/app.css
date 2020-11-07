@@ -62,6 +62,7 @@ button {
     transition: .2s;
     display: block;
     margin: 0 auto;
+    outline: 0;
 }
 
 button *{
@@ -86,7 +87,6 @@ button .hover {
 button:hover {
     background-color: var(--white_t);
     color: var(--border);
-    font-weight: 800;
     border: .2rem var(--border) solid;
     box-shadow: 0 0 1rem var(--white);
 }
@@ -113,6 +113,7 @@ input {
     width: 100%;
     height: 2.5em;
     transition: .2s;
+    outline: 0;
 }
 
 
@@ -544,7 +545,8 @@ input:focus {
     align-content: end;
     display: flex;
     margin-top: auto;
-    grid-column: 2/span 1;
+    grid-column: 1/span 2;
+    grid-row: 1/ span 1;
 }
 }
 
@@ -577,6 +579,9 @@ input:focus {
 
 #middleTableSection {
     position: relative;
+    grid-template-rows: 50% 50%;
+    grid-template-columns: 75% 25%;
+    display: grid;
 }
 
 #leaveButton {
@@ -590,6 +595,8 @@ input:focus {
     background-color: var(--side);
     display: block;
     margin-left: auto;
+    grid-column: 2/span 1;
+    grid-row: 1/span 1;
 }
 
 #resultTable {
