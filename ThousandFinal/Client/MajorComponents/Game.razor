@@ -47,11 +47,9 @@
                     </div>
 
                     <div id="mandatory">
-
-                        <div>Name: @UserName</div>
                         <MandatoryTable currentMandatory="@mandatorySuit"></MandatoryTable>
-
                     </div>
+
                     @if (phase == Phase.Auction)
                     {
                         if (AmIActive())
@@ -67,11 +65,6 @@
                         <h1 style="color: green">Winner: @getWinnerName()</h1>
                     }
 
-                    @if (phase == Phase.GivingAdditionalCards)
-                    {
-
-                    }
-
                     @if (phase == Phase.RaisingPointsToAchieve)
                     {
                         if (AmIActive())
@@ -81,7 +74,6 @@
                             </div>
                         }
                     }
-
 
                     @if (phase == Phase.Playing || phase == Phase.WaitingPhase)
                     {
