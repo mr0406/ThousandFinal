@@ -134,7 +134,7 @@ input:focus {
     display: grid;
     grid-template-rows: 10% 90%;
     grid-template-columns: 75% 25%;
-    background: linear-gradient(-10deg, rgba(27,128,117,1) 10%, rgba(6,51,42,20) 80%);
+    background: linear-gradient(0deg, rgba(21,23,51,1) 10%, rgba(54, 58, 128,1) 80%);
 }
 
 #loginContainer {
