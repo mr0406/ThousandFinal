@@ -15,17 +15,6 @@
         }
         else
         {
-            //<div class="row" id="row1">
-            <div id="nickname">
-
-                <div>Name:@UserName</div>
-
-            </div>
-
-            
-            //</div>
-
-            //<div class="row" id="row2">
             <div class="activeBox">
                 @if (AmIActive())
                 {
@@ -43,7 +32,7 @@
                 @if (leftUserName != null)
                 {
                     <div class="otherPlayer" id="leftPlayer">
-                        <OtherPlayerHand UserName="@leftUserName" numberOfCards="leftUserNumberOfCards"></OtherPlayerHand>
+                        <OtherPlayerHand UserName="@leftUserName" numberOfCards="@leftUserNumberOfCards"></OtherPlayerHand>
                     </div>
                 }
                 <div id="middleTableSection">
@@ -66,7 +55,7 @@
                         if (AmIActive())
                         {
                             <div id="raisingPoints">
-                                <AuctionBoard lastHighest="highestBet"></AuctionBoard>
+                                <AuctionBoard lastHighest="@highestBet"></AuctionBoard>
                             </div>
                         }
                     }
@@ -86,7 +75,7 @@
                         if (AmIActive())
                         {
                             <div id="raisingPoints">
-                                <RaisingPointsBoard playerBet="highestBet"></RaisingPointsBoard>
+                                <RaisingPointsBoard playerBet="@highestBet"></RaisingPointsBoard>
                             </div>
                         }
                     }
@@ -95,14 +84,14 @@
                     @if (phase == Phase.Playing || phase == Phase.WaitingPhase)
                     {
                         <div id="table">
-                            <CardsOnTable Cards="cardsOnTable"></CardsOnTable>
+                            <CardsOnTable Cards="@cardsOnTable"></CardsOnTable>
                         </div>
                     }
                 </div>
                 @if (rightUserName != null)
                 {
                     <div class="otherPlayer" id="rightPlayer">
-                        <OtherPlayerHand UserName="@rightUserName" numberOfCards="rightUserNumberOfCards"></OtherPlayerHand>
+                        <OtherPlayerHand UserName="@rightUserName" numberOfCards="@rightUserNumberOfCards"></OtherPlayerHand>
                     </div>
                 }
             </div>
@@ -110,7 +99,7 @@
 
             //<div class="row" id="row3">
             <div id="playerCards">
-                <PlayersHand Cards="playerCards"></PlayersHand>
+                <PlayersHand Cards="@playerCards"></PlayersHand>
             </div>
             //</div>
         }
