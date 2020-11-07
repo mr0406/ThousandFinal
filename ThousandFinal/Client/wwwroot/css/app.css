@@ -544,7 +544,7 @@ input:focus {
 #cardsToTake {
     align-content: end;
     display: flex;
-    margin-top: auto;
+    margin: auto;
     grid-column: 1/span 2;
     grid-row: 1/ span 1;
 }
@@ -615,19 +615,23 @@ input:focus {
 #tableContainer {
     width: 95%;
     height: 100%;
-    background-color: var(--main);
+    background-color: var(--black_t);
     grid-row: 3/span 1;
     grid-column: 1/span 3;
     display: grid;
     grid-template-columns: 20% 60% 20%;
     margin: 0 auto;
-    box-shadow: 0 0 2.5em var(--main);
     border-radius: 12em;
 }
 
 .otherPlayer {
     width: 100%;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    flex-direction: column;
 }
 
     .otherPlayer > .otherPlayerHand > #cardContainer {
@@ -703,13 +707,11 @@ input:focus {
         }
 
 #gameContainer {
-    border: dotted;
     display: grid;
     grid-column: 1/span 1;
     grid-row: 1/ span 2;
     grid-template-rows: 7% 15% 55% 23%;
     grid-template-columns: 20% 60% 20%;
-    background: linear-gradient(0deg, rgba(27,128,117,1) 30%, rgba(6,51,42,20) 70%);
 }
 
 #gameContainer > button {
@@ -737,7 +739,6 @@ input:focus {
     display: grid;
     grid-template-rows: 9em auto 8.8em;
     grid-template-columns: 100%;
-    background-color: var(--white);
 }
 
 #chatContainer h1 {
@@ -773,10 +774,12 @@ ul.playerList {
     grid-column: 1;
 }
 
+.playerName {
+    background-color: red;
+}
+
 #messages {
     width: 100%;
-    border-top: .1rem solid var(--border);
-    border-bottom: .1rem solid var(--border);
     display: block;
     margin: 0 auto;
     overflow-y: auto;
