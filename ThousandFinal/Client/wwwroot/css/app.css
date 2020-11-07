@@ -436,7 +436,7 @@ input:focus {
     width: 24px;
 }
 
-#cardsOnTable {
+.cardsOnTable {
     min-width: 40%;
     min-height: 200px;
     border: groove;
@@ -445,13 +445,13 @@ input:focus {
 }
 
 .can-drop {
-    background-color: var(--side);
+    background-color: green;
     width: 100%;
     height: 100%;
 }
 
 .no-drop {
-    background-color: var(--red);
+    background-color: red;
     width: 100%;
     height: 100%;
 }

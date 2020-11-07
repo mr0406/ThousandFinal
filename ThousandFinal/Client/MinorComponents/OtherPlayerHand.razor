@@ -52,9 +52,13 @@
     private async Task HandleEnter()
     {
         if (Game.AmIActive() && Game.phase == Phase.GivingAdditionalCards && numberOfCards < 8)
+        {
             dropClass = "can-drop";
+        }
         else
+        {
             dropClass = "no-drop";
+        }
     }
 
     private async Task HandleLeave()

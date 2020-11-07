@@ -1,6 +1,6 @@
 ﻿<div ondragover="event.preventDefault();"
      ondragstart="event.dataTransfer.setData('', event.target.id);"
-     @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass" id="cardsOnTable">
+     @ondrop="@HandleDrop" @ondragenter="@HandleEnter" @ondragleave="@HandleLeave" class="@dropClass cardsOnTable">
     @if (Cards != null)
     {
         @foreach (var card in Cards)
@@ -33,10 +33,12 @@
         if(Game.phase == Phase.Playing && Game.AmIActive() && CanPlayThisCard())
         {
             dropClass = "can-drop";
+            Console.WriteLine("can-drop");
         }
         else
         {
             dropClass = "no-drop";
+            Console.WriteLine("no-drop");
         }
     }
 
