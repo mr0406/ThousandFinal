@@ -23,7 +23,7 @@ html, body {
     --white: rgb(253, 247, 236);
     --white_t: rgb(253, 247, 236, 0.8);
     --black: #0B0500;
-    --black_t: rgba(11, 5, 0, 0.2);
+    --black_t: rgba(11,5,0,0.35);
     --red: rgba(254, 94, 65, 1);
     --red_t: rgba(254, 94, 65, 0.5);
     margin: 0;
@@ -129,10 +129,10 @@ input:focus {
     height: 100vh;
     max-height: 100%;
     max-width: 100%;
-    background-color: var(--black);
     display: grid;
     grid-template-rows: 10% 90%;
     grid-template-columns: 75% 25%;
+    background: linear-gradient(-10deg, rgba(27,128,117,1) 10%, rgba(6,51,42,20) 80%);
 }
 
 #loginContainer {
@@ -464,7 +464,7 @@ input:focus {
     transition: .2s;
     clear: both;
     position: relative;
-    margin: 0;
+    margin-left: 10px;
     padding: 0;
 }
 
@@ -552,6 +552,8 @@ input:focus {
 
 #cardsToTake > #cardContainer {
     margin: .1em;
+    box-shadow: 0.5em 0 1em var(--black);
+    margin-left: 10px;
 }
 
     #cardsToTake > #cardContainer > .cardColorContainer {
@@ -611,7 +613,6 @@ input:focus {
 }
 
 #tableContainer {
-    border: solid;
     width: 95%;
     height: 100%;
     background-color: var(--main);
@@ -620,6 +621,8 @@ input:focus {
     display: grid;
     grid-template-columns: 20% 60% 20%;
     margin: 0 auto;
+    box-shadow: 0 0 2.5em var(--main);
+    border-radius: 12em;
 }
 
 .otherPlayer {
@@ -670,7 +673,7 @@ input:focus {
     display: inline-block;
     position: relative;
     margin: 0 auto;
-    grid-column: 2/ span 1;
+    grid-column: 1/ span 2;
 }
 
 #playerCards {
@@ -706,6 +709,7 @@ input:focus {
     grid-row: 1/ span 2;
     grid-template-rows: 7% 15% 55% 23%;
     grid-template-columns: 20% 60% 20%;
+    background: linear-gradient(0deg, rgba(27,128,117,1) 30%, rgba(6,51,42,20) 70%);
 }
 
 #gameContainer > button {
