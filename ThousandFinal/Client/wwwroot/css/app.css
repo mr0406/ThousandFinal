@@ -714,11 +714,12 @@ input:focus {
     grid-template-columns: 20% 60% 20%;
 }
 
-#gameContainer > button {
-    background-color: var(--red_t);
-    grid-column: 1/span 3;
-    grid-row: 1/span 2;
-}
+    #gameContainer > button {
+        background-color: var(--red_t);
+        grid-column: 1/span 1;
+        grid-row: 1/span 1;
+        z-index: 2137;
+    }
 
 #gameContainer > button:hover {
     background-color: var(--white);
@@ -739,6 +740,7 @@ input:focus {
     display: grid;
     grid-template-rows: 9em auto 8.8em;
     grid-template-columns: 100%;
+    border-left: solid;
 }
 
 #chatContainer h1 {
