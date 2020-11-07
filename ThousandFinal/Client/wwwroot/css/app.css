@@ -26,6 +26,8 @@ html, body {
     --black_t: rgba(11, 5, 0, 0.2);
     --red: rgba(254, 94, 65, 1);
     --red_t: rgba(254, 94, 65, 0.5);
+    --green: rgb(27, 128, 117);
+    --green_t: rgba(27,128,117,0.5);
     margin: 0;
     padding: 0;
 }
@@ -274,13 +276,16 @@ input:focus {
     float: right;
     background-color: var(--main);
     color: var(--red);
-    font-size: 2rem;
-    width: 2.5rem;
+    font-size: 1.5rem;
+    width: 2rem;
+    height: 2rem;
     margin: 0;
     padding: 0;
     border: 0;
     top: 0;
+    right: 0;
     border-radius: 0;
+    position: absolute;
 }
 
 .chooseNickname header button:hover {
@@ -356,7 +361,7 @@ input:focus {
             position: relative;
             display: inline-block;
             margin-left: 10%;
-            width: 90%;
+            width: 80%;
             height: 2.4rem;
         }
       
@@ -373,11 +378,11 @@ input:focus {
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: var(--white);
+            background-color: var(--red);
             transition: .2s;
             border-radius: 2rem;
         }
-      
+
         .slider:before {
             position: absolute;
             content: "";
@@ -389,7 +394,7 @@ input:focus {
         }
         
         input:checked + .slider {
-            background-color: var(--white_t);
+            background-color: var(--green);
         }
         
         input:focus + .slider {
@@ -405,7 +410,6 @@ input:focus {
     #readyScreen > button {
         display: inline-block;
         width: 70%;
-        /* margin-left: 3.5rem; */
         grid-row: 2;
         grid-column: 2;
     }
@@ -437,7 +441,7 @@ input:focus {
     min-height: 200px;
     border: groove;
     display: flex;
-    background-color: yellow;
+    background-color: var(--green);
 }
 
 .can-drop {
@@ -767,6 +771,11 @@ ul.playerList {
     justify-content: space-evenly;
     grid-row: 2;
     grid-column: 1;
+}
+
+#itsMe {
+    background-color: var(--green);
+    font-weight: 600;
 }
 
 #messages {
