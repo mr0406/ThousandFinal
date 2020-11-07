@@ -5,7 +5,14 @@
         <ul class="playerList">
             @foreach (var user in Users)
             {
-                <li class="playerList">@user.Name: @user.Points</li>
+                if (user.Name == UserName)
+                {
+                    <li class="playerList" style="color: green">@user.Name: @user.Points</li>
+                }
+                else
+                {
+                    <li class="playerList">@user.Name: @user.Points</li>
+                }
             }
         </ul>
     </div>
