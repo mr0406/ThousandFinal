@@ -446,18 +446,14 @@ input:focus {
 }
 
 
-#currentMandatory {
-    display: block;
-    margin: auto;
-    width: 24px;
-}
+
 
 .cardsOnTable {
     display: flex;
-    background-color: var(--green);
     width: 100%;
     height: 100%;
     position: absolute;
+    padding: 13px;
 }
 
 .playerName {
@@ -470,7 +466,7 @@ input:focus {
 .playerNameContainer {
     display: flex;
     margin: auto auto 0 auto;
-    width: 1em;
+    width: 100%;
     height: 1em;
     font-size: 30px;
 }
@@ -633,16 +629,29 @@ input:focus {
 #leaveButton {
     grid-column: 1;
     grid-row: 1/span 1;
+    margin: 10px 0 0 10px;
 }
 
-#mandatory {
-    width: 10rem;
-    height: 3rem;
-    background-color: var(--side);
+#mandatoryContainer {
+    height: 6.5em;
     display: block;
-    margin-left: auto;
-    grid-column: 2/span 1;
+    margin: 15px auto 0 auto;
+    grid-column: 1/span 2;
     grid-row: 1/span 1;
+    border: dashed;
+    border-color: rgba(54, 58, 128,1);
+    padding: 10px;
+}
+
+#mandatoryText {
+    color: var(--white);
+    font-size: 25px;
+}
+
+#mandatoryImage {
+    display: block;
+    margin: auto;
+    width: 50px;
 }
 
 #resultTable {
@@ -714,15 +723,14 @@ input:focus {
 }
 
 #table {
-    background-color: green;
     width: 70%;
     height: 200px;
     display: inline-block;
     position: relative;
     margin: 0 auto;
     grid-column: 1/ span 2;
-    border: solid;
-    border-color: rgba(255,255,255,0.3);
+    border: dashed;
+    border-color: rgba(54, 58, 128,1);
 }
 
 #playerCards {

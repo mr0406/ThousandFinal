@@ -1,7 +1,9 @@
 ﻿@if (currentMandatory != Suit.None)
 {
-    <div>Mandatory: </div>
-    <img src=@getImgLink(currentMandatory) id="currentMandatory" />
+    <div id="mandatoryContainer">
+        <div id="mandatoryText">Mandatory: </div>
+        <img src=@getImgLink(currentMandatory) id="mandatoryImage" />
+    </div>
 }
 
 @code {
