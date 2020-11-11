@@ -15,12 +15,22 @@
 */
 /* Login.razor style */
 
+@media only screen and (max-width: 1800px) {
+
+    .playerNameContainer{
+        font-size: 23px;
+    }
+
+}
+
+
 html, body {
     --main: rgb(51, 173, 255);
     --main_t: rgb(51, 173, 255, 0.5);
     --side: rgb(222, 245, 255);
     --side_t: rgb(222, 245, 255, 0.5);
-    --border: #0065d8;
+    --border: rgba( 0,101,216,1);
+    --border_t rgba(0,101,216,0.5);
     --white: rgb(253, 247, 236);
     --white_t: rgb(253, 247, 236, 0.8);
     --black: #0B0500;
@@ -80,6 +90,7 @@ button {
     display: block;
     margin: 0 auto;
     outline: 0;
+    border: .13rem var(--border) solid;
 }
 
 button *{
@@ -101,12 +112,12 @@ button .hover {
     display: none;
 }
 
-button:hover {
-    background-color: var(--white_t);
-    color: var(--border);
-    border: .2rem var(--border) solid;
-    box-shadow: 0 0 1rem var(--white);
-}
+    button:hover {
+        background-color: var(--border_t);
+        color: var(--white);
+        border: .2rem var(--border) solid;
+        box-shadow: 0 0 0.4rem var(--border);
+    }
 
 button:hover .not_hover {
     display: none;
@@ -441,7 +452,7 @@ input:focus {
 }
 
 .activeBox > h1{
-    color: green;
+    color: var(--white);
     text-align: center;
 }
 
@@ -468,7 +479,7 @@ input:focus {
     margin: auto auto 0 auto;
     width: 100%;
     height: 1em;
-    font-size: 30px;
+    font-size: 29px;
 }
 
 #leftUserName {
