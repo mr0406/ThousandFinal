@@ -6,18 +6,30 @@
 
         @if (!GameStarted)
         {<div id="readyContainer">
-            <div id="readyScreen">
-                <h2>Are you ready? </h2>
-                <label id="switch">
-                    <input type="checkbox" class="slider" @value="@IsReady" @onchange="() => CheckBoxClick()" disabled="@checkBoxDisabled" />
-                    <span class="slider"></span>
-                </label>
-                <button @onclick="TryStartGame">Start</button>
+                <div id="readyScreen">
+                    <h2>Are you ready? </h2>
+                    <label id="switch">
+                        <input type="checkbox" class="slider" @value="@IsReady" @onchange="() => CheckBoxClick()" disabled="@checkBoxDisabled" />
+                        <span class="slider"></span>
+                    </label>
+                    <button @onclick="TryStartGame">Start</button>
+                </div>
             </div>
-        </div>
         }
         else
         {
+
+            <div id="leftUserName" class="playerNameContainer">
+
+                <div class="playerName">@leftUserName</div>
+
+            </div>
+            <div id="rightUserName" class="playerNameContainer">
+
+                <div class="playerName">@rightUserName</div>
+        
+            </div>
+
             <div class="activeBox">
                 @if (AmIActive())
                 {

@@ -1,8 +1,8 @@
-﻿<div class="playerName">@UserName</div>
-
-<div ondragover="event.preventDefault();"
+﻿<div ondragover="event.preventDefault();"
      ondragstart="event.dataTransfer.setData('', event.target.id);"
-     @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass otherPlayerHand">
+     @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass" style="width: 100%; height: 100%; z-index: 10;"></div>
+
+<div class="otherPlayerHand">
 
     @for (int i = 0; i < @numberOfCards; i++)
     {
