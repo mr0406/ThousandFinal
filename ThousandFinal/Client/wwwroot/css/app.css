@@ -30,7 +30,7 @@ html, body {
     --side: rgb(222, 245, 255);
     --side_t: rgb(222, 245, 255, 0.5);
     --border: rgba( 0,101,216,1);
-    --border_t rgba(0,101,216,0.5);
+    --border_t: rgba(0,101,216,0.5);
     --white: rgb(253, 247, 236);
     --white_t: rgb(253, 247, 236, 0.8);
     --black: #0B0500;
@@ -555,9 +555,10 @@ input:focus {
     grid-gap: .1rem;
     margin: auto;
     position: absolute;
-    top: 50%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
+    grid-row: 2/ span 1;
 }
 
 .raisebuttonRow:nth-child(1) {
@@ -744,6 +745,28 @@ input:focus {
     border-color: rgba(54, 58, 128,1);
 }
 
+#playerCardsContainer {
+    grid-row: 4/ span 1;
+    grid-column: 2/ span 1;
+    display: flex;
+    justify-content: center;
+}
+
+    #playerCardsContainer > #playerCards > #cardContainer {
+        box-shadow: -0.5em 0 1em var(--black);
+        transition: .2s;
+        padding: 1em;
+        margin: 0 0 2em;
+    }
+
+    #playerCardsContainer > #playerCards > #cardContainer:hover {
+        transform: translateY(-1em);
+    }
+
+        #playerCardsContainer > #playerCards > #cardContainer:not(:first-child) {
+            margin-left: -1.8em;
+        }
+
 #playerCards {
     display: flex;
     justify-content: space-between;
@@ -751,24 +774,7 @@ input:focus {
     overflow-y: hidden;
     padding-top: 20px;
     overflow-x: auto;
-    grid-row: 4/ span 1;
-    grid-column: 2/ span 1;
 }
-
-    #playerCards > #cardContainer {
-        box-shadow: -0.5em 0 1em var(--black);
-        transition: .2s;
-        padding: 1em;
-        margin: 0 0 2em;
-    }
-
-        #playerCards > #cardContainer:hover {
-            transform: translateY(-1em);
-        }
-
-        #playerCards > #cardContainer:not(:first-child) {
-            margin-left: -3em;
-        }
 
 .unselectable {
     -moz-user-select: -moz-none;
