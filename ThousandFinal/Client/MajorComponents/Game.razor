@@ -149,6 +149,7 @@
         hubConnection.On(ServerToClient.RECEIVE_GAME_STARTED, () =>
         {
             GameStarted = true;
+            checkBoxDisabled = false;
             StateHasChanged();
         });
 
