@@ -29,16 +29,16 @@
             }
             else
             {
-                <div class="message" id="othersMessage">@message.AuthorName: @message.Text</div>
+                <div class="message" id="othersMessage"><span class="messageNickaname">@message.AuthorName:</span> @message.Text</div>
             }
         }
     </div>
 
     <div id="form">
         <label>
-            <input @bind="messageInput" id="messageForm" @onkeyup="@KeyPress" />
+            <input @bind="messageInput" id="messageForm" @onkeyup="@KeyPress" placeholder="Message" />
         </label>
-        <button @onclick="Send"><span>Send</span><img src="https://img.icons8.com/dotty/80/000000/filled-sent.png"/></button>
+        <button @onclick="Send"><img src="/images/filled-sent.ico"/></button>
     </div>
 
 </div>
