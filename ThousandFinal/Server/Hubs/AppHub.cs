@@ -145,7 +145,17 @@ namespace ThousandFinal.Server.Hubs
 
             await SendUsers(roomName);
 
-            string text = $"{userName} is now ready";
+            string text = $"{userName} is ";
+
+            if(rooms[roomName].Users[Context.ConnectionId].IsReady == true)
+            {
+                text += "ready";
+            }
+            else
+            {
+                text += "not ready";
+            }
+
             await SendMessageFromServer(text, roomName, Context.ConnectionId);
         }
 
@@ -155,10 +165,19 @@ namespace ThousandFinal.Server.Hubs
 
             string roomName = user_room[Context.ConnectionId];
 
+            int numberOfUsersInRoom = rooms[roomName].Users.Count;
+            if (numberOfUsersInRoom != 3)
+            {
+                string text = "not enough players in room";
+                await SendMessageFromServer(text, roomName);
+                return;
+            }
+
             int numberOfReadyUsers = CalculateNumberOfReadyUsers(roomName);
             if (numberOfReadyUsers != 3)
             {
-                string text = "not enough players";
+                string text = "not enough ready players: ";
+                text += GetStringWithNotReadyUsers(roomName);
                 await SendMessageFromServer(text, roomName);
                 return;
             }
@@ -287,6 +306,19 @@ namespace ThousandFinal.Server.Hubs
                 }
             }
             return numberOfReadyUsers;
+        }
+
+        private string GetStringWithNotReadyUsers(string roomName)
+        {
+            string info = "";
+            foreach (var user in rooms[roomName].Users)
+            {
+                if (!user.Value.IsReady)
+                {
+                    info += $" {user.Value.Name} is not ready";
+                }
+            }
+            return info;
         }
 
         private void RefreshActivity(string connectionId)
