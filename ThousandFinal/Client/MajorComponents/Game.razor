@@ -19,7 +19,7 @@
         else
         {
 
-            
+           
 
             <div class="activeBox">
                 @if (AmIActive())
@@ -116,7 +116,7 @@
     [Parameter] public List<UserModel> Users { get; set; }
     [Parameter] public string UserName { get; set; }
 
-    public bool IsReady { get; set; } 
+    public bool IsReady { get; set; }
 
     public string leftUserName;
     public int leftUserNumberOfCards;
@@ -136,6 +136,8 @@
     public Phase phase { get; set; }
     public int highestBet { get; set; } = 100;
     public CardModel bestCardOnTable { get; set; } = null;
+
+    public const int checkBoxDelayMiliSeconds = 2500;
 
     protected override async Task OnInitializedAsync()
     {
@@ -232,18 +234,32 @@
 
     public async Task CheckBoxClick()
     {
-        await hubConnection.SendAsync(ClientToServer.USER_READY_CHANGE);
         checkBoxDisabled = true;
+        StateHasChanged();
+
+        await hubConnection.SendAsync(ClientToServer.USER_READY_CHANGE);
+
+        var Timer = new System.Timers.Timer();
+        Timer.AutoReset = false;
+        Timer.Interval = checkBoxDelayMiliSeconds;
+
+        Timer.Elapsed += OnTimerEnd;
+        Timer.Enabled = true;
+    }
+
+    private void OnTimerEnd(Object o, System.Timers.ElapsedEventArgs e)
+    {
+        checkBoxDisabled = false;
+        StateHasChanged();
     }
 
     public bool AmIActive()
     {
         if (Users[activePlayerIndex].Name == UserName)
         {
-            Console.WriteLine("IAMACTIVE");
             return true;
         }
-        
+
         return false;
     }
 
