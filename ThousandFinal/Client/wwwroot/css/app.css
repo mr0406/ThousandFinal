@@ -17,9 +17,9 @@
 
 @media only screen and (max-width: 1800px) {
 
-    .playerNameContainer{
+    /*.playerNameContainer{
         font-size: 23px;
-    }
+    }*/
 
 }
 
@@ -494,24 +494,27 @@ input:focus {
     height: 100%;
     text-align: center;
     color: var(--white);
+    font-size: 2rem;
+    font-weight: 600;
+    grid-row: 2/span 1;
 }
 
-.playerNameContainer {
+/*.playerNameContainer {
     display: flex;
     margin: auto auto 0 auto;
     width: 100%;
     height: 1em;
-    font-size: 29px;
-}
+    font-size: 2rem;
+}*/
 
 #leftUserName {
-    grid-row: 2/span 1;
-    grid-column: 1/span 1;
+    /* grid-row: 2/span 1;
+    grid-column: 1/span 1; */
 }
 
 #rightUserName {
-    grid-row: 2/span 1;
-    grid-column: 3/span 1;
+    /* grid-row: 2/span 1;
+    grid-column: 3/span 1; */
 }
 .can-drop {
     background-color: rgba(0,124,0,0.4);
@@ -622,12 +625,14 @@ input:focus {
     grid-column: 1/span 2;
     grid-row: 1/ span 1;
 }
-}
 
-#cardsToTake > #cardContainer {
+#cardsToTake #cardContainer {
     margin: .1em;
     box-shadow: 0.5em 0 1em var(--black);
     margin-left: 10px;
+}
+
+#cardsToTake > #cardContainer {
 }
 
     #cardsToTake > #cardContainer > .cardColorContainer {
@@ -706,7 +711,7 @@ input:focus {
     grid-row: 3/span 1;
     grid-column: 1/span 3;
     display: grid;
-    grid-template-columns: 20% 60% 20%;
+    grid-template-columns: 10em auto 10em;
     margin: 0 auto;
     border-radius: 12em;
 }
@@ -714,11 +719,9 @@ input:focus {
 .otherPlayer {
     width: 100%;
     position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100%;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 10% 2rem auto;
 }
 
     .otherPlayer > .otherPlayerHand > #cardContainer {
@@ -735,10 +738,19 @@ input:focus {
         position: relative;
         margin: 0;
         padding: 0;
-        box-shadow: 0.5em 0 1em var(--black); 
     }
     .otherPlayer > .otherPlayerHand > #cardContainer:not(:first-child) {
         margin-top: -4.5em;
+    }
+
+    #rightPlayer #cardContainer {
+        float: left;
+        box-shadow: -0.5em 0 1em var(--black);
+    }
+
+    #leftPlayer #cardContainer {
+        float: right;
+        box-shadow: 0.5em 0 1em var(--black);
     }
 
 .otherPlayerHand {
