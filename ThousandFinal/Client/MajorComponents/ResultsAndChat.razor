@@ -20,7 +20,7 @@
         {
             if (message.GeneratedFromServer)
             {
-                <div class="message" id="serverMessage">@message.Text</div>
+                <div class="message" id="serverMessage">@((MarkupString)message.Text)</div>
             }
             else if (message.AuthorName == UserName)
             {
