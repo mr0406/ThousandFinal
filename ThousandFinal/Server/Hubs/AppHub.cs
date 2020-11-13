@@ -315,7 +315,7 @@ namespace ThousandFinal.Server.Hubs
             {
                 if (!user.Value.IsReady)
                 {
-                    info += $" </br> <span> {user.Value.Name} </span> is not ready";
+                    info += $" <br/> <span> {user.Value.Name} </span> is not ready";
                 }
             }
             return info;
