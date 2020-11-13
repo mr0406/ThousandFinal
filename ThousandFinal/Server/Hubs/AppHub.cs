@@ -119,10 +119,14 @@ namespace ThousandFinal.Server.Hubs
             string roomName = user_room[Context.ConnectionId];
             string userName = rooms[roomName].Users[Context.ConnectionId].Name;
 
+            if (rooms[roomName].gameService != null) //it means game started
+            {
+                SetUsersInRoomInactive(roomName);
+            }
+
             rooms[roomName].DeleteGame();
             rooms[roomName].Users.Remove(Context.ConnectionId);
             user_room.Remove(Context.ConnectionId);
-            SetUsersInRoomInactive(roomName);
 
             await SendUsers(roomName);
             await SendGameDelete(roomName);

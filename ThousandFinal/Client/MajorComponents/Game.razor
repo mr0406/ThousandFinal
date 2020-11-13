@@ -140,8 +140,11 @@
     {
         hubConnection.On(ServerToClient.RECEIVE_GAME_DELETE, () =>
         {
-            IsReady = false;
-            GameStarted = false;
+            if(GameStarted)
+            {
+                IsReady = false;
+                GameStarted = false;
+            }
             StateHasChanged();
         });
 
@@ -190,12 +193,12 @@
     {
         if(IsReady)
         {
-            Console.WriteLine("Button ON");
+            Console.WriteLine("StartButton ON");
             return false;
         }
         else
         {
-            Console.WriteLine("Button OFF");
+            Console.WriteLine("StartButton OFF");
             return true;
         }
     }
@@ -250,6 +253,7 @@
     public async Task CheckBoxClick()
     {
         IsReady = !IsReady;
+        Console.WriteLine($"ready: {IsReady}");
         checkBoxDisabled = true;
         StateHasChanged();
 
