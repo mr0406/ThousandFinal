@@ -17,9 +17,9 @@
 
 @media only screen and (max-width: 1800px) {
 
-    .playerNameContainer{
+    /*.playerNameContainer{
         font-size: 23px;
-    }
+    }*/
 
 }
 
@@ -32,19 +32,20 @@ html, body {
     --border: rgba( 0,101,216,1);
     --border_t: rgba(0,101,216,0.5);
     --white: rgb(253, 247, 236);
-    --white_t: rgb(253, 247, 236, 0.8);
+    --white_t: rgb(253, 247, 236, 0.4);
     --black: #0B0500;
     --black_t: rgba(11,5,0,0.35);
     --red: rgba(254, 94, 65, 1);
     --red_t: rgba(254, 94, 65, 0.5);
     --green: rgb(27, 128, 117);
     --green_t: rgba(27,128,117,0.5);
+    --background: linear-gradient(0deg, rgba(21,23,51,1) 10%, rgba(54, 58, 128,1) 80%);
     margin: 0;
     padding: 0;
 }
 
 #loading-1 {
-    background: linear-gradient(0deg, rgba(21,23,51,1) 10%, rgba(54, 58, 128,1) 80%);
+    background: var(--background);
     height: 100vh;
     width: 100vw;
     display: flex;
@@ -67,7 +68,7 @@ html, body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--border);
+    background: var(--white);
     border-radius: 1rem;
 }
 
@@ -90,19 +91,22 @@ button {
     display: block;
     margin: 0 auto;
     outline: 0;
-    border: .13rem var(--border) solid;
+    border: .13rem var(--black_t) solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 button *{
     line-height: 2rem;
 }
 
-button img {
-    height: 1.4rem;
-    margin: .3rem .5rem 0 .3rem;
-    float: right;
-    transition: .2s;
-}
+    button img {
+        height: 1.5rem;
+        margin: auto 0;
+        position: relative;
+        transition: .2s;
+    }
 
 button .not_hover {
     display: inherit;
@@ -119,6 +123,11 @@ button .hover {
         box-shadow: 0 0 0.4rem var(--border);
     }
 
+    button > span {
+        margin: auto;
+        position: relative;
+    }
+
 button:hover .not_hover {
     display: none;
 }
@@ -126,16 +135,25 @@ button:hover .not_hover {
 button:hover .hover {
     display: inherit;
 }
+.singleRoomContainer button:hover {
+    box-shadow: none;
+}
 
-label p{
+#roomCreator button {
+    background-color: var(--white);
+    border: .13rem var(--white_t) solid;
+}
+
+label p {
     margin-left: .5rem;
+    color: var(--white);
 }
 
 input {
     border: none;
     border-bottom: var(--white) solid .2rem;
     border-radius: 1rem;
-    background-color: var(--white_t);
+    background-color: var(--white);
     padding: 1rem;
     margin: 0 0 .3rem 0;
     width: 100%;
@@ -169,16 +187,15 @@ input:focus {
     min-height: 300px;
     width: 70%;
     min-width: 400px;
-    padding: 2rem;
+    padding: 1rem;
     border-radius: 1rem;
-    border: .5rem var(--border) solid;
-    box-shadow: 0 0 1rem var(--border);
+    border: .3rem var(--white) dashed;
+    box-shadow: 0 0 1rem var(--border_t);
     color: var(--white);
     top: 50%;
     left: 50%;
     position: absolute;
     transform: translate(-50%, -50%);
-    background-color: var(--main);
     display: grid;
     grid-template-columns: 35% 65%;
     grid-template-rows: 9rem 20% auto;
@@ -193,7 +210,6 @@ input:focus {
 }
 
 #roomBrowser {
-    padding: 1rem 0;
     overflow-y: auto;
     overflow-x: hidden;
     grid-row: 1 / span 3;
@@ -211,9 +227,9 @@ input:focus {
     align-items: center;
     height: 150px;
     width: 100%;
-    background-color: var(--side);
+    background-color: var(--white);
     border-radius: 10px;
-    box-shadow: 0 0 .5rem var(--border);
+    box-shadow: 0 0 .5rem var(--border_t);
     transition: .2s;
     padding: 1rem;
     margin: 1rem 0;
@@ -235,8 +251,14 @@ input:focus {
     margin: 0;
     font-size: larger;
     font-weight: bolder;
-    box-shadow: -.5rem 1rem .5rem var(--side_t);
 }
+
+    .singleRoomContainer button:hover {
+        background-color: var(--black_t);
+        color: var(--white);
+        border: .2rem var(--black_t) solid;
+        box-shadow: 0 0 0.4rem var(--black);
+    }
 
 .gameInfo {
     width: 100%;
@@ -244,12 +266,12 @@ input:focus {
     grid-row: 2 / span 1;
     grid-column: 1;
     padding: 1rem;
-    background-color: var(--side);
-    border: .3rem var(--border) solid;
+    background-color: var(--white);
+    border: .3rem var(--white_t) solid;
     border-radius: .5rem;
-    box-shadow: 0 0 .5rem var(--border);
+    box-shadow: 0 0 .5rem var(--border_t);
     text-align: justify;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 .aboutUs {
@@ -258,12 +280,12 @@ input:focus {
     grid-row: 3 /span 1;
     grid-column: 1;
     padding: 1rem;
-    background-color: var(--side);
-    border: .3rem var(--border) solid;
+    background-color: var(--white);
+    border: .3rem var(--white_t) solid;
     border-radius: .5rem;
-    box-shadow: 0 0 .5rem var(--border);
+    box-shadow: 0 0 .5rem var(--border_t);
     text-align: justify;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 .aboutUs span {
@@ -472,24 +494,27 @@ input:focus {
     height: 100%;
     text-align: center;
     color: var(--white);
+    font-size: 2rem;
+    font-weight: 600;
+    grid-row: 2/span 1;
 }
 
-.playerNameContainer {
+/*.playerNameContainer {
     display: flex;
     margin: auto auto 0 auto;
     width: 100%;
     height: 1em;
-    font-size: 29px;
-}
+    font-size: 2rem;
+}*/
 
 #leftUserName {
-    grid-row: 2/span 1;
-    grid-column: 1/span 1;
+    /* grid-row: 2/span 1;
+    grid-column: 1/span 1; */
 }
 
 #rightUserName {
-    grid-row: 2/span 1;
-    grid-column: 3/span 1;
+    /* grid-row: 2/span 1;
+    grid-column: 3/span 1; */
 }
 .can-drop {
     background-color: rgba(0,124,0,0.4);
@@ -600,12 +625,14 @@ input:focus {
     grid-column: 1/span 2;
     grid-row: 1/ span 1;
 }
-}
 
-#cardsToTake > #cardContainer {
+#cardsToTake #cardContainer {
     margin: .1em;
     box-shadow: 0.5em 0 1em var(--black);
     margin-left: 10px;
+}
+
+#cardsToTake > #cardContainer {
 }
 
     #cardsToTake > #cardContainer > .cardColorContainer {
@@ -684,7 +711,7 @@ input:focus {
     grid-row: 3/span 1;
     grid-column: 1/span 3;
     display: grid;
-    grid-template-columns: 20% 60% 20%;
+    grid-template-columns: 10em auto 10em;
     margin: 0 auto;
     border-radius: 12em;
 }
@@ -692,11 +719,9 @@ input:focus {
 .otherPlayer {
     width: 100%;
     position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100%;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 10% 2rem auto;
 }
 
     .otherPlayer > .otherPlayerHand > #cardContainer {
@@ -713,10 +738,19 @@ input:focus {
         position: relative;
         margin: 0;
         padding: 0;
-        box-shadow: 0.5em 0 1em var(--black); 
     }
     .otherPlayer > .otherPlayerHand > #cardContainer:not(:first-child) {
         margin-top: -4.5em;
+    }
+
+    #rightPlayer #cardContainer {
+        float: left;
+        box-shadow: -0.5em 0 1em var(--black);
+    }
+
+    #leftPlayer #cardContainer {
+        float: right;
+        box-shadow: 0.5em 0 1em var(--black);
     }
 
 .otherPlayerHand {
@@ -821,7 +855,7 @@ input:focus {
     grid-row: 1/3;
     grid-column-start: 2;
     display: grid;
-    grid-template-rows: 9em auto 8.8em;
+    grid-template-rows: 9em auto 5.7em;
     grid-template-columns: 100%;
     border-left: solid;
 }
@@ -877,11 +911,11 @@ ul.playerList {
     display: table;
     flex-direction: column;
     background-color: var(--main_t);
-    color: white;
+    color: var(--white);
 }
 
 #serverMessage {
-    background-color: var(--red);
+    background-color: var(--red_t);
     width: 100%;
     max-width: initial;
     border-radius: 1em;
@@ -895,42 +929,51 @@ ul.playerList {
     float: right;
     border-radius: 1em 1em 0 1em;
     padding-right: 1em;
-    background-color: var(--main);
+    background-color: rgba(11,5,0,0.5);
 }
 
 #othersMessage {
     text-align: left;
     float: left;
-    background-color: var(--border);
+    background-color: var(--white_t);
     border-radius: 1em 1em 1em 0;
     padding-left: 1em;
 }
 
+.messageNickaname{
+    font-weight: 600;
+}
+
 #chatContainer > #form {
     grid-row: 3;
+    display: flex;
 }
 
-#chatContainer > #form button {
-    box-shadow: none;
-}
+    #chatContainer > #form button {
+        box-shadow: none;
+        width: 40px;
+        margin: 0 0.5em auto 0.5em;
+        border: .13rem var(--border) solid;
+        display: flex;
+        justify-content: center;
+    }
 
-#chatContainer > #form label {
-    display: block;
-    max-width: 90%;
-    margin: .5rem auto;
-}
+    #chatContainer > #form label {
+        display: block;
+        width: 82%;
+        margin: 0 0 auto 0.5em;
+    }
 
-#chatContainer > #form input {
-    border: .2rem solid var(--border);
-    border-radius: 1em;
-    background-color: var(--white);
-    height: 3em;
-    width: 100%;
-}
+    #chatContainer > #form input {
+        border: .2rem solid var(--border);
+        border-radius: 1em;
+        background-color: var(--white);
+        height: 3em;
+        width: 100%;
+    }
 
 #chatContainer > #form input:focus {
     border: .2rem solid var(--border);
-    background-color: var(--white_t);
 }
 
 /* Koniec stylu Chat.razor */
