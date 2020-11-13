@@ -9,18 +9,15 @@
                 <div id="readyScreen">
                     <h2>Are you ready? </h2>
                     <label id="switch">
-                        <input type="checkbox" class="slider" @value="@IsReady" @onchange="() => CheckBoxClick()" disabled="@checkBoxDisabled" />
+                        <input type="checkbox" class="slider" @onchange="() => CheckBoxClick()" disabled="@checkBoxDisabled" />
                         <span class="slider"></span>
                     </label>
-                    <button @onclick="TryStartGame">Start</button>
+                    <button @onclick="TryStartGame" disabled="@IsStartGameButtonDisabled()">Start</button>
                 </div>
             </div>
         }
         else
-        {
-
-           
-
+        {       
             <div class="activeBox">
                 @if (AmIActive())
                 {
@@ -183,7 +180,25 @@
         });
     }
 
-    void TryStartGame() => hubConnection.SendAsync(ClientToServer.TRY_START_GAME);
+    void TryStartGame()
+    {
+        Console.WriteLine("TryStartGame clicked");
+        hubConnection.SendAsync(ClientToServer.TRY_START_GAME);
+    }
+
+    public bool IsStartGameButtonDisabled()
+    {
+        if(IsReady)
+        {
+            Console.WriteLine("Button ON");
+            return false;
+        }
+        else
+        {
+            Console.WriteLine("Button OFF");
+            return true;
+        }
+    }
 
     public async Task PlayCard()
     {
@@ -234,6 +249,7 @@
 
     public async Task CheckBoxClick()
     {
+        IsReady = !IsReady;
         checkBoxDisabled = true;
         StateHasChanged();
 
