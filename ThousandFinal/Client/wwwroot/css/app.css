@@ -8,10 +8,8 @@
 /* Div class "main", is the whole website, besides errors. Don't use any styles on it.
  * Div class "content px-4" is the container for actual content. Don't put any style on it either.
  * 
- * added classes: s
- * form, 
- * added IDs:
- * loginContainer, roomBrowser, singleRoomContainer, roomCreator
+ * added classes: 
+ * showIfDraggable 
 */
 /* Login.razor style */
 
@@ -506,25 +504,9 @@ input:focus {
     font-size: 2rem;
     font-weight: 600;
     grid-row: 2/span 1;
+    grid-column: 1/span 1;
 }
 
-/*.playerNameContainer {
-    display: flex;
-    margin: auto auto 0 auto;
-    width: 100%;
-    height: 1em;
-    font-size: 2rem;
-}*/
-
-#leftUserName {
-    /* grid-row: 2/span 1;
-    grid-column: 1/span 1; */
-}
-
-#rightUserName {
-    /* grid-row: 2/span 1;
-    grid-column: 3/span 1; */
-}
 .can-drop {
     background-color: rgba(0,124,0,0.4);
     width: 100%;
@@ -775,6 +757,14 @@ input:focus {
 
 #leftPlayer {
     grid-column: 1/ span 1;
+}
+
+.showIfDraggable {
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    grid-column: 1/span 1;
+    grid-row: 3/span 1;
 }
 
 #table {
