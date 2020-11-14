@@ -39,7 +39,9 @@
                             <div class="playerName">@leftUserName</div>
 
                         <!-- </div> -->
-                        <OtherPlayerHand UserName="@leftUserName" numberOfCards="@leftUserNumberOfCards"></OtherPlayerHand>
+                            
+                                <OtherPlayerHand UserName="@leftUserName" numberOfCards="@leftUserNumberOfCards"></OtherPlayerHand>
+                            
                     </div>
                 }
                 <div id="middleTableSection">
@@ -85,6 +87,7 @@
                         </div>
                     }
                 </div>
+
                 @if (rightUserName != null)
                 {
                     <div class="otherPlayer" id="rightPlayer">

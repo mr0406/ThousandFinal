@@ -510,13 +510,11 @@ input:focus {
 .can-drop {
     background-color: rgba(0,124,0,0.4);
     width: 100%;
-    height: 100%;
 }
 
 .no-drop {
     background-color: rgba(124,0,0,0.4);
     width: 100%;
-    height: 100%;
 }
 
 #cardContainer {

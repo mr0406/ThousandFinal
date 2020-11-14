@@ -1,20 +1,22 @@
-﻿<div ondragover="event.preventDefault();"
+﻿<!-- <div ondragover="event.preventDefault();"
      ondragstart="event.dataTransfer.setData('', event.target.id);"
-     @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass showIfDraggable"></div>
+     @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass showIfDraggable"></div> -->
 
-<div class="otherPlayerHand">
+<div ondragover="event.preventDefault();"
+     ondragstart="event.dataTransfer.setData('', event.target.id);"
+     @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass otherPlayerHand">
 
     @for (int i = 0; i < @numberOfCards; i++)
     {
         <div id="cardContainer">
 
-            <div class="cardColorContainer">
+            <!-- <div class="cardColorContainer">
 
-                <div class="cardColorText"></div>
+            <div class="cardColorText"></div>
 
-                <img class="smallCardColorImage" />
+            <img class="smallCardColorImage" />
 
-            </div>
+        </div> 
 
             <img class="bigCardColorImage" />
 
@@ -24,7 +26,7 @@
 
                 <div class="cardColorText"></div>
 
-            </div>
+            </div> -->
         </div>
     }
 </div>
