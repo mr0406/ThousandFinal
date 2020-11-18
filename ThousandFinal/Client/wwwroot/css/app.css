@@ -530,7 +530,7 @@ input:focus {
     clear: both;
     position: relative;
     margin-left: 10px;
-    padding: 0;
+    padding: 1em;
 }
 
 .cardColorContainer {
@@ -621,12 +621,9 @@ input:focus {
     margin-left: 10px;
 }
 
-#cardsToTake > #cardContainer {
-}
-
-    #cardsToTake > #cardContainer > .cardColorContainer {
+    /*#cardsToTake > #cardContainer > .cardColorContainer {
         padding: 0.5rem;
-    }
+    }*/
 
 .waitingRoom {
     height: 100%;
@@ -786,7 +783,6 @@ input:focus {
     #playerCardsContainer > #playerCards > #cardContainer {
         box-shadow: -0.5em 0 1em var(--black);
         transition: all .3s ease;
-        padding: 1em;
         margin: 0 0 2em;
     }
 
