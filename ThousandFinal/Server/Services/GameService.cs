@@ -61,6 +61,7 @@ namespace ThousandFinal.Server.Services
         private async Task StartRound()
         {
             cardsToTakeExists = true;
+            mandatorySuit = Suit.None;
             cards = _cardService.DistributeCards(players);
             obligatedPlayer = TurnSystem.ChooseNextObligatedPlayerIndex(obligatedPlayer);
             await StartAuctionPhase();
