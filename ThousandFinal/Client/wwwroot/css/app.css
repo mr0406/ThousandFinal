@@ -465,7 +465,15 @@ input:focus {
         grid-column: 2;
     }
 
+        #readyScreen > button:hover {
+            border-color: var(--black_t);
+            box-shadow: 0 0 .4rem var(--green);
+        }
+
         #readyScreen > button:disabled {
+            cursor: context-menu;
+            box-shadow: none;
+            border: none;
             opacity: .5;
             background-color: var(--red);
         }
@@ -534,7 +542,7 @@ input:focus {
     clear: both;
     position: relative;
     margin-left: 10px;
-    padding: 0;
+    padding: 1em;
 }
 
 .cardColorContainer {
@@ -625,12 +633,9 @@ input:focus {
     margin-left: 10px;
 }
 
-#cardsToTake > #cardContainer {
-}
-
-    #cardsToTake > #cardContainer > .cardColorContainer {
+    /*#cardsToTake > #cardContainer > .cardColorContainer {
         padding: 0.5rem;
-    }
+    }*/
 
 .waitingRoom {
     height: 100%;
@@ -659,10 +664,17 @@ input:focus {
 }
 
 #leaveButton {
+    background-color: var(--white_t);
+    z-index: 10;
+    margin: .5rem 0 0 .5rem;
     grid-column: 1;
     grid-row: 1/span 1;
-    margin: 10px 0 0 10px;
 }
+
+    #leaveButton:hover {
+        border-color: var(--red);
+        box-shadow: 0 0 0.4rem var(--red);
+    }
 
 #mandatoryContainer {
     height: 6.5em;
@@ -790,7 +802,6 @@ input:focus {
     #playerCardsContainer > #playerCards > #cardContainer {
         box-shadow: -0.5em 0 1em var(--black);
         transition: all .3s ease;
-        padding: 1em;
         margin: 0 0 2em;
     }
 
@@ -919,7 +930,7 @@ ul.playerList {
     background-color: var(--red_t);
     width: 100%;
     max-width: initial;
-    border-radius: 1em;
+    border-radius: .5em;
     text-align: center;
     font-size: smaller;
     color: var(--white);

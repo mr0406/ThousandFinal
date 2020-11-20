@@ -1,7 +1,11 @@
 ﻿<CascadingValue Value="this">
     <div id="gameContainer">
 
-        <button id="leaveButton" style="z-index: 10" @onclick="LeaveRoom">Leave</button>
+        <button id="leaveButton" @onclick="LeaveRoom">
+            <span>Leave</span>
+            <img class="not_hover" src="https://img.icons8.com/pastel-glyph/100/000000/exit--v1.png" />
+            <img class="hover" src="https://img.icons8.com/pastel-glyph/64/000000/exit--v2.png" />
+        </button>
 
 
         @if (!GameStarted)
