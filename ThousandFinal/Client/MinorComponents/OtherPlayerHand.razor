@@ -2,11 +2,13 @@
      ondragstart="event.dataTransfer.setData('', event.target.id);"
      @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass showIfDraggable"></div> -->
 
-<div ondragover="event.preventDefault();"
-     ondragstart="event.dataTransfer.setData('', event.target.id);"
-     @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass otherPlayerHand">
+<div class="otherPlayerHand">
 
-    <div class="onhover">
+    <div class="otherPlayerCards">
+
+     <div ondragover="event.preventDefault();"
+     ondragstart="event.dataTransfer.setData('', event.target.id);"
+     @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass onhover"></div>
 
         @for (int i = 0; i < @numberOfCards; i++)
         {
