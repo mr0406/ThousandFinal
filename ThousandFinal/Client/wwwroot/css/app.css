@@ -722,7 +722,7 @@ input:focus {
     grid-row: 3/span 1;
     grid-column: 1/span 3;
     display: grid;
-    grid-template-columns: 10em auto 10em;
+    grid-template-columns: 12em auto 12em;
     margin: 0 auto;
     border-radius: 12em;
 }
@@ -771,10 +771,8 @@ input:focus {
 
 .otherPlayerHand {
     grid-row: 3/span 1;
-    height: auto;
-    width: auto;
-    align-content: center;
-    display: grid;
+    position: absolute;
+    top: 4.5em;
 }
 
 #rightPlayer {
@@ -881,7 +879,8 @@ input:focus {
     display: grid;
     grid-template-rows: 9em auto 5.7em;
     grid-template-columns: 100%;
-    border-left: solid;
+    border-left: dashed;
+    border-color: var(--black_t);
 }
 
 #chatContainer h1 {
@@ -937,18 +936,24 @@ li.playerList {
     padding: .5rem;
     display: table;
     flex-direction: column;
-    background-color: var(--main_t);
     color: var(--white);
 }
 
+#serverMessage:first-child {
+    border-width: 3px 0 3px 0;
+}
+
 #serverMessage {
-    background-color: var(--red_t);
     width: 100%;
     max-width: initial;
-    border-radius: .5em;
     text-align: center;
-    font-size: smaller;
     color: var(--white);
+    border-style: dashed;
+    border-color: var(--black_t);
+    border-width: 0 0 3px 0;
+    padding: 1px;
+    font-size: 18px;
+    font-weight: 900;
 }
 
 #myMessage {
@@ -956,13 +961,13 @@ li.playerList {
     float: right;
     border-radius: 1em 1em 0 1em;
     padding-right: 1em;
-    background-color: rgba(11,5,0,0.5);
+    background-color: #6168E8;
 }
 
 #othersMessage {
     text-align: left;
     float: left;
-    background-color: var(--white_t);
+    background-color: #363CA8;
     border-radius: 1em 1em 1em 0;
     padding-left: 1em;
 }
