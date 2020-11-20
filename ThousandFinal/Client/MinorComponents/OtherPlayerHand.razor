@@ -6,29 +6,33 @@
      ondragstart="event.dataTransfer.setData('', event.target.id);"
      @ondrop="HandleDrop" @ondragenter="HandleEnter" @ondragleave="HandleLeave" class="@dropClass otherPlayerHand">
 
-    @for (int i = 0; i < @numberOfCards; i++)
-    {
-        <div id="cardContainer">
+    <div class="onhover">
 
-            <!-- <div class="cardColorContainer">
+        @for (int i = 0; i < @numberOfCards; i++)
+        {
+            <div id="cardContainer">
 
-            <div class="cardColorText"></div>
-
-            <img class="smallCardColorImage" />
-
-        </div> 
-
-            <img class="bigCardColorImage" />
-
-            <div class="cardColorContainer">
-
-                <img class="smallCardColorImage" />
+                <!-- <div class="cardColorContainer">
 
                 <div class="cardColorText"></div>
 
-            </div> -->
-        </div>
-    }
+                <img class="smallCardColorImage" />
+
+            </div>
+
+                <img class="bigCardColorImage" />
+
+                <div class="cardColorContainer">
+
+                    <img class="smallCardColorImage" />
+
+                    <div class="cardColorText"></div>
+
+                </div> -->
+
+            </div>
+        }
+    </div>
 </div>
 
 @code {

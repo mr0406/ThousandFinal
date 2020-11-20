@@ -517,6 +517,10 @@ input:focus {
     width: 100%;
 }
 
+.onhover {
+    background-color: rgba(124,0,0,0.4);
+}
+
 #cardContainer {
     height: 10em;
     width: 6em;
@@ -728,9 +732,9 @@ input:focus {
         margin: 0;
         padding: 0;
     }
-    .otherPlayer > .otherPlayerHand > #cardContainer:not(:first-child) {
-        margin-top: -4.5em;
-    }
+        .otherPlayer > .otherPlayerHand > #cardContainer:nth-child(1) {
+            margin-top: -4.5em;
+        }
 
     #rightPlayer #cardContainer {
         float: left;
@@ -743,10 +747,10 @@ input:focus {
     }
 
 .otherPlayerHand {
-    width: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    position: absolute;
+    grid-row: 3/span 1;
+    height: auto;
+    width: auto;
+    align-content: center;
 }
 
 #rightPlayer {
