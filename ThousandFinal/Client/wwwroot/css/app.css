@@ -771,10 +771,18 @@ input:focus {
     box-shadow: -0.5em 0 1em var(--black);
 }
 
+    #rightPlayer .otherPlayerHand {
+        right: .5rem;
+    }
+
 #leftPlayer #cardContainer {
     float: right;
     box-shadow: 0.5em 0 1em var(--black);
 }
+
+    #leftPlayer .otherPlayerHand {
+        left: .5rem;
+    }
 
 .otherPlayerHand {
     grid-row: 3/span 1;
