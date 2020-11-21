@@ -3,14 +3,11 @@
     <div class="shadow"></div">
 
     <div class="chooseNickname">
-        <header>
-            <div class="left">
-                <span>thousand</span>final
-            </div>
-            <button @onclick="CloseJoinWindow">
-                x
-            </button>
-        </header>
+ 
+        <button @onclick="CloseJoinWindow">
+            x
+        </button>
+
         <div class="nicknameFormContainer">
             <span>Enter your nickname</span>
             <input @bind="userName" @onkeyup="@JoinPressKey" placeholder="Nickname" />

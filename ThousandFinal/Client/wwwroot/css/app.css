@@ -291,55 +291,27 @@ input:focus {
 }
 
 .chooseNickname {
-    border-radius: 0 0 1rem 1rem;
-    background-color: var(--black);
-    border: .2rem var(--border) solid;
+    border-radius: 1rem;
+    background-color: rgba(21,23,51,1);
+    border: .2rem var(--black_t) solid;
     color: var(--white);
-    box-shadow: 0 0 .5rem var(--border);
     position: absolute;
     height: 300px;
-    margin-top: -150px;
-    margin-left: -181px;
     top: 50%;
     left: 50%;
     z-index: 10;
+    transform: translate(-50%, -50%);
 }
+    .chooseNickname > button:not(first-child) {
+        background-color: var(--white_t);
+        width: 85%;
+    }
 
-.chooseNickname header {
-    height: 2rem;
-    padding: .5rem 2rem;
-    font-size: .8rem;
-    font-weight: bold;
-    letter-spacing: .3rem;
-    text-transform: uppercase;
-    background-color: var(--border);
-}
-
-.chooseNickname header > .left > span {
-    color: var(--side);
-}
-
-.chooseNickname header button {
-    float: right;
-    background-color: var(--main);
-    color: var(--red);
-    font-size: 1.5rem;
-    width: 2rem;
-    height: 2rem;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    top: 0;
-    right: 0;
-    border-radius: 0;
-    position: absolute;
-}
-
-.chooseNickname header button:hover {
-    background-color: var(--white);
-    font-weight: 600;
-    box-shadow: none;
-}
+    .chooseNickname > button:first-child {
+        width: 10%;
+        float: right;
+        margin: 10px;
+    }
 
 .nicknameFormContainer {
     padding: 1rem 2rem;
@@ -350,11 +322,6 @@ input:focus {
     color: var(--white);
     text-align: left;
     margin-left: .5rem;
-}
-
-.chooseNickname > button {
-    background-color: var(--white_t);
-    width: 85%;
 }
 
 .chooseNickname > button:hover {
@@ -730,12 +697,25 @@ input:focus {
 .testingDiv {
     width: 100%;
 }
+
+@keyframes chooseNicknameAnimation {
+    0% {
+        background-color: rgba(0,0,0,0);
+    }
+
+    100% {
+        background-color: rgba(11,5,0,0.6);
+    }
+}
+
 .shadow {
     height: 100%;
     width: 100%;
     position: absolute;
-    background-color: rgba(11,5,0,0.9);
     z-index: 9;
+    animation-name: chooseNicknameAnimation;
+    background-color: rgba(11,5,0,0.6);
+    animation-duration: 0.5s;
 }
 
 .otherPlayer {
