@@ -9,7 +9,6 @@ namespace ThousandFinal.Server.Services
     public interface ICardService
     {
         List<CardModel> DistributeCards(List<UserModel> players);
-        List<CardModel> GiveCardsToAuctionWinner(List<CardModel> cards, 
-                List<UserModel> players, int auctionWinnerIndex);
+        List<CardModel> GiveCardsToAuctionWinner(List<CardModel> cards, List<UserModel> players, int auctionWinnerIndex);
     }
 }

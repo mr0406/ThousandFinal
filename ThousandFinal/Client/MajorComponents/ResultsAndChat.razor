@@ -85,6 +85,8 @@
     async Task KeyPress(KeyboardEventArgs e)
     {
         if (e.Key == "Enter")
+        {
             await Send();
+        }
     }
 }

@@ -195,7 +195,7 @@ namespace ThousandFinal.Server.Hubs
         #region Waiting room actions 
         public async Task CreateRoom(string roomName)
         {
-            rooms.Add(roomName, new Room()); //tworzymy pokoj bez gry w środku
+            rooms.Add(roomName, new Room()); //create room without game in
             await SendRooms();
         }
 

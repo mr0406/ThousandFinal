@@ -293,38 +293,25 @@
     public bool CanPlayThisCard()
     {
         if (PayloadCard.Status != Status.InHand)
-        {
             return false;
-        }
 
         if(NoCardOnBoard())
-        {
             return true;
-        }
 
         if (IsBetterAsSameSuit(PayloadCard))
-        {
             return true;
-        }
 
         if (!CanPlayBetterAsSameSuit() && IsSameSuit(PayloadCard))
-        {
             return true;
-        }
 
         if (!CanPlaySameSuit() && IsBetterBecouseOfMandatory(PayloadCard))
-        {
             return true;
-        }
+
         if (!CanPlayBetterAsSameSuit() && !CanPlayBetterBecouseOfMandatory() && IsMandatorySuit(PayloadCard))
-        {
             return true;
-        }
 
         if(!CanPlaySameSuit() && !CanPlayMandatorySuit())
-        {
             return true;
-        }
 
         return false;
     }
@@ -332,16 +319,12 @@
     public bool CanPlayMandatorySuit()
     {
         if (mandatorySuit == Suit.None)
-        {
             return false;
-        }
 
         foreach (var checkedCard in playerCards)
         {
             if (checkedCard.Suit == mandatorySuit)
-            {
                 return true;
-            }
         }
         return false;
     }
@@ -420,17 +403,12 @@
         foreach (var card in playerCards)
         {
             if (IsBetterBecouseOfMandatory(card))
-            {
                 return true;
-            }
         }
         return false;
     }
 
     public string getWinnerName() => Users.SingleOrDefault(x => x.Points >= 1000).Name;
 
-    async Task LeaveRoom()
-    {
-        await hubConnection.SendAsync(ClientToServer.LEAVE_ROOM);
-    }
+    async Task LeaveRoom() => await hubConnection.SendAsync(ClientToServer.LEAVE_ROOM);
 }

@@ -10,7 +10,7 @@ namespace ThousandFinal.Shared.Models
 
         public bool IsReady { get; set; } = false;
         public bool GiveUpAuction { get; set; } = false;
-        public int Points { get; set; } = 0; //change to 0
+        public int Points { get; set; } = 0; 
         public int PointsInCurrentRound { get; set; } = 0;
         public int PointsToAchieve { get; set; } = 0;
 

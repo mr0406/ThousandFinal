@@ -13,7 +13,6 @@ namespace ThousandFinal.Server.Hubs
         Task ReceiveGameStarted();
         Task ReceiveGameDelete();
 
-        //Rooms
         Task ReceiveJoinRoom(string userName);
         Task ReceiveRooms(List<RoomDTO> roomDTOs);
     }
