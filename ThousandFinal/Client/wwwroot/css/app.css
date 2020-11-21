@@ -730,6 +730,13 @@ input:focus {
 .testingDiv {
     width: 100%;
 }
+.shadow {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-color: rgba(11,5,0,0.9);
+    z-index: 9;
+}
 
 .otherPlayer {
     width: 100%;

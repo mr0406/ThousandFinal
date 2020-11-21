@@ -1,60 +1,64 @@
-﻿<div id="loginContainer">
+﻿@if (choosenRoom != null)
+{
+    <div class="shadow"></div">
+
+    <div class="chooseNickname">
+        <header>
+            <div class="left">
+                <span>thousand</span>final
+            </div>
+            <button @onclick="CloseJoinWindow">
+                x
+            </button>
+        </header>
+        <div class="nicknameFormContainer">
+            <span>Enter your nickname</span>
+            <input @bind="userName" @onkeyup="@JoinPressKey" placeholder="Nickname" />
+        </div>
+        <button @onclick="TryJoin"><span>Join</span><img class="not_hover" src="https://img.icons8.com/ios-filled/50/000000/enter-2.png" /><img class="hover" src="https://img.icons8.com/ios/50/000000/enter-2.png" /></button>
+    </div>
+}
+
+<div id="loginContainer">
 
     <div id="roomCreator">
         <label>
             <p>Room:</p>
-            <input @bind="newRoomName" @onkeyup="@AddRoomPressKey" placeholder="Room Name"/>
-            <button @onclick="@AddRoom"><span>Add</span><img class="not_hover" src="https://img.icons8.com/material-rounded/24/000000/add-column.png"/><img class="hover" src="https://img.icons8.com/material-outlined/24/000000/add-column.png"/></button>
+            <input @bind="newRoomName" @onkeyup="@AddRoomPressKey" placeholder="Room Name" />
+            <button @onclick="@AddRoom"><span>Add</span><img class="not_hover" src="https://img.icons8.com/material-rounded/24/000000/add-column.png" /><img class="hover" src="https://img.icons8.com/material-outlined/24/000000/add-column.png" /></button>
         </label>
     </div>
 
-        @if (choosenRoom != null)
+
+
+    <div class="gameInfo">
+        <div>
+            This is a game called: Russian Schnapsed or Thousand Schnapsen.
+            You can read more on: <a href="https://en.wikipedia.org/wiki/Russian_Schnapsen" target="_blank">Game Info</a>
+        </div>
+    </div>
+
+    <div class="aboutUs">
+        <div>Created by polish IT students: </div>
+        <div><span>Marcin Rakowski</span> - founder, backend (<a href="https://github.com/mr0406" target="_blank">github</a>) </div>
+        <div><span>Agata Wojciechowska</span> - frontend (<a href="https://github.com/AgataWojciech" target="_blank">github</a>) </div>
+        <div><span>Michał Kelman</span> - frontend (<a href="https://github.com/fonvi" target="_blank">github</a>) </div>
+        <br />
+        <div>Used technologies: .NET Core, C#, Blazor WebAssembly, SignalR, HTML5, CSS3</div>
+        <div>Icons from <a href="https://icons8.com/icons">icons8</a></div>
+    </div>
+
+    <div id="roomBrowser">
+        @for (int i = 0; i < roomDTOs.Count(); i++)
         {
-            <div class="chooseNickname">
-                <header>
-                    <div class="left">
-                        <span>thousand</span>final
-                    </div>
-                    <button @onclick="CloseJoinWindow">
-                        x
-                    </button>
-                </header>
-                <div class="nicknameFormContainer">
-                    <span>Enter your nickname</span>
-                    <input @bind="userName" @onkeyup="@JoinPressKey" placeholder="Nickname" />
-                </div>
-                <button @onclick="TryJoin"><span>Join</span><img class="not_hover" src="https://img.icons8.com/ios-filled/50/000000/enter-2.png"/><img class="hover" src="https://img.icons8.com/ios/50/000000/enter-2.png"/></button>
+            int temp = i;
+            <div class="singleRoomContainer">
+                <div class="roomName"> @roomDTOs[i].Name </div>
+                <div class="numOfUsers"> @roomDTOs[i].NumOfUsers/3 </div>
+                <button @onclick="@(() => (ChooseRoom(temp)))">Choose</button>
             </div>
         }
-
-        <div class="gameInfo">
-            <div>
-                This is a game called: Russian Schnapsed or Thousand Schnapsen.
-                You can read more on: <a href="https://en.wikipedia.org/wiki/Russian_Schnapsen" target="_blank">Game Info</a>
-            </div>
-        </div>
-
-        <div class="aboutUs">
-            <div>Created by polish IT students: </div>
-            <div><span>Marcin Rakowski</span> - founder, backend (<a href="https://github.com/mr0406" target="_blank">github</a>) </div>
-            <div><span>Agata Wojciechowska</span> - frontend (<a href="https://github.com/AgataWojciech" target="_blank">github</a>) </div>
-            <div><span>Michał Kelman</span> - frontend (<a href="https://github.com/fonvi" target="_blank">github</a>) </div>
-            <br/>
-            <div>Used technologies: .NET Core, C#, Blazor WebAssembly, SignalR, HTML5, CSS3</div>
-            <div>Icons from <a href="https://icons8.com/icons">icons8</a></div>
-        </div>
-
-        <div id="roomBrowser">
-            @for (int i = 0; i < roomDTOs.Count(); i++)
-            {
-                int temp = i;
-                <div class="singleRoomContainer">
-                    <div class="roomName"> @roomDTOs[i].Name </div>
-                    <div class="numOfUsers"> @roomDTOs[i].NumOfUsers/3 </div>
-                    <button @onclick="@(() => (ChooseRoom(temp)))">Choose</button>
-                </div>
-            }
-        </div>
+    </div>
 </div>
 
 @code {
@@ -94,13 +98,13 @@
     {
         userName = userName.Trim();
 
-        if(String.IsNullOrWhiteSpace(userName))
+        if (String.IsNullOrWhiteSpace(userName))
         {
             //empty nick
             return;
         }
 
-        if(userName.Length > MAX_NICK_LENGTH)
+        if (userName.Length > MAX_NICK_LENGTH)
         {
             //too long nick
             return;
@@ -117,7 +121,7 @@
 
     async Task AddRoom()
     {
-        if(roomDTOs.Count() >= MAX_NUM_OF_ROOMS)
+        if (roomDTOs.Count() >= MAX_NUM_OF_ROOMS)
         {
             //too many rooms
             return;
@@ -125,13 +129,13 @@
 
         newRoomName = newRoomName.Trim();
 
-        if(String.IsNullOrWhiteSpace(newRoomName))
+        if (String.IsNullOrWhiteSpace(newRoomName))
         {
             //empty room name
             return;
         }
 
-        if(newRoomName.Length > MAX_ROOM_NAME_LENGTH)
+        if (newRoomName.Length > MAX_ROOM_NAME_LENGTH)
         {
             //to long room name
             return;
