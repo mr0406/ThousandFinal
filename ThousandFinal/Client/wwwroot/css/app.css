@@ -694,9 +694,6 @@ input:focus {
     border-radius: 12em;
 }
 
-.testingDiv {
-    width: 100%;
-}
 
 @keyframes chooseNicknameAnimation {
     0% {
@@ -1110,4 +1107,35 @@ li.playerList {
     100% {
         transform: rotate(360deg);
     }
+}
+
+
+.blazored-toast-header button {
+    width: auto;
+    margin: 0;
+}
+
+    .blazored-toast-header button:hover {
+        background-color: initial;
+        color: initial;
+        border: initial;
+        box-shadow: initial;
+    }
+
+.blazored-toast-body .blazored-toast-header h5{
+    margin: 0;
+}
+
+.blazored-toast-body p{
+    margin: 0;
+}
+
+#gameFrame > button {
+    grid-column: 2/span 1;
+}
+
+.testingDiv {
+    width: 100%;
+    grid-column: 2/span 1;
+    grid-row: 1/ span 1;
 }

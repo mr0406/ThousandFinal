@@ -1,9 +1,17 @@
-﻿@if (choosenRoom != null)
+﻿@using Blazored.Toast.Configuration
+@inject IToastService toastService
+<div class="testingDiv">
+    <button @onclick="@(()=> toastService.ShowInfo("Info Message"))">Test Info</button>
+    <button @onclick="@(()=> toastService.ShowError("Info Message"))">Test Error</button>
+    <button @onclick="@(()=> toastService.ShowWarning("Info Message"))">Test Warning</button>
+    <button @onclick="@(()=> toastService.ShowSuccess("Info Message"))">Test Success</button>
+</div>
+@if (choosenRoom != null)
 {
-    <div class="shadow"/>
+    <div class="shadow" />
 
     <div class="chooseNickname">
- 
+
         <button @onclick="CloseJoinWindow">
             x
         </button>
@@ -24,6 +32,8 @@
             <input @bind="newRoomName" @onkeyup="@AddRoomPressKey" placeholder="Room Name" />
             <button @onclick="@AddRoom"><span>Add</span><img class="not_hover" src="https://img.icons8.com/material-rounded/24/000000/add-column.png" /><img class="hover" src="https://img.icons8.com/material-outlined/24/000000/add-column.png" /></button>
         </label>
+
+        
     </div>
 
     <div class="gameInfo">
@@ -55,6 +65,16 @@
         }
     </div>
 </div>
+
+
+
+    <BlazoredToasts Position="ToastPosition.BottomRight"
+                   Timeout="10"
+                   IconType="IconType.FontAwesome"
+                   SuccessClass="success-toast-override"
+                   SuccessIcon="fa fa-thumbs-up"
+                   ErrorIcon="fa fa-bug"
+                   />
 
 @code {
     [CascadingParameter] HubConnection hubConnection { get; set; }
