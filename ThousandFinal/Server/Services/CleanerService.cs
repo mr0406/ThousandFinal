@@ -17,7 +17,7 @@ namespace ThousandFinal.Server.Services
         private IHubContext<AppHub> hubContext;
 
         private const int SERVICE_TURN_ON_FREQUENCY_IN_MILISECONDS = 600000; //600000 - 10 min
-        private const int MAX_INACTIVE_MINUTES = 20; //20
+        private const int MAX_INACTIVE_MINUTES = 20;
 
         private Timer _timer;
 

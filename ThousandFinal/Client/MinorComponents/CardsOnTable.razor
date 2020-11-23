@@ -45,10 +45,7 @@
         }
     }
 
-    private async Task HandleLeave()
-    {
-        dropClass = "";
-    }
+    private async Task HandleLeave() => dropClass = "";
 
     public bool CanPlayThisCard() => Game.CanPlayThisCard();
 }
