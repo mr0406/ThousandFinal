@@ -25,5 +25,14 @@ namespace ThousandFinal.Shared.Models
             this.RoomName = RoomName;
             lastActivityTime = DateTime.Now;
         }
+
+        public void ResetUserState()
+        {
+            IsReady = false;
+            GiveUpAuction = false;
+            Points = 0;
+            PointsInCurrentRound = 0;
+            PointsToAchieve = 0;
+        }
     }
 }

@@ -56,6 +56,13 @@ namespace ThousandFinal.Server.Services
         {
             players = Players;
             await StartRound();
+            await ShowAlertInRoom(Alerts.AlertType.Info, "Game started");
+        }
+
+        private async Task RestartGame()
+        {
+            players.ForEach(x => x.ResetUserState());
+            await StartGame(players);
         }
 
         private async Task StartRound()
@@ -75,7 +82,10 @@ namespace ThousandFinal.Server.Services
 
         private async Task EndAuctionPhase()
         {
-            SetAuctionWinner(highestBetOwner);
+            auctionWinner = highestBetOwner;
+
+            await ShowAlertInRoom(Alerts.AlertType.Info, 
+                $"Auction ended. {players[highestBetOwner].Name} won - need to achieve {highestBet} points");
 
             if (highestBet != 100)
             {
@@ -86,8 +96,6 @@ namespace ThousandFinal.Server.Services
             activePlayer = highestBetOwner;
             await StartGivingCardsPhase();
         }
-
-        private void SetAuctionWinner(int AuctionWinner) => auctionWinner = AuctionWinner;
 
         private async Task ShowCardsToTakeForAWhile()
         {
@@ -103,7 +111,12 @@ namespace ThousandFinal.Server.Services
             await Refresh();
         }
 
-        private async Task EndGivingCardsPhase() => await StartRaisingPointsToAchievePhase();
+        private async Task EndGivingCardsPhase()
+        {
+            await ShowAlertInRoom(Alerts.AlertType.Info,
+                $"{players[highestBetOwner].Name} decided to play {highestBet}");
+            await StartRaisingPointsToAchievePhase();
+        }
 
 
         private async Task StartRaisingPointsToAchievePhase()
@@ -164,13 +177,18 @@ namespace ThousandFinal.Server.Services
 
         private async Task EndRound()
         {
-            AddPointsAfterRound();
+            await AddPointsAfterRound();
 
             bool isWinner = CheckIsWinner();
             if (isWinner)
             {
                 roundPhase = Phase.PlayerWon;
                 await Refresh();
+
+                await ShowInfoAfterGame();
+
+                System.Threading.Thread.Sleep(5000);
+                await RestartGame();
             }
             else
             {
@@ -178,7 +196,24 @@ namespace ThousandFinal.Server.Services
             }
         }
 
-        private void AddPointsAfterRound()
+        private async Task ShowInfoAfterGame()
+        {
+            foreach(var player in players)
+            {
+                if(player.Points == 1000)
+                {
+                    await hubContext.Clients.Client(player.ConnectionId).SendAsync(ServerToClient.RECEIVE_ALERT, 
+                        Alerts.AlertType.Success, $"YOU WON A GAME. AMAZING PERFORMANCE!!!");
+                }
+                else
+                {
+                    await hubContext.Clients.Client(player.ConnectionId).SendAsync(ServerToClient.RECEIVE_ALERT, 
+                        Alerts.AlertType.Info, $"Game ended. You get {player.Points}. Next time will be better!");
+                }
+            }
+        }
+
+        private async Task AddPointsAfterRound()
         {
             foreach (var card in cards)
             {
@@ -193,7 +228,7 @@ namespace ThousandFinal.Server.Services
             for (int i = 0; i < 3; i++)
             {
                 AddPointsToPlayer(i);
-            }
+            }         
         }
 
         private void AddPointsToPlayer(int playerIndex)
@@ -213,6 +248,7 @@ namespace ThousandFinal.Server.Services
                     players[playerIndex].Points += roundedPoints;
                 }
             }
+
             players[playerIndex].PointsInCurrentRound = 0;
             players[playerIndex].PointsToAchieve = 0;
         }
@@ -222,7 +258,10 @@ namespace ThousandFinal.Server.Services
             foreach (var player in players)
             {
                 if (player.Points >= 1000)
+                {
+                    player.Points = 1000;
                     return true;
+                }
             }
             return false;
         } 
@@ -476,7 +515,16 @@ namespace ThousandFinal.Server.Services
             bestCard = null;
             numberOfCardsOnTable = 0;
             fightNumber++;
-        } 
+        }
         #endregion
+
+        public async Task ShowAlertInRoom(Alerts.AlertType alertType, string text)
+        {
+            foreach (var player in players)
+            {
+                await hubContext.Clients.Client(player.ConnectionId)
+                        .SendAsync(ServerToClient.RECEIVE_ALERT, alertType, text);
+            }
+        }
     }
 }

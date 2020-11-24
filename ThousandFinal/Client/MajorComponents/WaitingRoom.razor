@@ -1,11 +1,4 @@
-﻿@using Blazored.Toast.Configuration
-@inject IToastService toastService
-<div class="testingDiv">
-    <button @onclick="@(()=> toastService.ShowInfo("Info Message"))">Test Info</button>
-    <button @onclick="@(()=> toastService.ShowError("Info Message"))">Test Error</button>
-    <button @onclick="@(()=> toastService.ShowWarning("Info Message"))">Test Warning</button>
-    <button @onclick="@(()=> toastService.ShowSuccess("Info Message"))">Test Success</button>
-</div>
+﻿
 @if (choosenRoom != null)
 {
     <div class="shadow" />
@@ -66,16 +59,6 @@
     </div>
 </div>
 
-
-
-    <BlazoredToasts Position="ToastPosition.BottomRight"
-                   Timeout="10"
-                   IconType="IconType.FontAwesome"
-                   SuccessClass="success-toast-override"
-                   SuccessIcon="fa fa-thumbs-up"
-                   ErrorIcon="fa fa-bug"
-                   />
-
 @code {
     [CascadingParameter] HubConnection hubConnection { get; set; }
 
@@ -111,23 +94,26 @@
 
     async Task TryJoin()
     {
-        userName = userName.Trim();
+        userName = userName?.Trim();
 
         if (String.IsNullOrWhiteSpace(userName))
         {
-            //empty nick
+            await hubConnection.SendAsync(ClientToServer.SHOW_ALERT_TO_ITSELF, Alerts.AlertType.Error, 
+                "Cannot join: empty nick");
             return;
         }
 
         if (userName.Length > MAX_NICK_LENGTH)
         {
-            //too long nick
+            await hubConnection.SendAsync(ClientToServer.SHOW_ALERT_TO_ITSELF, Alerts.AlertType.Error, 
+                $"Cannot join: too long nick. Nick cannot be longer than {MAX_NICK_LENGTH} characters");
             return;
         }
 
         if (choosenRoom.NumOfUsers >= MAX_NUM_OF_USERS_IN_ROOM)
         {
-            //no place in room
+            await hubConnection.SendAsync(ClientToServer.SHOW_ALERT_TO_ITSELF, 
+                Alerts.AlertType.Error, "Room is full of players");
             return;
         }
 
@@ -138,7 +124,8 @@
     {
         if (roomDTOs.Count() >= MAX_NUM_OF_ROOMS)
         {
-            //too many rooms
+            await hubConnection.SendAsync(ClientToServer.SHOW_ALERT_TO_ITSELF, Alerts.AlertType.Error, 
+                $"Too many rooms. Max number of rooms: {MAX_NUM_OF_ROOMS}");
             return;
         }
 
@@ -146,20 +133,23 @@
 
         if (String.IsNullOrWhiteSpace(newRoomName))
         {
-            //empty room name
+            await hubConnection.SendAsync(ClientToServer.SHOW_ALERT_TO_ITSELF, 
+                Alerts.AlertType.Error, "Cannot add room: empty name");
             return;
         }
 
         if (newRoomName.Length > MAX_ROOM_NAME_LENGTH)
         {
-            //to long room name
+            await hubConnection.SendAsync(ClientToServer.SHOW_ALERT_TO_ITSELF, Alerts.AlertType.Error,
+                $"Cannot add room: too long room name. Room name cannot be longer than {MAX_ROOM_NAME_LENGTH} characters");
             return;
         }
 
 
         if (roomDTOs.Any(x => x.Name == newRoomName))
         {
-            //There is already room with this name
+            await hubConnection.SendAsync(ClientToServer.SHOW_ALERT_TO_ITSELF, Alerts.AlertType.Error, 
+                "There is already room with this name");
             return;
         }
 

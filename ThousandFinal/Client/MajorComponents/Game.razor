@@ -130,7 +130,7 @@
     public List<CardModel> playerCards = new List<CardModel>();
     public List<CardModel> cardsOnTable = new List<CardModel>();
     public bool cardsToTakeExists { get; set; } = true;
-    public List<CardModel> cardsToTake = new List<CardModel>(); //FIX
+    public List<CardModel> cardsToTake = new List<CardModel>();
 
     public int activePlayerIndex;
     public Suit mandatorySuit;
@@ -235,17 +235,20 @@
     {
         if (phase != Phase.GivingAdditionalCards)
         {
-            Console.WriteLine("Wrong phase");
+            await hubConnection.SendAsync(ClientToServer.SHOW_ALERT_TO_ITSELF, Alerts.AlertType.Warning, 
+                "Cannot give card in this game phase");
             return;
         }
         if (PayloadCard.Status != Status.InHand)
         {
-            Console.WriteLine("The card must be in hand");
+            await hubConnection.SendAsync(ClientToServer.SHOW_ALERT_TO_ITSELF, Alerts.AlertType.Warning, 
+                "Given card must be in your hand");
             return;
         }
         if (!AmIActive())
         {
-            Console.WriteLine("Not your turn");
+            await hubConnection.SendAsync(ClientToServer.SHOW_ALERT_TO_ITSELF, Alerts.AlertType.Warning, 
+                "Not your turn");
             return;
         }
 

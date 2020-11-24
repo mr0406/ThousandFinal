@@ -69,6 +69,8 @@ namespace ThousandFinal.Server.Services
             {
                 AppHub.rooms[roomName].Users.Remove(user.Key);
                 AppHub.user_room.Remove(user.Key);
+                await hubContext.Clients.Client(user.Key).SendAsync(ServerToClient.RECEIVE_ALERT, Alerts.AlertType.Warning,
+                    "Room was deleted, becouse there was no activity");
                 await hubContext.Clients.Client(user.Key).SendAsync(ServerToClient.RECEIVE_LEAVE_ROOM);
             }
 
@@ -81,7 +83,7 @@ namespace ThousandFinal.Server.Services
         public async Task KickUserFromRoom(string userConnectionId)
         {
             string roomName = AppHub.user_room[userConnectionId];
-            string userName = AppHub.rooms[roomName].Users[userConnectionId].Name;
+            string nameOfUserToKick = AppHub.rooms[roomName].Users[userConnectionId].Name;
 
             AppHub.rooms[roomName].DeleteGame();
 
@@ -90,12 +92,23 @@ namespace ThousandFinal.Server.Services
 
             foreach (var user in AppHub.rooms[roomName].Users)
             {
+                if(user.Value.Name == nameOfUserToKick)
+                {
+                    await hubContext.Clients.Client(user.Key).SendAsync(ServerToClient.RECEIVE_ALERT, Alerts.AlertType.Warning,
+                        "You were inactive, so you were kicked from room");
+                }
+                else
+                {
+                    await hubContext.Clients.Client(user.Key).SendAsync(ServerToClient.RECEIVE_ALERT, Alerts.AlertType.Info,
+                        $"Game was deleted, becouse {nameOfUserToKick} was inactive");
+                }
+
                 user.Value.IsReady = false;
             }
 
             foreach (var user in AppHub.rooms[roomName].Users)
             {       
-                await hubContext.Clients.Client(user.Key).SendAsync(ServerToClient.RECEIVE_MESSAGE, (new MessageModel($"{userName} left room", true)));
+                //await hubContext.Clients.Client(user.Key).SendAsync(ServerToClient.RECEIVE_MESSAGE, (new MessageModel($"{nameOfUserToKick} left room", true)));
                 await hubContext.Clients.Client(user.Key).SendAsync(ServerToClient.RECEIVE_USERS, (AppHub.rooms[roomName].Users.Values.ToList()));
                 await hubContext.Clients.Client(user.Key).SendAsync(ServerToClient.RECEIVE_GAME_DELETE);
             }
