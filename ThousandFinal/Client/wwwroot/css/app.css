@@ -951,7 +951,7 @@ li.playerList {
     text-align: right;
     float: right;
     border-radius: 1em 1em 0 1em;
-    background-color: rgba(22,74,159,1);
+    background-color: var(--border_t);
     padding: 9px;
     color: white;
 }
@@ -969,11 +969,11 @@ li.playerList {
     margin: 0 auto 0px 0px;
     padding: 5px 0 1px 0;
     color: inherit;
-    background-color: rgba(22,74,159,1);
+    background-color: var(--border);
     width: auto;
     max-width: 100%;
     border-radius: 0px 16px 0px 0px;
-    border-bottom: 17px solid rgba(22,74,159,1);
+    border-bottom: 17px solid var(--border);
 }
 
 .messageNickname {
@@ -1165,25 +1165,12 @@ li.playerList {
     color: inherit;
     border-radius: 1em 1em 0 0;
     background-color: rgba(26, 137, 236,1);
-    box-shadow: -2px 1px 4px 1px black;
+    box-shadow: 1px 4px 8px 1px black;
     margin-top: -1.05em;
 }
 
 .MessageWrapper {
     width: 80%;
     overflow: auto;
-    padding: 5px 2px 0 2px;
-}
-
-.cardBack {
-    width: 7.22em;
-    height: 10em;
-}
-
-.otherPlayerCards .cardBack {
-    transform:rotate(90deg);
-}
-
-#cardsToTake .cardBack {
-    margin: 5px;
+    padding-top: 5px;
 }
