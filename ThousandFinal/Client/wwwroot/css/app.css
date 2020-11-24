@@ -920,15 +920,14 @@ li.playerList {
 }
 
 .message {
-    min-width: 51%;
-    max-width: 80%;
+    min-width: 40%;
+    max-width: 100%;
     overflow: auto;
     overflow-wrap: anywhere;
     margin: 2px 0 0 0;
-    padding: .5rem;
     display: table;
     flex-direction: column;
-    color: var(--white);
+    color: white;
 }
 
 #serverMessage:first-child {
@@ -952,20 +951,35 @@ li.playerList {
     text-align: right;
     float: right;
     border-radius: 1em 1em 0 1em;
-    padding-right: 1em;
-    background-color: #6168E8;
+    background-color: var(--border_t);
+    padding: 9px;
+    color: white;
 }
 
 #othersMessage {
     text-align: left;
     float: left;
-    background-color: #363CA8;
     border-radius: 1em 1em 1em 0;
-    padding-left: 1em;
+    display: grid;
+    grid-template-columns: 100%;
 }
 
-.messageNickaname{
+.messageNicknameWrapper {
     font-weight: 600;
+    margin: 0 auto 0px 0px;
+    padding: 5px 0 1px 0;
+    color: inherit;
+    background-color: var(--border);
+    width: auto;
+    max-width: 100%;
+    border-radius: 0px 16px 0px 0px;
+    border-bottom: 17px solid var(--border);
+}
+
+.messageNickname {
+    color: inherit;
+    margin: 0 1em 0 1em;
+    max-width: 100%;
 }
 
 #chatContainer > #form {
@@ -1138,4 +1152,25 @@ li.playerList {
     width: 100%;
     grid-column: 2/span 1;
     grid-row: 1/ span 1;
+}
+
+.otherPlayerMessageText {
+    padding: 0px 0px 0px 10px;
+    margin: 5px;
+    display: block;
+    color: inherit;
+}
+
+.otherPlayerMessageTextWrapper {
+    color: inherit;
+    border-radius: 1em 1em 0 0;
+    background-color: rgba(26, 137, 236,1);
+    box-shadow: 1px 4px 8px 1px black;
+    margin-top: -1.05em;
+}
+
+.MessageWrapper {
+    width: 80%;
+    overflow: auto;
+    padding-top: 5px;
 }

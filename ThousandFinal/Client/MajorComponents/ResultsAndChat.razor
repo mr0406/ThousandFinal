@@ -25,11 +25,22 @@
             else if (message.AuthorName == UserName)
             {
 
-                <div class="message" id="myMessage">@message.Text</div>
+                <div class="right MessageWrapper"><div class="message" id="myMessage">@message.Text</div></div>
             }
             else
             {
-                <div class="message" id="othersMessage"><span class="messageNickaname">@message.AuthorName:</span> <br/> @message.Text</div>
+                <div class="left MessageWrapper">
+                    <div class="message" id="othersMessage">
+
+                        <div class="messageNicknameWrapper">
+                            <div class="messageNickname">@message.AuthorName</div>
+                        </div>
+
+                        <div class="otherPlayerMessageTextWrapper">
+                            <div class="otherPlayerMessageText">@message.Text</div>
+                        </div>
+                    </div> 
+                </div>
             }
         }
     </div>
