@@ -1,5 +1,8 @@
 ﻿@page "/"
+@using Blazored.Toast.Configuration
+@using ThousandFinal.Shared.Models
 @inject NavigationManager  NavigationManager
+@inject IToastService toastService
 
 <CascadingValue Value="this.hubConnection">
     <div id="gameFrame">
@@ -8,13 +11,19 @@
             <WaitingRoom></WaitingRoom>
         }
         else
-        {         
+        {
             <Game UserName="@UserName" Users="Users"></Game>
             <ResultsAndChat UserName="@UserName" Users="Users"></ResultsAndChat>
         }
     </div>
 </CascadingValue>
 
+<BlazoredToasts Position="ToastPosition.BottomRight"
+                Timeout="10"
+                IconType="IconType.FontAwesome"
+                SuccessClass="success-toast-override"
+                SuccessIcon="fa fa-thumbs-up"
+                ErrorIcon="fa fa-bug" />
 
 @code {
     public HubConnection hubConnection;
@@ -22,7 +31,7 @@
     public bool joined = false;
 
     public List<UserModel> Users = new List<UserModel>();
-    public string UserName; 
+    public string UserName;
 
     protected override async Task OnInitializedAsync()
     {
@@ -52,6 +61,33 @@
             this.UserName = UserName;
 
             StateHasChanged();
+        });
+
+        hubConnection.On<Alerts.AlertType, string>(ServerToClient.RECEIVE_ALERT, (Alerts.AlertType alertType, string text) =>
+        {
+            switch(alertType)
+            {
+                case Alerts.AlertType.Info:
+                {
+                    toastService.ShowInfo(text);
+                    break;
+                }
+                case Alerts.AlertType.Error:
+                {
+                    toastService.ShowError(text);
+                    break;
+                }
+                case Alerts.AlertType.Warning:
+                {
+                    toastService.ShowWarning(text);
+                    break;
+                }
+                case Alerts.AlertType.Success:
+                {
+                    toastService.ShowSuccess(text);
+                    break;
+                }
+            }
         });
 
         await hubConnection.StartAsync();

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ThousandFinal.Shared.Models;
+using static ThousandFinal.Shared.Models.Alerts;
 
 namespace ThousandFinal.Server.Hubs
 {
@@ -15,5 +16,7 @@ namespace ThousandFinal.Server.Hubs
 
         Task ReceiveJoinRoom(string userName);
         Task ReceiveRooms(List<RoomDTO> roomDTOs);
+
+        Task ReceiveAlert(AlertType alertType, string text);
     }
 }

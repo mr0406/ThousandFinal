@@ -5,6 +5,7 @@
         //Administration and Chat
         public const string RECEIVE_USERS = "ReceiveUsers";
         public const string RECEIVE_MESSAGE = "ReceiveMessage";
+        public const string RECEIVE_ALERT = "ReceiveAlert";
 
         //Game
         public const string RECEIVE_GAME_STARTED = "ReceiveGameStarted";

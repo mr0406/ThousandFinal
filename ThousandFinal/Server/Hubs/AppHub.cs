@@ -215,7 +215,8 @@ namespace ThousandFinal.Server.Hubs
         {
             if (IsThereUserWithThisName(userName, roomName))
             {
-                //There is already user with this name
+                await Clients.Caller.ReceiveAlert(Alerts.AlertType.Error,
+                    "There is a player with same nick as you. You cannot join.");
                 return;
             }
 
@@ -330,7 +331,22 @@ namespace ThousandFinal.Server.Hubs
             string roomName = user_room[Context.ConnectionId];
             rooms[roomName].lastActivityTime = DateTime.Now;
             rooms[roomName].Users[connectionId].lastActivityTime = DateTime.Now;
-        } 
+        }
+
+        public async Task ShowAlertToItself(Alerts.AlertType alertType, string text)
+        {
+            await Clients.Caller.ReceiveAlert(alertType, text);
+        }
+
+        public async Task ShowAlertInRoom(Alerts.AlertType alertType, string text)
+        {
+            string roomName = user_room[Context.ConnectionId];
+
+            if(rooms.ContainsKey(roomName))
+            {
+                await rooms[roomName].gameService.ShowAlertInRoom(alertType, text);
+            }
+        }
         #endregion
     }
 }

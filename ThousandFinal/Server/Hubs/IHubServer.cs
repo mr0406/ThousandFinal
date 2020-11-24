@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ThousandFinal.Shared.Models;
+using static ThousandFinal.Shared.Models.Alerts;
 
 namespace ThousandFinal.Server.Hubs
 {
@@ -23,5 +24,9 @@ namespace ThousandFinal.Server.Hubs
         Task RaisePointsToAchieve(int points);
         Task DontRaisePointsToAchieve();
         Task PlayCard(CardModel card, CardModel bestCardOnTable);
+
+        //Alerts
+        Task ShowAlertToItself(AlertType alertType, string text);
+        Task ShowAlertInRoom(AlertType alertType, string text);
     }
 }

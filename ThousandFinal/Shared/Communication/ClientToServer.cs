@@ -20,5 +20,9 @@
         public const string RAISE_POINTS_TO_ACHIEVE = "RaisePointsToAchieve";
         public const string DONT_RAISE_POINTS_TO_ACHIEVE = "DontRaisePointsToAchieve";
         public const string PLAY_CARD = "PlayCard";
+
+        //Alerts
+        public const string SHOW_ALERT_TO_ITSELF = "ShowAlertToItself";
+        public const string SHOW_ALERT_IN_ROOM = "ShowAlertInRoom";
     }
 }

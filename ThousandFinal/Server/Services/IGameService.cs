@@ -18,5 +18,8 @@ namespace ThousandFinal.Server.Services
         Task RaisePointsToAchieve(string playerConnectionId, int points);
         Task DontRaisePointsToAchieve(string playerConnectionId);
         Task PlayCard(string playerConnectionId, CardModel card, CardModel newBestCard);
+
+        //Alerts
+        Task ShowAlertInRoom(Alerts.AlertType alertType, string text);
     }
 }
