@@ -1,17 +1,19 @@
-﻿   @if (Cards.Count() != 0)
+﻿@if (Cards.Count() != 0)
+{
+    @foreach (var card in Cards)
     {
-        @foreach (var card in Cards)
-        {
-            <Card CardModel="card"></Card>
-        }
+        <Card CardModel="card"></Card>
     }
-    else
+}
+else
+{
+    @for (int i = 0; i < 3; i++)
     {
-        @for(int i = 0; i < 3; i++)
-        {
-            <div id="cardContainer"/>
-        }
+        <!--<div id="cardContainer">-->
+        <img class="cardBack" src="/images/rewers2.png" />
+        <!--</div>-->
     }
+}
 
 @code {
     [CascadingParameter] public Game Game { get; set; }
