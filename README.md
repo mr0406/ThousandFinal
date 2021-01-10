@@ -12,6 +12,6 @@ Marcin Rakowski (github.com/mr0406) - founder, backend  <br />
 Agata Wojciechowska (github.com/AgataWojciech) - frontend <br />
 Michał Kelman (github.com/fonvi) - frontend <br />
 
-[!alt text](https://github.com/mr0406/ThousandFinal/blob/NewHope/Images/Game.bmp
+[!Image](Images/Game.bmp)
 
-[!alt text](https://github.com/mr0406/ThousandFinal/blob/NewHope/Images/JoinRoom.bmp
+[!alt text](https://github.com/mr0406/ThousandFinal/blob/NewHope/Images/JoinRoom.bmp)
